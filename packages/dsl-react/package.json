@@ -1,0 +1,65 @@
+{
+  "name": "@m0saic/dsl-react",
+  "version": "0.2.0",
+  "description": "Render m0 DSL layouts as positioned React regions — the Layout→React bridge.",
+  "keywords": [
+    "m0saic",
+    "m0",
+    "dsl",
+    "react",
+    "layout"
+  ],
+  "license": "Apache-2.0",
+  "private": false,
+  "type": "commonjs",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m0saic-project/m0saic-packages.git",
+    "directory": "packages/dsl-react"
+  },
+  "homepage": "https://github.com/m0saic-project/m0saic-packages/tree/main/packages/dsl-react#readme",
+  "bugs": {
+    "url": "https://github.com/m0saic-project/m0saic-packages/issues"
+  },
+  "author": "m0saic LLC",
+  "files": [
+    "dist",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "browser": "./dist/esm/index.js",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "scripts": {
+    "build": "npm run build:types && npm run build:esm && npm run build:cjs",
+    "build:types": "tsc -p tsconfig.types.json",
+    "build:esm": "tsc -p tsconfig.esm.json && node scripts/fix-esm-imports.js && node -e \"require('fs').writeFileSync('dist/esm/package.json','{\\\"type\\\":\\\"module\\\"}\\n')\"",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "clean": "rm -rf dist",
+    "dev": "tsc -w",
+    "typecheck": "tsc --noEmit",
+    "test": "jest --collectCoverage=false"
+  },
+  "dependencies": {
+    "@m0saic/dsl": "^2.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

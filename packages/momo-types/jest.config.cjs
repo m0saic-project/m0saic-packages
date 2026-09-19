@@ -29,6 +29,9 @@ module.exports = {
       "^@m0saic/template-utils/(.*)$": "<rootDir>/../template-utils/src/$1",
       "^@m0saic/dictionary$": "<rootDir>/../dictionary/src",
       "^@m0saic/dictionary/dist/(?:cjs/|esm/|types/)?(.*)$": "<rootDir>/../dictionary/src/$1",
-      "^@m0saic/dictionary/(.*)$": "<rootDir>/../dictionary/src/$1"
+      "^@m0saic/dictionary/(.*)$": "<rootDir>/../dictionary/src/$1",
+      "^@m0saic/dsl-react$": "<rootDir>/../dsl-react/src",
+      "^@m0saic/dsl-react/dist/(?:cjs/|esm/|types/)?(.*)$": "<rootDir>/../dsl-react/src/$1",
+      "^@m0saic/dsl-react/(.*)$": "<rootDir>/../dsl-react/src/$1"
   },
 };
