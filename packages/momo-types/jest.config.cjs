@@ -23,6 +23,9 @@ module.exports = {
       "^@m0saic/platform/(.*)$": "<rootDir>/../platform/src/$1",
       "^@m0saic/text$": "<rootDir>/../text/src",
       "^@m0saic/text/dist/(?:cjs/|esm/|types/)?(.*)$": "<rootDir>/../text/src/$1",
-      "^@m0saic/text/(.*)$": "<rootDir>/../text/src/$1"
+      "^@m0saic/text/(.*)$": "<rootDir>/../text/src/$1",
+      "^@m0saic/template-utils$": "<rootDir>/../template-utils/src",
+      "^@m0saic/template-utils/dist/(?:cjs/|esm/|types/)?(.*)$": "<rootDir>/../template-utils/src/$1",
+      "^@m0saic/template-utils/(.*)$": "<rootDir>/../template-utils/src/$1"
   },
 };

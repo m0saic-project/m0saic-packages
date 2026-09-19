@@ -1,0 +1,33 @@
+{
+    "bars-stack": {
+      "kind": "mosaic_document",
+      "version": 1,
+      "m0saic": "5(1,1,1,1,1)",
+      "config": {
+        "fps": 30,
+        "durationMs": 2000,
+        "sources": [
+          {
+            "type": "lavfi",
+            "lavfi": "color=c=black@0.0,format=rgba,drawbox=x=0:y='ih*(1-0.25)':w=iw:h='ih*0.25':color=0x3b82f6@1:t=fill:replace=1"
+          },
+          {
+            "type": "lavfi",
+            "lavfi": "color=c=black@0.0,format=rgba,drawbox=x=0:y='ih*(1-0.55)':w=iw:h='ih*0.55':color=0x10b981@1:t=fill:replace=1"
+          },
+          {
+            "type": "lavfi",
+            "lavfi": "color=c=black@0.0,format=rgba,drawbox=x=0:y='ih*(1-0.40)':w=iw:h='ih*0.40':color=0xf59e0b@1:t=fill:replace=1"
+          },
+          {
+            "type": "lavfi",
+            "lavfi": "color=c=black@0.0,format=rgba,drawbox=x=0:y='ih*(1-0.70)':w=iw:h='ih*0.70':color=0xef4444@1:t=fill:replace=1"
+          },
+          {
+            "type": "lavfi",
+            "lavfi": "color=c=black@0.0,format=rgba,drawbox=x=0:y='ih*(1-0.33)':w=iw:h='ih*0.33':color=0x8b5cf6@1:t=fill:replace=1"
+          }
+        ]
+      }
+    }
+  }

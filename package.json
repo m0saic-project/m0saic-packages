@@ -6,8 +6,8 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build -w packages/momo-types && npm run build -w packages/types && npm run build -w packages/platform && npm run build -w packages/text",
-    "test": "npm run test -w packages/momo-types && npm run test -w packages/platform && npm run test -w packages/text"
+    "build": "npm run build -w packages/momo-types && npm run build -w packages/types && npm run build -w packages/platform && npm run build -w packages/text && npm run build -w packages/template-utils",
+    "test": "npm run test -w packages/momo-types && npm run test -w packages/platform && npm run test -w packages/text && npm run test -w packages/template-utils"
   },
   "devDependencies": {
     "typescript": "^6.0.2",

@@ -1,0 +1,19 @@
+{
+  "templateId": "@m0saic/charts/bar-graph/internal/chart-frame/v1",
+  "defaults": {
+    "propsPath": "packages/template-utils/tools/dev/props/chart-frame.props.json",
+    "injectPath": "packages/template-utils/tools/dev/inject/chart-frame.inject.json",
+    "wrap": true,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationMs": 2000
+  },
+  "variants": [
+    { "name": "dark_r12", "props": { "preset": "dark", "cornerRadius": 0.12 } },
+    { "name": "dark_r18", "props": { "preset": "dark", "cornerRadius": 0.18 } },
+    { "name": "dark_r24", "props": { "preset": "dark", "cornerRadius": 0.24 } },
+    { "name": "glass_r18", "props": { "preset": "glass", "cornerRadius": 0.18 } },
+    { "name": "paper_r18", "props": { "preset": "paper", "cornerRadius": 0.18 } }
+  ]
+}

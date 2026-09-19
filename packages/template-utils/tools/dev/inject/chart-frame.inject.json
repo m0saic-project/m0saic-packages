@@ -1,0 +1,24 @@
+{
+  "plot-area": {
+    "kind": "mosaic_document",
+    "version": 1,
+    "m0saic": "F",
+    "config": {
+      "fps": 30,
+      "durationMs": 2000,
+      "sources": [
+        {
+          "type": "text",
+          "style": {
+            "fontSize": 36,
+            "fontColor": "#6b7280",
+            "fontFamily": "Arial, sans-serif"
+          },
+          "layers": [{ "content": { "kind": "literal", "text": "PLOT AREA" } }],
+          "placement": { "hAlign": "center", "vAlign": "middle" },
+          "visual": { "backgroundColor": "none" }
+        }
+      ]
+    }
+  }
+}

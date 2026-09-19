@@ -1,0 +1,18 @@
+{
+    "axisConfig": {
+        "fillAxis": "y",
+        "layoutAxis": "x",
+        "labelDock": "bottom",
+        "valueDock": "top",
+        "gridDirection": "horizontal",
+        "baselineEdge": "bottom"
+    },
+    "grid": {
+        "show": true,
+        "count": 5
+    },
+    "baseline": {
+        "show": true
+    },
+    "barsStackRef": "bars-stack"
+}

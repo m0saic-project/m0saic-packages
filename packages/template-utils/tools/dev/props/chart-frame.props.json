@@ -1,0 +1,6 @@
+{
+  "padding": { "top": 0.04, "right": 0.04, "bottom": 0.04, "left": 0.04 },
+  "cornerRadius": 0.24,
+  "preset": "dark",
+  "plotAreaRef": "plot-area"
+}
