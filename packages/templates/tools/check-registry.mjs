@@ -436,9 +436,14 @@ say(`[check-registry] ✓ ${ids.length} templates registered — definition-time
   (warnings1.length ? ` (${warnings1.length} template(s) carry ${warnedKnobs} warning knob(s): ${[...new Set(warnings1.map((f) => f.convention))].join(", ")})` : "") + ".");
 
 // ── Stage 2: render time ───────────────────────────────────────────────────
-/** Set by scripts/sync-public-packages.mjs (and the public repo's CI): the tree
- *  is a standalone mirror without the monorepo's fixture dirs. */
-const STANDALONE_CHECKOUT = process.env.M0SAIC_STANDALONE_CHECKOUT === "1";
+/** A standalone checkout (the public m0saic-packages mirror, its CI, a contributor's
+ *  clone) has none of the monorepo's fixture dirs. Detected by the absence of the
+ *  sibling `packages/sandbox` (the corpus post-mortem/v1 renders by default); the
+ *  monorepo always has it. M0SAIC_STANDALONE_CHECKOUT=1 forces the mode, =0 forces
+ *  the full gate. */
+const STANDALONE_CHECKOUT =
+  process.env.M0SAIC_STANDALONE_CHECKOUT === "1" ||
+  (process.env.M0SAIC_STANDALONE_CHECKOUT !== "0" && !fs.existsSync(path.join(ROOT, "..", "sandbox")));
 const errors2 = [];
 const warnings2 = [];
 const skipped = report.skipped; // same array — `--json` used to print skipped: [] because this was a detached local
