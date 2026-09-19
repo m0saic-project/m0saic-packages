@@ -1,0 +1,31 @@
+{
+  "_comment": "Benchmark · sources/audio: a single Big Buck Bunny clip rendered with its audio track enabled. Exercises the audio decode / resample / mux path on top of video decode.",
+  "_generated": "baked by tools/bake-benchmark-battery.mjs — frozen workload, edit via the baker + a set version bump",
+  "kind": "mosaic_document",
+  "version": 1,
+  "m0": "1",
+  "fps": 30,
+  "durationMs": 8000,
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "assets": {
+    "av": {
+      "kind": "file",
+      "path": "../media/bbb-av.mp4",
+      "mediaType": "video"
+    }
+  },
+  "sources": [
+    {
+      "type": "media",
+      "mediaType": "video",
+      "assetId": "av",
+      "audio": {
+        "enabled": true,
+        "volume": 1
+      }
+    }
+  ]
+}

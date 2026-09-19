@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    // `community-m.web.ts` imports the bundled Community M seed manifest.
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "declaration": true,
+    "module": "commonjs",
+    "target": "es2019",
+    "moduleResolution": "Node10",
+    "ignoreDeprecations": "6.0",
+    "strict": true,
+    "types": ["jest", "node"],
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/__tests__/**"]
+}

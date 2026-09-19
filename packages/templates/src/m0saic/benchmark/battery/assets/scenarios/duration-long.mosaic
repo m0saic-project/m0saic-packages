@@ -1,0 +1,80 @@
+{
+  "_comment": "Benchmark · duration: a 16-cell grid rendered for 60s. Longest wall-clock; exposes how per-frame cost scales with length.",
+  "_generated": "baked by tools/bake-benchmark-battery.mjs — frozen workload, edit via the baker + a set version bump",
+  "kind": "mosaic_document",
+  "version": 1,
+  "m0": "4[4(1,1,1,1),4(1,1,1,1),4(1,1,1,1),4(1,1,1,1)]",
+  "fps": 30,
+  "durationMs": 60000,
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "assets": {},
+  "sources": [
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    }
+  ]
+}

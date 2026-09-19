@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "label": "idle",
+  "startedAtIso": "2026-06-18T00:00:00.000Z",
+  "finishedAtIso": "2026-06-18T00:02:11.000Z",
+  "elapsedMs": 131000,
+  "system": {
+    "cpu": { "model": "Apple M1", "cores": 8, "speedMhz": 2400 },
+    "ram": { "totalBytes": 8589934592, "totalGb": 8 },
+    "os": { "platform": "darwin", "arch": "arm64", "release": "23.6.0" },
+    "ffmpeg": {
+      "found": true,
+      "version": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers",
+      "hwEncoders": ["h264_videotoolbox", "hevc_videotoolbox", "prores_videotoolbox"]
+    }
+  },
+  "versions": { "cli": { "name": "m0saic-cli", "version": "0.1.0" } },
+  "sets": [
+    { "set": "sources", "version": 2, "scenarioIds": ["sources-lavfi", "sources-text", "sources-nested", "sources-ref", "sources-media", "sources-audio"] },
+    { "set": "geometry", "version": 1, "scenarioIds": ["geometry-grid"] },
+    { "set": "duration", "version": 1, "scenarioIds": ["duration-long"] },
+    { "set": "encoders", "version": 1, "scenarioIds": ["encoders-libopenh264", "encoders-libx264", "encoders-libx265"] }
+  ],
+  "scenarios": [
+    { "id": "sources-lavfi", "set": "sources", "label": "Lavfi generators", "ok": true, "elapsedMs": 4544, "outFps": 52.8, "frames": 240, "width": 1920, "height": 1080, "durationMs": 8000, "fps": 30, "codec": "libopenh264" },
+    { "id": "sources-text", "set": "sources", "label": "Text rasterization", "ok": true, "elapsedMs": 6039, "outFps": 39.7, "frames": 240, "width": 1920, "height": 1080, "durationMs": 8000, "fps": 30, "codec": "libopenh264" },
+    { "id": "sources-nested", "set": "sources", "label": "Nested mosaic", "ok": true, "elapsedMs": 4331, "outFps": 55.4, "frames": 240, "width": 1920, "height": 1080, "durationMs": 8000, "fps": 30, "codec": "libopenh264" },
+    { "id": "sources-ref", "set": "sources", "label": "Ref mirror", "ok": true, "elapsedMs": 2815, "outFps": 85.3, "frames": 240, "width": 1920, "height": 1080, "durationMs": 8000, "fps": 30, "codec": "libopenh264" },
+    { "id": "sources-media", "set": "sources", "label": "Video decode (4 clips)", "ok": true, "elapsedMs": 2755, "outFps": 43.6, "frames": 120, "width": 1920, "height": 1080, "durationMs": 4000, "fps": 30, "codec": "libx264" },
+    { "id": "sources-audio", "set": "sources", "label": "Audio + video", "ok": true, "elapsedMs": 2391, "outFps": 100.4, "frames": 240, "width": 1920, "height": 1080, "durationMs": 8000, "fps": 30, "codec": "libx264" },
+    { "id": "geometry-grid", "set": "geometry", "label": "144-cell grid", "ok": true, "elapsedMs": 31521, "outFps": 7.6, "frames": 240, "width": 1920, "height": 1080, "durationMs": 8000, "fps": 30, "codec": "libopenh264" },
+    { "id": "duration-long", "set": "duration", "label": "60s render", "ok": true, "elapsedMs": 32810, "outFps": 54.9, "frames": 1800, "width": 1920, "height": 1080, "durationMs": 60000, "fps": 30, "codec": "libopenh264" },
+    { "id": "encoders-libopenh264", "set": "encoders", "label": "libopenh264 (sw baseline)", "ok": true, "elapsedMs": 2000, "outFps": 120, "frames": 240, "width": 1920, "height": 1080, "durationMs": 8000, "fps": 30, "codec": "libopenh264" },
+    { "id": "encoders-libx264", "set": "encoders", "label": "libx264 (sw)", "ok": true, "elapsedMs": 2637, "outFps": 91, "frames": 240, "width": 1920, "height": 1080, "durationMs": 8000, "fps": 30, "codec": "libx264" },
+    { "id": "encoders-libx265", "set": "encoders", "label": "libx265 (sw)", "ok": true, "elapsedMs": 3227, "outFps": 74.4, "frames": 240, "width": 1920, "height": 1080, "durationMs": 8000, "fps": 30, "codec": "libx265" },
+    { "id": "encoders-h264_videotoolbox", "set": "encoders", "label": "h264_videotoolbox (hw)", "ok": true, "elapsedMs": 2111, "outFps": 113.7, "frames": 240, "width": 1920, "height": 1080, "durationMs": 8000, "fps": 30, "codec": "h264_videotoolbox" },
+    { "id": "encoders-hevc_videotoolbox", "set": "encoders", "label": "hevc_videotoolbox (hw)", "ok": true, "elapsedMs": 1935, "outFps": 124, "frames": 240, "width": 1920, "height": 1080, "durationMs": 8000, "fps": 30, "codec": "hevc_videotoolbox" },
+    { "id": "encoders-prores_videotoolbox", "set": "encoders", "label": "prores_videotoolbox (hw)", "ok": true, "elapsedMs": 2085, "outFps": 115.1, "frames": 240, "width": 1920, "height": 1080, "durationMs": 8000, "fps": 30, "codec": "prores_videotoolbox" }
+  ],
+  "summary": { "totalElapsedMs": 103201, "scoreVersion": 1, "score": 47.4 }
+}

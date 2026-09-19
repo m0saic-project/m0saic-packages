@@ -1,0 +1,1 @@
+export { TheMosaicMV2 } from "./logo";

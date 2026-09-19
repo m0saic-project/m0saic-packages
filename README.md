@@ -19,7 +19,6 @@ Each package sits in `packages/<name>` and publishes to npm as `@m0saic/<name>`.
 | [`template-utils`](./packages/template-utils) | Apache-2.0 | Template runtime helpers — `definePropsSchema`, `defineMosaicTemplate`, seeded RNG, ffmpeg expression builders, primitives, the `forensic` namespace. Anything a template author uses that is not producing m0. |
 | [`dictionary`](./packages/dictionary) | MIT | Named layout entries (the brand M, patterns, QR codes, masks, generators) — the canonical shape library. |
 | [`dsl-react`](./packages/dsl-react) | Apache-2.0 | Render m0 DSL layouts as positioned React regions — the Layout → React bridge. |
-| [`templates-advanced`](./packages/templates-advanced) | MIT | Catch-all for anything `templates` needs that would otherwise add an external dependency to the core template package. |
 | [`templates`](./packages/templates) | MIT | The built-in template library — brand, hero, demos, media, ui, primitives, forensic — with its generated `template-manifest.json`. |
 
 ### Elsewhere
@@ -41,7 +40,7 @@ npm i @m0saic/types @m0saic/platform
 # author templates
 npm i @m0saic/template-utils @m0saic/types @m0saic/platform
 
-# the built-in template library (pulls dictionary, templates-advanced, template-utils)
+# the built-in template library (pulls dictionary, template-utils)
 npm i @m0saic/templates
 
 # named layouts on their own
@@ -83,7 +82,7 @@ npm run build      # every package, in dependency order
 npm test
 ```
 
-The build order is the dependency order: `momo-types → types → platform → text → template-utils → dictionary → dsl-react → templates-advanced → templates`. `npm install` pulls `@m0saic/dsl*` and `@m0saic/community-m` from npm — neither is a workspace here.
+The build order is the dependency order: `momo-types → types → platform → text → template-utils → dictionary → dsl-react → templates`. `npm install` pulls `@m0saic/dsl*` and `@m0saic/community-m` from npm — neither is a workspace here.
 
 ---
 
@@ -92,7 +91,7 @@ The build order is the dependency order: `momo-types → types → platform → 
 Two licenses, chosen per package (see the table above and each package's own `LICENSE`):
 
 - **Apache-2.0** — `momo-types`, `types`, `platform`, `text`, `template-utils`, `dsl-react`. See [`LICENSE`](./LICENSE) and [`NOTICE`](./NOTICE) at the root; each of these packages ships both.
-- **MIT** — `dictionary`, `templates-advanced`, `templates`. The template libraries are MIT so you can copy a template into your own project without ceremony. (The community repos linked above are MIT too; the sandbox corpus is Apache-2.0.)
+- **MIT** — `dictionary`, `templates`. The template libraries are MIT so you can copy a template into your own project without ceremony. (The community repos linked above are MIT too; the sandbox corpus is Apache-2.0.)
 
 m0saic and the m0saic logo are trademarks of m0saic LLC. Neither license grants permission to use the trade names, trademarks, service marks, or product names of m0saic LLC, except as required for reasonable and customary use in describing the origin of the work.
 

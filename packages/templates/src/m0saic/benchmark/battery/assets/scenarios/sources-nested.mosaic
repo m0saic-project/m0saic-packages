@@ -1,0 +1,48 @@
+{
+  "_comment": "Benchmark · sources/nested: a nested mosaic child rendered then composited into the parent. Stresses recursive render.",
+  "_generated": "baked by tools/bake-benchmark-battery.mjs — frozen workload, edit via the baker + a set version bump",
+  "kind": "mosaic_document",
+  "version": 1,
+  "m0": "2(1,1)",
+  "fps": 30,
+  "durationMs": 8000,
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "assets": {},
+  "children": {
+    "child-grid": {
+      "kind": "mosaic_document",
+      "version": 1,
+      "m0": "2(1,1)",
+      "fps": 30,
+      "durationMs": 8000,
+      "size": {
+        "width": 960,
+        "height": 1080
+      },
+      "assets": {},
+      "sources": [
+        {
+          "type": "lavfi",
+          "lavfi": "mandelbrot"
+        },
+        {
+          "type": "lavfi",
+          "color": "#3f8efc"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "type": "mosaic",
+      "ref": "child-grid"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    }
+  ]
+}

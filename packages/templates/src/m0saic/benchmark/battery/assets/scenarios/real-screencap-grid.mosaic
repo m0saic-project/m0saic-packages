@@ -1,0 +1,4591 @@
+{
+  "kind": "mosaic_pipeline",
+  "version": 1,
+  "emit": "multi",
+  "steps": [
+    {
+      "name": "bbb-clip-01",
+      "label": "bbb-clip-01",
+      "durationMs": 4000,
+      "file": {
+        "kind": "mosaic_document",
+        "version": 1,
+        "sources": [
+          {
+            "type": "mosaic",
+            "ref": "info-pane",
+            "editor": {
+              "owner": "user"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 235
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.235)/3600\\:d\\:2}:%{eif\\:mod((t+0.235)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.235\\,60)\\:d\\:2}.%{eif\\:mod((t+0.235)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 471
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.471)/3600\\:d\\:2}:%{eif\\:mod((t+0.471)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.471\\,60)\\:d\\:2}.%{eif\\:mod((t+0.471)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 706
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.706)/3600\\:d\\:2}:%{eif\\:mod((t+0.706)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.706\\,60)\\:d\\:2}.%{eif\\:mod((t+0.706)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 941
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.941)/3600\\:d\\:2}:%{eif\\:mod((t+0.941)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.941\\,60)\\:d\\:2}.%{eif\\:mod((t+0.941)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 1176
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.176)/3600\\:d\\:2}:%{eif\\:mod((t+1.176)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.176\\,60)\\:d\\:2}.%{eif\\:mod((t+1.176)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 1412
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.412)/3600\\:d\\:2}:%{eif\\:mod((t+1.412)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.412\\,60)\\:d\\:2}.%{eif\\:mod((t+1.412)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 1647
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.647)/3600\\:d\\:2}:%{eif\\:mod((t+1.647)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.647\\,60)\\:d\\:2}.%{eif\\:mod((t+1.647)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 1882
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.882)/3600\\:d\\:2}:%{eif\\:mod((t+1.882)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.882\\,60)\\:d\\:2}.%{eif\\:mod((t+1.882)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 2118
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.118)/3600\\:d\\:2}:%{eif\\:mod((t+2.118)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.118\\,60)\\:d\\:2}.%{eif\\:mod((t+2.118)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 2353
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.353)/3600\\:d\\:2}:%{eif\\:mod((t+2.353)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.353\\,60)\\:d\\:2}.%{eif\\:mod((t+2.353)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 2588
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.588)/3600\\:d\\:2}:%{eif\\:mod((t+2.588)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.588\\,60)\\:d\\:2}.%{eif\\:mod((t+2.588)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 2824
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.824)/3600\\:d\\:2}:%{eif\\:mod((t+2.824)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.824\\,60)\\:d\\:2}.%{eif\\:mod((t+2.824)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 3059
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.059)/3600\\:d\\:2}:%{eif\\:mod((t+3.059)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.059\\,60)\\:d\\:2}.%{eif\\:mod((t+3.059)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 3294
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.294)/3600\\:d\\:2}:%{eif\\:mod((t+3.294)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.294\\,60)\\:d\\:2}.%{eif\\:mod((t+3.294)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 3529
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.529)/3600\\:d\\:2}:%{eif\\:mod((t+3.529)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.529\\,60)\\:d\\:2}.%{eif\\:mod((t+3.529)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-01",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0,
+                "bottom": 0,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 3765
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.765)/3600\\:d\\:2}:%{eif\\:mod((t+3.765)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.765\\,60)\\:d\\:2}.%{eif\\:mod((t+3.765)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          }
+        ],
+        "assets": {
+          "bbb-clip-01": {
+            "kind": "file",
+            "path": "../media/bbb-clip-01.mp4",
+            "mediaType": "video"
+          }
+        },
+        "m0": "1080[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4[4(1{1},1{1},1{1},1{1}),4(1{1},1{1},1{1},1{1}),4(1{1},1{1},1{1},1{1}),4(1{1},1{1},1{1},1{1})]]",
+        "children": {
+          "info-pane": {
+            "kind": "mosaic_document",
+            "version": 1,
+            "assets": {},
+            "m0": "1",
+            "sources": [
+              {
+                "type": "text",
+                "renderMode": {
+                  "kind": "image"
+                },
+                "layers": [
+                  {
+                    "content": {
+                      "kind": "literal",
+                      "text": "bbb-clip-01.mp4"
+                    },
+                    "style": {
+                      "fontSize": 24,
+                      "fontColor": "#ffffff",
+                      "borderWidth": 1,
+                      "borderColor": "#ffffff"
+                    },
+                    "visual": {
+                      "backgroundColor": "#0d0d0d"
+                    },
+                    "placement": {
+                      "hAlign": "left",
+                      "vAlign": "top",
+                      "padding": {
+                        "x": 0.015,
+                        "y": 0.06593406593406594
+                      }
+                    }
+                  },
+                  {
+                    "content": {
+                      "kind": "literal",
+                      "text": "Duration: 4.00s  |  Size: 535.82 KiB (548,683 bytes)  |  Bitrate: 1.1 Mbit/s  |  Container: QuickTime / MOV\nStream 0 Video: 1280x720 yuv420p 8-bit 24.00 fps H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (High)"
+                    },
+                    "style": {
+                      "fontSize": 13,
+                      "fontColor": "#a0a0a0"
+                    },
+                    "visual": {},
+                    "placement": {
+                      "hAlign": "left",
+                      "vAlign": "top",
+                      "yExpr": "45",
+                      "padding": {
+                        "x": 0.015
+                      }
+                    }
+                  }
+                ],
+                "editor": {
+                  "owner": "template"
+                },
+                "engine": {
+                  "renderStatus": "ok"
+                }
+              }
+            ],
+            "size": {
+              "width": 1920,
+              "height": 1080
+            },
+            "fps": 30,
+            "durationMs": 4000,
+            "editor": {
+              "owner": "user"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          }
+        },
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "fps": 30,
+        "durationMs": 4000,
+        "editor": {
+          "owner": "user"
+        },
+        "engine": {
+          "renderStatus": "ok"
+        }
+      }
+    },
+    {
+      "name": "bbb-clip-02",
+      "label": "bbb-clip-02",
+      "durationMs": 4000,
+      "file": {
+        "kind": "mosaic_document",
+        "version": 1,
+        "sources": [
+          {
+            "type": "mosaic",
+            "ref": "info-pane",
+            "editor": {
+              "owner": "user"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 235
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.235)/3600\\:d\\:2}:%{eif\\:mod((t+0.235)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.235\\,60)\\:d\\:2}.%{eif\\:mod((t+0.235)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 471
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.471)/3600\\:d\\:2}:%{eif\\:mod((t+0.471)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.471\\,60)\\:d\\:2}.%{eif\\:mod((t+0.471)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 706
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.706)/3600\\:d\\:2}:%{eif\\:mod((t+0.706)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.706\\,60)\\:d\\:2}.%{eif\\:mod((t+0.706)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 941
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.941)/3600\\:d\\:2}:%{eif\\:mod((t+0.941)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.941\\,60)\\:d\\:2}.%{eif\\:mod((t+0.941)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 1176
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.176)/3600\\:d\\:2}:%{eif\\:mod((t+1.176)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.176\\,60)\\:d\\:2}.%{eif\\:mod((t+1.176)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 1412
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.412)/3600\\:d\\:2}:%{eif\\:mod((t+1.412)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.412\\,60)\\:d\\:2}.%{eif\\:mod((t+1.412)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 1647
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.647)/3600\\:d\\:2}:%{eif\\:mod((t+1.647)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.647\\,60)\\:d\\:2}.%{eif\\:mod((t+1.647)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 1882
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.882)/3600\\:d\\:2}:%{eif\\:mod((t+1.882)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.882\\,60)\\:d\\:2}.%{eif\\:mod((t+1.882)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 2118
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.118)/3600\\:d\\:2}:%{eif\\:mod((t+2.118)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.118\\,60)\\:d\\:2}.%{eif\\:mod((t+2.118)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 2353
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.353)/3600\\:d\\:2}:%{eif\\:mod((t+2.353)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.353\\,60)\\:d\\:2}.%{eif\\:mod((t+2.353)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 2588
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.588)/3600\\:d\\:2}:%{eif\\:mod((t+2.588)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.588\\,60)\\:d\\:2}.%{eif\\:mod((t+2.588)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 2824
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.824)/3600\\:d\\:2}:%{eif\\:mod((t+2.824)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.824\\,60)\\:d\\:2}.%{eif\\:mod((t+2.824)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 3059
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.059)/3600\\:d\\:2}:%{eif\\:mod((t+3.059)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.059\\,60)\\:d\\:2}.%{eif\\:mod((t+3.059)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 3294
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.294)/3600\\:d\\:2}:%{eif\\:mod((t+3.294)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.294\\,60)\\:d\\:2}.%{eif\\:mod((t+3.294)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 3529
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.529)/3600\\:d\\:2}:%{eif\\:mod((t+3.529)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.529\\,60)\\:d\\:2}.%{eif\\:mod((t+3.529)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-02",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0,
+                "bottom": 0,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 3765
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.765)/3600\\:d\\:2}:%{eif\\:mod((t+3.765)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.765\\,60)\\:d\\:2}.%{eif\\:mod((t+3.765)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          }
+        ],
+        "assets": {
+          "bbb-clip-02": {
+            "kind": "file",
+            "path": "../media/bbb-clip-02.mp4",
+            "mediaType": "video"
+          }
+        },
+        "m0": "1080[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4[4(1{1},1{1},1{1},1{1}),4(1{1},1{1},1{1},1{1}),4(1{1},1{1},1{1},1{1}),4(1{1},1{1},1{1},1{1})]]",
+        "children": {
+          "info-pane": {
+            "kind": "mosaic_document",
+            "version": 1,
+            "assets": {},
+            "m0": "1",
+            "sources": [
+              {
+                "type": "text",
+                "renderMode": {
+                  "kind": "image"
+                },
+                "layers": [
+                  {
+                    "content": {
+                      "kind": "literal",
+                      "text": "bbb-clip-02.mp4"
+                    },
+                    "style": {
+                      "fontSize": 24,
+                      "fontColor": "#ffffff",
+                      "borderWidth": 1,
+                      "borderColor": "#ffffff"
+                    },
+                    "visual": {
+                      "backgroundColor": "#0d0d0d"
+                    },
+                    "placement": {
+                      "hAlign": "left",
+                      "vAlign": "top",
+                      "padding": {
+                        "x": 0.015,
+                        "y": 0.06593406593406594
+                      }
+                    }
+                  },
+                  {
+                    "content": {
+                      "kind": "literal",
+                      "text": "Duration: 4.00s  |  Size: 542.41 KiB (555,425 bytes)  |  Bitrate: 1.1 Mbit/s  |  Container: QuickTime / MOV\nStream 0 Video: 1280x720 yuv420p 8-bit 24.00 fps H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (High)"
+                    },
+                    "style": {
+                      "fontSize": 13,
+                      "fontColor": "#a0a0a0"
+                    },
+                    "visual": {},
+                    "placement": {
+                      "hAlign": "left",
+                      "vAlign": "top",
+                      "yExpr": "45",
+                      "padding": {
+                        "x": 0.015
+                      }
+                    }
+                  }
+                ],
+                "editor": {
+                  "owner": "template"
+                },
+                "engine": {
+                  "renderStatus": "ok"
+                }
+              }
+            ],
+            "size": {
+              "width": 1920,
+              "height": 1080
+            },
+            "fps": 30,
+            "durationMs": 4000,
+            "editor": {
+              "owner": "user"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          }
+        },
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "fps": 30,
+        "durationMs": 4000,
+        "editor": {
+          "owner": "user"
+        },
+        "engine": {
+          "renderStatus": "ok"
+        }
+      }
+    },
+    {
+      "name": "bbb-clip-03",
+      "label": "bbb-clip-03",
+      "durationMs": 4000,
+      "file": {
+        "kind": "mosaic_document",
+        "version": 1,
+        "sources": [
+          {
+            "type": "mosaic",
+            "ref": "info-pane",
+            "editor": {
+              "owner": "user"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 235
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.235)/3600\\:d\\:2}:%{eif\\:mod((t+0.235)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.235\\,60)\\:d\\:2}.%{eif\\:mod((t+0.235)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 471
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.471)/3600\\:d\\:2}:%{eif\\:mod((t+0.471)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.471\\,60)\\:d\\:2}.%{eif\\:mod((t+0.471)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 706
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.706)/3600\\:d\\:2}:%{eif\\:mod((t+0.706)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.706\\,60)\\:d\\:2}.%{eif\\:mod((t+0.706)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 941
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.941)/3600\\:d\\:2}:%{eif\\:mod((t+0.941)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.941\\,60)\\:d\\:2}.%{eif\\:mod((t+0.941)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 1176
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.176)/3600\\:d\\:2}:%{eif\\:mod((t+1.176)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.176\\,60)\\:d\\:2}.%{eif\\:mod((t+1.176)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 1412
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.412)/3600\\:d\\:2}:%{eif\\:mod((t+1.412)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.412\\,60)\\:d\\:2}.%{eif\\:mod((t+1.412)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 1647
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.647)/3600\\:d\\:2}:%{eif\\:mod((t+1.647)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.647\\,60)\\:d\\:2}.%{eif\\:mod((t+1.647)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 1882
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.882)/3600\\:d\\:2}:%{eif\\:mod((t+1.882)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.882\\,60)\\:d\\:2}.%{eif\\:mod((t+1.882)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 2118
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.118)/3600\\:d\\:2}:%{eif\\:mod((t+2.118)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.118\\,60)\\:d\\:2}.%{eif\\:mod((t+2.118)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 2353
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.353)/3600\\:d\\:2}:%{eif\\:mod((t+2.353)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.353\\,60)\\:d\\:2}.%{eif\\:mod((t+2.353)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 2588
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.588)/3600\\:d\\:2}:%{eif\\:mod((t+2.588)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.588\\,60)\\:d\\:2}.%{eif\\:mod((t+2.588)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 2824
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.824)/3600\\:d\\:2}:%{eif\\:mod((t+2.824)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.824\\,60)\\:d\\:2}.%{eif\\:mod((t+2.824)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 3059
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.059)/3600\\:d\\:2}:%{eif\\:mod((t+3.059)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.059\\,60)\\:d\\:2}.%{eif\\:mod((t+3.059)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 3294
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.294)/3600\\:d\\:2}:%{eif\\:mod((t+3.294)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.294\\,60)\\:d\\:2}.%{eif\\:mod((t+3.294)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 3529
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.529)/3600\\:d\\:2}:%{eif\\:mod((t+3.529)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.529\\,60)\\:d\\:2}.%{eif\\:mod((t+3.529)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-03",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0,
+                "bottom": 0,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 3765
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.765)/3600\\:d\\:2}:%{eif\\:mod((t+3.765)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.765\\,60)\\:d\\:2}.%{eif\\:mod((t+3.765)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          }
+        ],
+        "assets": {
+          "bbb-clip-03": {
+            "kind": "file",
+            "path": "../media/bbb-clip-03.mp4",
+            "mediaType": "video"
+          }
+        },
+        "m0": "1080[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4[4(1{1},1{1},1{1},1{1}),4(1{1},1{1},1{1},1{1}),4(1{1},1{1},1{1},1{1}),4(1{1},1{1},1{1},1{1})]]",
+        "children": {
+          "info-pane": {
+            "kind": "mosaic_document",
+            "version": 1,
+            "assets": {},
+            "m0": "1",
+            "sources": [
+              {
+                "type": "text",
+                "renderMode": {
+                  "kind": "image"
+                },
+                "layers": [
+                  {
+                    "content": {
+                      "kind": "literal",
+                      "text": "bbb-clip-03.mp4"
+                    },
+                    "style": {
+                      "fontSize": 24,
+                      "fontColor": "#ffffff",
+                      "borderWidth": 1,
+                      "borderColor": "#ffffff"
+                    },
+                    "visual": {
+                      "backgroundColor": "#0d0d0d"
+                    },
+                    "placement": {
+                      "hAlign": "left",
+                      "vAlign": "top",
+                      "padding": {
+                        "x": 0.015,
+                        "y": 0.06593406593406594
+                      }
+                    }
+                  },
+                  {
+                    "content": {
+                      "kind": "literal",
+                      "text": "Duration: 4.00s  |  Size: 1.04 MiB (1,091,765 bytes)  |  Bitrate: 2.2 Mbit/s  |  Container: QuickTime / MOV\nStream 0 Video: 1280x720 yuv420p 8-bit 24.00 fps H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (High)"
+                    },
+                    "style": {
+                      "fontSize": 13,
+                      "fontColor": "#a0a0a0"
+                    },
+                    "visual": {},
+                    "placement": {
+                      "hAlign": "left",
+                      "vAlign": "top",
+                      "yExpr": "45",
+                      "padding": {
+                        "x": 0.015
+                      }
+                    }
+                  }
+                ],
+                "editor": {
+                  "owner": "template"
+                },
+                "engine": {
+                  "renderStatus": "ok"
+                }
+              }
+            ],
+            "size": {
+              "width": 1920,
+              "height": 1080
+            },
+            "fps": 30,
+            "durationMs": 4000,
+            "editor": {
+              "owner": "user"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          }
+        },
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "fps": 30,
+        "durationMs": 4000,
+        "editor": {
+          "owner": "user"
+        },
+        "engine": {
+          "renderStatus": "ok"
+        }
+      }
+    },
+    {
+      "name": "bbb-clip-04",
+      "label": "bbb-clip-04",
+      "durationMs": 4000,
+      "file": {
+        "kind": "mosaic_document",
+        "version": 1,
+        "sources": [
+          {
+            "type": "mosaic",
+            "ref": "info-pane",
+            "editor": {
+              "owner": "user"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 235
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.235)/3600\\:d\\:2}:%{eif\\:mod((t+0.235)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.235\\,60)\\:d\\:2}.%{eif\\:mod((t+0.235)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 471
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.471)/3600\\:d\\:2}:%{eif\\:mod((t+0.471)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.471\\,60)\\:d\\:2}.%{eif\\:mod((t+0.471)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 706
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.706)/3600\\:d\\:2}:%{eif\\:mod((t+0.706)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.706\\,60)\\:d\\:2}.%{eif\\:mod((t+0.706)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0,
+                "right": 0,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 941
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+0.941)/3600\\:d\\:2}:%{eif\\:mod((t+0.941)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+0.941\\,60)\\:d\\:2}.%{eif\\:mod((t+0.941)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 1176
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.176)/3600\\:d\\:2}:%{eif\\:mod((t+1.176)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.176\\,60)\\:d\\:2}.%{eif\\:mod((t+1.176)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 1412
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.412)/3600\\:d\\:2}:%{eif\\:mod((t+1.412)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.412\\,60)\\:d\\:2}.%{eif\\:mod((t+1.412)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 1647
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.647)/3600\\:d\\:2}:%{eif\\:mod((t+1.647)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.647\\,60)\\:d\\:2}.%{eif\\:mod((t+1.647)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 1882
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+1.882)/3600\\:d\\:2}:%{eif\\:mod((t+1.882)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+1.882\\,60)\\:d\\:2}.%{eif\\:mod((t+1.882)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 2118
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.118)/3600\\:d\\:2}:%{eif\\:mod((t+2.118)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.118\\,60)\\:d\\:2}.%{eif\\:mod((t+2.118)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 2353
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.353)/3600\\:d\\:2}:%{eif\\:mod((t+2.353)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.353\\,60)\\:d\\:2}.%{eif\\:mod((t+2.353)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 2588
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.588)/3600\\:d\\:2}:%{eif\\:mod((t+2.588)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.588\\,60)\\:d\\:2}.%{eif\\:mod((t+2.588)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0,
+                "bottom": 0.004044489383215369,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 2824
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+2.824)/3600\\:d\\:2}:%{eif\\:mod((t+2.824)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+2.824\\,60)\\:d\\:2}.%{eif\\:mod((t+2.824)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0,
+                "left": 0
+              }
+            },
+            "playback": {
+              "clipStartMs": 3059
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.059)/3600\\:d\\:2}:%{eif\\:mod((t+3.059)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.059\\,60)\\:d\\:2}.%{eif\\:mod((t+3.059)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 3294
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.294)/3600\\:d\\:2}:%{eif\\:mod((t+3.294)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.294\\,60)\\:d\\:2}.%{eif\\:mod((t+3.294)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0.0020833333333333333,
+                "bottom": 0,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 3529
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.529)/3600\\:d\\:2}:%{eif\\:mod((t+3.529)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.529\\,60)\\:d\\:2}.%{eif\\:mod((t+3.529)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "media",
+            "mediaType": "video",
+            "assetId": "bbb-clip-04",
+            "placement": {
+              "fit": "cover",
+              "inset": {
+                "top": 0.004044489383215369,
+                "right": 0,
+                "bottom": 0,
+                "left": 0.0020833333333333333
+              }
+            },
+            "playback": {
+              "clipStartMs": 3765
+            },
+            "audio": {
+              "enabled": false
+            },
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          },
+          {
+            "type": "text",
+            "renderMode": {
+              "kind": "video"
+            },
+            "layers": [
+              {
+                "content": {
+                  "kind": "expr",
+                  "expr": "%{eif\\:(t+3.765)/3600\\:d\\:2}:%{eif\\:mod((t+3.765)/60\\,60)\\:d\\:2}:%{eif\\:mod(t+3.765\\,60)\\:d\\:2}.%{eif\\:mod((t+3.765)*1000\\,1000)\\:d\\:3}",
+                  "eval": "frame"
+                },
+                "style": {
+                  "fontSize": 18,
+                  "fontColor": "#ffffff",
+                  "borderWidth": 0.003,
+                  "borderColor": "black@0.8"
+                },
+                "visual": {
+                  "backgroundColor": "none"
+                },
+                "placement": {
+                  "hAlign": "right",
+                  "vAlign": "bottom",
+                  "padding": {
+                    "x": 0.02,
+                    "y": 0.03
+                  }
+                }
+              }
+            ],
+            "editor": {
+              "owner": "template"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          }
+        ],
+        "assets": {
+          "bbb-clip-04": {
+            "kind": "file",
+            "path": "../media/bbb-clip-04.mp4",
+            "mediaType": "video"
+          }
+        },
+        "m0": "1080[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4[4(1{1},1{1},1{1},1{1}),4(1{1},1{1},1{1},1{1}),4(1{1},1{1},1{1},1{1}),4(1{1},1{1},1{1},1{1})]]",
+        "children": {
+          "info-pane": {
+            "kind": "mosaic_document",
+            "version": 1,
+            "assets": {},
+            "m0": "1",
+            "sources": [
+              {
+                "type": "text",
+                "renderMode": {
+                  "kind": "image"
+                },
+                "layers": [
+                  {
+                    "content": {
+                      "kind": "literal",
+                      "text": "bbb-clip-04.mp4"
+                    },
+                    "style": {
+                      "fontSize": 24,
+                      "fontColor": "#ffffff",
+                      "borderWidth": 1,
+                      "borderColor": "#ffffff"
+                    },
+                    "visual": {
+                      "backgroundColor": "#0d0d0d"
+                    },
+                    "placement": {
+                      "hAlign": "left",
+                      "vAlign": "top",
+                      "padding": {
+                        "x": 0.015,
+                        "y": 0.06593406593406594
+                      }
+                    }
+                  },
+                  {
+                    "content": {
+                      "kind": "literal",
+                      "text": "Duration: 4.00s  |  Size: 449.73 KiB (460,526 bytes)  |  Bitrate: 921 kbit/s  |  Container: QuickTime / MOV\nStream 0 Video: 1280x720 yuv420p 8-bit 24.00 fps H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (High)"
+                    },
+                    "style": {
+                      "fontSize": 13,
+                      "fontColor": "#a0a0a0"
+                    },
+                    "visual": {},
+                    "placement": {
+                      "hAlign": "left",
+                      "vAlign": "top",
+                      "yExpr": "45",
+                      "padding": {
+                        "x": 0.015
+                      }
+                    }
+                  }
+                ],
+                "editor": {
+                  "owner": "template"
+                },
+                "engine": {
+                  "renderStatus": "ok"
+                }
+              }
+            ],
+            "size": {
+              "width": 1920,
+              "height": 1080
+            },
+            "fps": 30,
+            "durationMs": 4000,
+            "editor": {
+              "owner": "user"
+            },
+            "engine": {
+              "renderStatus": "ok"
+            }
+          }
+        },
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "fps": 30,
+        "durationMs": 4000,
+        "editor": {
+          "owner": "user"
+        },
+        "engine": {
+          "renderStatus": "ok"
+        }
+      }
+    }
+  ],
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "fps": 30,
+  "durationMs": 4000,
+  "editor": {
+    "owner": "user"
+  },
+  "engine": {
+    "renderStatus": "ok"
+  }
+}

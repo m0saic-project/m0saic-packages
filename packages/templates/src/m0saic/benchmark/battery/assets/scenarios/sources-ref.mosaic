@@ -1,0 +1,24 @@
+{
+  "_comment": "Benchmark · sources/ref: cell 1 mirrors cell 0 via a MosaicRefSource (back-edge). Stresses ref tap/reuse.",
+  "_generated": "baked by tools/bake-benchmark-battery.mjs — frozen workload, edit via the baker + a set version bump",
+  "kind": "mosaic_document",
+  "version": 1,
+  "m0": "2(1,1)",
+  "fps": 30,
+  "durationMs": 8000,
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "assets": {},
+  "sources": [
+    {
+      "type": "lavfi",
+      "lavfi": "mandelbrot"
+    },
+    {
+      "type": "ref",
+      "flattenedStableKey": "r/fc0"
+    }
+  ]
+}

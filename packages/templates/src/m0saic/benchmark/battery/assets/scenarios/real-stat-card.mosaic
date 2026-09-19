@@ -1,0 +1,187 @@
+{
+  "kind": "mosaic_document",
+  "version": 1,
+  "assets": {},
+  "m0": "25[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4[0,0,1,100(0,0,0,0,0,-,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1)],0,0,1]",
+  "sources": [
+    {
+      "type": "text",
+      "visual": {
+        "backgroundColor": "black@0"
+      },
+      "layers": [
+        {
+          "content": {
+            "kind": "literal",
+            "text": "Total Commits"
+          },
+          "style": {
+            "fontSize": 119,
+            "fontColor": "#8b949e"
+          },
+          "placement": {
+            "fit": "contain",
+            "hAlign": "left",
+            "vAlign": "middle",
+            "padding": {
+              "left": 0.06
+            }
+          }
+        }
+      ],
+      "overlay": {
+        "alpha": "(min(1,max(0,(t-0)/0.25)))*(min(1,max(0,(t-0)/0.25)))*(3-2*(min(1,max(0,(t-0)/0.25))))"
+      },
+      "editor": {
+        "owner": "user"
+      },
+      "engine": {
+        "renderStatus": "ok"
+      }
+    },
+    {
+      "type": "text",
+      "renderMode": {
+        "kind": "video"
+      },
+      "visual": {
+        "backgroundColor": "black@0"
+      },
+      "layers": [
+        {
+          "content": {
+            "kind": "expr",
+            "expr": "%{eif\\:2847*((1-(1-(min(1\\,max(0\\,(t-0)/3.5))))*(1-(min(1\\,max(0\\,(t-0)/3.5))))))+0.5\\:d}",
+            "eval": "frame"
+          },
+          "style": {
+            "fontSize": 497,
+            "fontColor": "#e6edf3"
+          },
+          "placement": {
+            "hAlign": "left",
+            "vAlign": "middle",
+            "padding": {
+              "left": 0.06
+            }
+          }
+        }
+      ],
+      "editor": {
+        "owner": "user"
+      },
+      "engine": {
+        "renderStatus": "ok"
+      }
+    },
+    {
+      "type": "lavfi",
+      "color": "#3fb950",
+      "mask": {
+        "kind": "inline-mask",
+        "localPath": "M 105.6 36.8 L 181.5 168.4 L 29.7 168.4 Z",
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 211.2,
+          "height": 205.2
+        }
+      },
+      "overlay": {
+        "alpha": "(min(1,max(0,(t-1.9250000000000003)/1.2249999999999999)))*(min(1,max(0,(t-1.9250000000000003)/1.2249999999999999)))*(3-2*(min(1,max(0,(t-1.9250000000000003)/1.2249999999999999))))"
+      },
+      "editor": {
+        "owner": "user"
+      },
+      "engine": {
+        "renderStatus": "ok"
+      }
+    },
+    {
+      "type": "text",
+      "renderMode": {
+        "kind": "video"
+      },
+      "visual": {
+        "backgroundColor": "black@0"
+      },
+      "layers": [
+        {
+          "content": {
+            "kind": "expr",
+            "expr": "+%{eif\\:18*((1-(1-(min(1\\,max(0\\,(t-1.9250000000000003)/1.2249999999999999))))*(1-(min(1\\,max(0\\,(t-1.9250000000000003)/1.2249999999999999))))))+0.5\\:d} (+%{eif\\:7.9*((1-(1-(min(1\\,max(0\\,(t-1.9250000000000003)/1.2249999999999999))))*(1-(min(1\\,max(0\\,(t-1.9250000000000003)/1.2249999999999999))))))\\:d}.%{eif\\:mod(7.9*((1-(1-(min(1\\,max(0\\,(t-1.9250000000000003)/1.2249999999999999))))*(1-(min(1\\,max(0\\,(t-1.9250000000000003)/1.2249999999999999))))))*10\\,10)\\:d\\:1}\\%)",
+            "eval": "frame"
+          },
+          "style": {
+            "fontSize": 140,
+            "fontColor": "#3fb950"
+          },
+          "placement": {
+            "hAlign": "left",
+            "vAlign": "middle",
+            "padding": {
+              "left": 0.04
+            }
+          }
+        }
+      ],
+      "overlay": {
+        "alpha": "(min(1,max(0,(t-1.9250000000000003)/1.2249999999999999)))*(min(1,max(0,(t-1.9250000000000003)/1.2249999999999999)))*(3-2*(min(1,max(0,(t-1.9250000000000003)/1.2249999999999999))))"
+      },
+      "editor": {
+        "owner": "user"
+      },
+      "engine": {
+        "renderStatus": "ok"
+      }
+    },
+    {
+      "type": "text",
+      "visual": {
+        "backgroundColor": "black@0"
+      },
+      "layers": [
+        {
+          "content": {
+            "kind": "literal",
+            "text": "vs last week"
+          },
+          "style": {
+            "fontSize": 86,
+            "fontColor": "#6e7681"
+          },
+          "placement": {
+            "fit": "contain",
+            "hAlign": "left",
+            "vAlign": "middle",
+            "padding": {
+              "left": 0.06
+            }
+          }
+        }
+      ],
+      "overlay": {
+        "alpha": "(min(1,max(0,(t-2.975)/0.525)))*(min(1,max(0,(t-2.975)/0.525)))*(3-2*(min(1,max(0,(t-2.975)/0.525))))"
+      },
+      "editor": {
+        "owner": "user"
+      },
+      "engine": {
+        "renderStatus": "ok"
+      }
+    }
+  ],
+  "backgroundColor": "#161b22",
+  "fps": 30,
+  "durationMs": 5000,
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "editor": {
+    "owner": "user"
+  },
+  "engine": {
+    "renderStatus": "ok"
+  }
+}

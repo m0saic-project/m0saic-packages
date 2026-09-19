@@ -1,0 +1,1 @@
+export { InfoPane, type InfoPaneProps } from "./info_pane";

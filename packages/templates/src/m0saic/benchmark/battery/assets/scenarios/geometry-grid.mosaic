@@ -1,0 +1,592 @@
+{
+  "_comment": "Benchmark · geometry: a 12×12 = 144-cell grid of color tiles. Stresses layout + chunked overlay stitching (stays under the 200-cell engine cap).",
+  "_generated": "baked by tools/bake-benchmark-battery.mjs — frozen workload, edit via the baker + a set version bump",
+  "kind": "mosaic_document",
+  "version": 1,
+  "m0": "12[12(1,1,1,1,1,1,1,1,1,1,1,1),12(1,1,1,1,1,1,1,1,1,1,1,1),12(1,1,1,1,1,1,1,1,1,1,1,1),12(1,1,1,1,1,1,1,1,1,1,1,1),12(1,1,1,1,1,1,1,1,1,1,1,1),12(1,1,1,1,1,1,1,1,1,1,1,1),12(1,1,1,1,1,1,1,1,1,1,1,1),12(1,1,1,1,1,1,1,1,1,1,1,1),12(1,1,1,1,1,1,1,1,1,1,1,1),12(1,1,1,1,1,1,1,1,1,1,1,1),12(1,1,1,1,1,1,1,1,1,1,1,1),12(1,1,1,1,1,1,1,1,1,1,1,1)]",
+  "fps": 30,
+  "durationMs": 8000,
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "assets": {},
+  "sources": [
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#2d3a8c"
+    },
+    {
+      "type": "lavfi",
+      "color": "#3f8efc"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    },
+    {
+      "type": "lavfi",
+      "color": "#f6c177"
+    },
+    {
+      "type": "lavfi",
+      "color": "#eb6f92"
+    },
+    {
+      "type": "lavfi",
+      "color": "#9ccfd8"
+    },
+    {
+      "type": "lavfi",
+      "color": "#c4a7e7"
+    }
+  ]
+}

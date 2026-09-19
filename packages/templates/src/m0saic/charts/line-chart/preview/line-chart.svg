@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<rect x="0" y="0" width="1280" height="720" fill="#ffffff"/>
+<line x1="70" y1="672" x2="1256" y2="672" stroke="#eef2f7" stroke-width="1"/>
+<text x="60" y="676" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="end">0</text>
+<line x1="70" y1="616.8" x2="1256" y2="616.8" stroke="#eef2f7" stroke-width="1"/>
+<text x="60" y="620.8" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="end">1,000</text>
+<line x1="70" y1="561.6" x2="1256" y2="561.6" stroke="#eef2f7" stroke-width="1"/>
+<text x="60" y="565.6" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="end">2,000</text>
+<line x1="70" y1="506.4" x2="1256" y2="506.4" stroke="#eef2f7" stroke-width="1"/>
+<text x="60" y="510.4" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="end">3,000</text>
+<line x1="70" y1="451.2" x2="1256" y2="451.2" stroke="#eef2f7" stroke-width="1"/>
+<text x="60" y="455.2" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="end">4,000</text>
+<line x1="70" y1="396" x2="1256" y2="396" stroke="#eef2f7" stroke-width="1"/>
+<text x="60" y="400" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="end">5,000</text>
+<line x1="70" y1="340.8" x2="1256" y2="340.8" stroke="#eef2f7" stroke-width="1"/>
+<text x="60" y="344.8" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="end">6,000</text>
+<line x1="70" y1="285.6" x2="1256" y2="285.6" stroke="#eef2f7" stroke-width="1"/>
+<text x="60" y="289.6" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="end">7,000</text>
+<line x1="70" y1="230.4" x2="1256" y2="230.4" stroke="#eef2f7" stroke-width="1"/>
+<text x="60" y="234.4" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="end">8,000</text>
+<line x1="70" y1="175.2" x2="1256" y2="175.2" stroke="#eef2f7" stroke-width="1"/>
+<text x="60" y="179.2" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="end">9,000</text>
+<line x1="70" y1="120" x2="1256" y2="120" stroke="#eef2f7" stroke-width="1"/>
+<text x="60" y="124" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="end">10,000</text>
+<line x1="70" y1="120" x2="70" y2="672" stroke="#eef2f7" stroke-width="1"/>
+<text x="70" y="694" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="middle">Jan</text>
+<line x1="307.2" y1="120" x2="307.2" y2="672" stroke="#eef2f7" stroke-width="1"/>
+<text x="307.2" y="694" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="middle">Feb</text>
+<line x1="544.4" y1="120" x2="544.4" y2="672" stroke="#eef2f7" stroke-width="1"/>
+<text x="544.4" y="694" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="middle">Mar</text>
+<line x1="781.6" y1="120" x2="781.6" y2="672" stroke="#eef2f7" stroke-width="1"/>
+<text x="781.6" y="694" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="middle">Apr</text>
+<line x1="1018.8" y1="120" x2="1018.8" y2="672" stroke="#eef2f7" stroke-width="1"/>
+<text x="1018.8" y="694" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="middle">May</text>
+<line x1="1256" y1="120" x2="1256" y2="672" stroke="#eef2f7" stroke-width="1"/>
+<text x="1256" y="694" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="middle">Jun</text>
+<line x1="70" y1="120" x2="70" y2="672" stroke="#d1d5db" stroke-width="1"/>
+<line x1="70" y1="672" x2="1256" y2="672" stroke="#d1d5db" stroke-width="1"/>
+<path d="M 70 605.76 L 307.2 567.12 L 544.4 528.48 L 781.6 445.68 L 1018.8 324.24 L 1256 131.04" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M 67 605.76 a 3 3 0 1 0 6 0 a 3 3 0 1 0 -6 0 Z M 304.2 567.12 a 3 3 0 1 0 6 0 a 3 3 0 1 0 -6 0 Z M 541.4 528.48 a 3 3 0 1 0 6 0 a 3 3 0 1 0 -6 0 Z M 778.6 445.68 a 3 3 0 1 0 6 0 a 3 3 0 1 0 -6 0 Z M 1015.8 324.24 a 3 3 0 1 0 6 0 a 3 3 0 1 0 -6 0 Z M 1253 131.04 a 3 3 0 1 0 6 0 a 3 3 0 1 0 -6 0 Z" fill="#2563eb"/>
+<text x="640" y="40" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="700" fill="#111827" text-anchor="middle">m0saic render growth</text>
+<text x="640" y="64" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#6b7280" text-anchor="middle">Mocked monthly renders generated by m0saic users.</text>
+<rect x="591" y="83" width="22" height="11" rx="2" fill="#2563eb"/>
+<text x="619" y="92" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#374151">Renders</text>
+</svg>

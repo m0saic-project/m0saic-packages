@@ -1,0 +1,1 @@
+export { FfmpegPulseFin } from "./fin";

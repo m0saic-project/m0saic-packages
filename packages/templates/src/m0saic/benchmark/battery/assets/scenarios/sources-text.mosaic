@@ -1,0 +1,120 @@
+{
+  "_comment": "Benchmark · sources/text: four rasterized text tiles. Stresses the text→image path.",
+  "_generated": "baked by tools/bake-benchmark-battery.mjs — frozen workload, edit via the baker + a set version bump",
+  "kind": "mosaic_document",
+  "version": 1,
+  "m0": "2[2(1,1),2(1,1)]",
+  "fps": 30,
+  "durationMs": 8000,
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "assets": {},
+  "sources": [
+    {
+      "type": "text",
+      "style": {
+        "fontSize": 96,
+        "fontColor": "#ffffff",
+        "fontFamily": "Arial"
+      },
+      "layers": [
+        {
+          "content": {
+            "kind": "literal",
+            "text": "m0saic"
+          }
+        }
+      ],
+      "placement": {
+        "hAlign": "center",
+        "vAlign": "middle"
+      },
+      "visual": {
+        "backgroundColor": "#0033aa"
+      },
+      "renderMode": {
+        "kind": "image"
+      }
+    },
+    {
+      "type": "text",
+      "style": {
+        "fontSize": 96,
+        "fontColor": "#ffffff",
+        "fontFamily": "Arial"
+      },
+      "layers": [
+        {
+          "content": {
+            "kind": "literal",
+            "text": "benchmark"
+          }
+        }
+      ],
+      "placement": {
+        "hAlign": "center",
+        "vAlign": "middle"
+      },
+      "visual": {
+        "backgroundColor": "#0033aa"
+      },
+      "renderMode": {
+        "kind": "image"
+      }
+    },
+    {
+      "type": "text",
+      "style": {
+        "fontSize": 96,
+        "fontColor": "#ffffff",
+        "fontFamily": "Arial"
+      },
+      "layers": [
+        {
+          "content": {
+            "kind": "literal",
+            "text": "render"
+          }
+        }
+      ],
+      "placement": {
+        "hAlign": "center",
+        "vAlign": "middle"
+      },
+      "visual": {
+        "backgroundColor": "#0033aa"
+      },
+      "renderMode": {
+        "kind": "image"
+      }
+    },
+    {
+      "type": "text",
+      "style": {
+        "fontSize": 96,
+        "fontColor": "#ffffff",
+        "fontFamily": "Arial"
+      },
+      "layers": [
+        {
+          "content": {
+            "kind": "literal",
+            "text": "speed"
+          }
+        }
+      ],
+      "placement": {
+        "hAlign": "center",
+        "vAlign": "middle"
+      },
+      "visual": {
+        "backgroundColor": "#0033aa"
+      },
+      "renderMode": {
+        "kind": "image"
+      }
+    }
+  ]
+}

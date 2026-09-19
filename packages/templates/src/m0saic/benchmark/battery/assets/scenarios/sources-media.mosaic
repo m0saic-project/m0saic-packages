@@ -1,0 +1,73 @@
+{
+  "_comment": "Benchmark · sources/media: a 2×2 grid of four distinct Big Buck Bunny clips (video-only). Stresses the real video decode + scale + composite path.",
+  "_generated": "baked by tools/bake-benchmark-battery.mjs — frozen workload, edit via the baker + a set version bump",
+  "kind": "mosaic_document",
+  "version": 1,
+  "m0": "2[2(1,1),2(1,1)]",
+  "fps": 30,
+  "durationMs": 4000,
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "assets": {
+    "clip1": {
+      "kind": "file",
+      "path": "../media/bbb-clip-01.mp4",
+      "mediaType": "video"
+    },
+    "clip2": {
+      "kind": "file",
+      "path": "../media/bbb-clip-02.mp4",
+      "mediaType": "video"
+    },
+    "clip3": {
+      "kind": "file",
+      "path": "../media/bbb-clip-03.mp4",
+      "mediaType": "video"
+    },
+    "clip4": {
+      "kind": "file",
+      "path": "../media/bbb-clip-04.mp4",
+      "mediaType": "video"
+    }
+  },
+  "sources": [
+    {
+      "type": "media",
+      "mediaType": "video",
+      "assetId": "clip1",
+      "audio": {
+        "enabled": false,
+        "volume": 1
+      }
+    },
+    {
+      "type": "media",
+      "mediaType": "video",
+      "assetId": "clip2",
+      "audio": {
+        "enabled": false,
+        "volume": 1
+      }
+    },
+    {
+      "type": "media",
+      "mediaType": "video",
+      "assetId": "clip3",
+      "audio": {
+        "enabled": false,
+        "volume": 1
+      }
+    },
+    {
+      "type": "media",
+      "mediaType": "video",
+      "assetId": "clip4",
+      "audio": {
+        "enabled": false,
+        "volume": 1
+      }
+    }
+  ]
+}

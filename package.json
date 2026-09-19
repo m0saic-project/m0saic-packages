@@ -6,8 +6,8 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build -w packages/momo-types && npm run build -w packages/types && npm run build -w packages/platform && npm run build -w packages/text && npm run build -w packages/template-utils && npm run build -w packages/dictionary && npm run build -w packages/dsl-react",
-    "test": "npm run test -w packages/momo-types && npm run test -w packages/platform && npm run test -w packages/text && npm run test -w packages/template-utils && npm run test -w packages/dictionary && npm run test -w packages/dsl-react"
+    "build": "npm run build -w packages/momo-types && npm run build -w packages/types && npm run build -w packages/platform && npm run build -w packages/text && npm run build -w packages/template-utils && npm run build -w packages/dictionary && npm run build -w packages/dsl-react && npm run build -w packages/templates",
+    "test": "npm run test -w packages/momo-types && npm run test -w packages/platform && npm run test -w packages/text && npm run test -w packages/template-utils && npm run test -w packages/dictionary && npm run test -w packages/dsl-react && npm run test -w packages/templates"
   },
   "devDependencies": {
     "typescript": "^6.0.2",

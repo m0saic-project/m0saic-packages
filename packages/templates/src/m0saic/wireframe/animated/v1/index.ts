@@ -1,0 +1,1 @@
+export { AnimatedWireframe } from "./animated-wireframe";

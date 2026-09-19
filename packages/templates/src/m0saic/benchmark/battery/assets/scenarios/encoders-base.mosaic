@@ -1,0 +1,32 @@
+{
+  "_comment": "Benchmark · encoders: one canonical workload re-rendered across video codecs (software baseline + auto-detected hw encoders) via make --video-codec. Content is codec-agnostic.",
+  "_generated": "baked by tools/bake-benchmark-battery.mjs — frozen workload, edit via the baker + a set version bump",
+  "kind": "mosaic_document",
+  "version": 1,
+  "m0": "4(1,1,1,1)",
+  "fps": 30,
+  "durationMs": 8000,
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "assets": {},
+  "sources": [
+    {
+      "type": "lavfi",
+      "lavfi": "mandelbrot"
+    },
+    {
+      "type": "lavfi",
+      "lavfi": "testsrc2"
+    },
+    {
+      "type": "lavfi",
+      "color": "#1b1f3b"
+    },
+    {
+      "type": "lavfi",
+      "color": "#43c59e"
+    }
+  ]
+}

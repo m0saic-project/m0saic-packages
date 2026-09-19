@@ -1,0 +1,28 @@
+{
+  "_comment": "Benchmark · lifetime/window-fade: the enable-gating sprint's canonical case — a half-canvas tile whose smoothstep fade + enable window occupy only [27,30] of a 30s parent. Pre-sprint the geq alpha-fold interprets per pixel on ALL 900 frames; the sprint gates/trims it to the 90 in-window frames.",
+  "_generated": "hand-frozen workload (not baked) — edit deliberately + bump the `lifetime` set version in manifest.ts",
+  "kind": "mosaic_document",
+  "version": 1,
+  "m0": "2(F,F)",
+  "fps": 30,
+  "durationMs": 30000,
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "assets": {},
+  "sources": [
+    {
+      "type": "lavfi",
+      "color": "#050314"
+    },
+    {
+      "type": "lavfi",
+      "color": "#EF7525",
+      "overlay": {
+        "alpha": "(min(1,max(0,(t-27.000)/0.500)))*(min(1,max(0,(t-27.000)/0.500)))*(3-2*(min(1,max(0,(t-27.000)/0.500))))",
+        "enable": "between(t,27.000,30.000)"
+      }
+    }
+  ]
+}

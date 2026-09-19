@@ -1,0 +1,1980 @@
+{
+  "kind": "mosaic_document",
+  "version": 1,
+  "assets": {},
+  "m0": "1",
+  "children": {
+    "bars-stack": {
+      "kind": "mosaic_document",
+      "version": 1,
+      "sources": [
+        {
+          "type": "mosaic",
+          "ref": "bar-0",
+          "placement": {
+            "inset": {
+              "top": 0.08333333333333333,
+              "right": 0,
+              "bottom": 0.08333333333333333,
+              "left": 0
+            }
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "mosaic",
+          "ref": "bar-1",
+          "placement": {
+            "inset": {
+              "top": 0.08333333333333333,
+              "right": 0,
+              "bottom": 0.08333333333333333,
+              "left": 0
+            }
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "mosaic",
+          "ref": "bar-2",
+          "placement": {
+            "inset": {
+              "top": 0.08333333333333333,
+              "right": 0,
+              "bottom": 0.08333333333333333,
+              "left": 0
+            }
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "mosaic",
+          "ref": "bar-3",
+          "placement": {
+            "inset": {
+              "top": 0.08333333333333333,
+              "right": 0,
+              "bottom": 0.08333333333333333,
+              "left": 0
+            }
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "mosaic",
+          "ref": "bar-4",
+          "placement": {
+            "inset": {
+              "top": 0.08333333333333333,
+              "right": 0,
+              "bottom": 0.08333333333333333,
+              "left": 0
+            }
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "mosaic",
+          "ref": "bar-5",
+          "placement": {
+            "inset": {
+              "top": 0.08333333333333333,
+              "right": 0,
+              "bottom": 0.08333333333333333,
+              "left": 0
+            }
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "mosaic",
+          "ref": "bar-6",
+          "placement": {
+            "inset": {
+              "top": 0.08333333333333333,
+              "right": 0,
+              "bottom": 0.08333333333333333,
+              "left": 0
+            }
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "mosaic",
+          "ref": "bar-7",
+          "placement": {
+            "inset": {
+              "top": 0.08333333333333333,
+              "right": 0,
+              "bottom": 0.08333333333333333,
+              "left": 0
+            }
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "mosaic",
+          "ref": "bar-8",
+          "placement": {
+            "inset": {
+              "top": 0.08333333333333333,
+              "right": 0,
+              "bottom": 0.08333333333333333,
+              "left": 0
+            }
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "mosaic",
+          "ref": "bar-9",
+          "placement": {
+            "inset": {
+              "top": 0.08333333333333333,
+              "right": 0,
+              "bottom": 0.08333333333333333,
+              "left": 0
+            }
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        }
+      ],
+      "assets": {},
+      "m0": "10[1,1,1,1,1,1,1,1,1,1]",
+      "fps": 30,
+      "durationMs": 5000,
+      "children": {
+        "bar-0": {
+          "kind": "mosaic_document",
+          "version": 1,
+          "sources": [
+            {
+              "type": "mosaic",
+              "ref": "fill",
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            },
+            {
+              "type": "text",
+              "visual": {
+                "backgroundColor": "black@0"
+              },
+              "layers": [
+                {
+                  "content": {
+                    "kind": "literal",
+                    "text": "8"
+                  },
+                  "style": {
+                    "fontSize": 26,
+                    "fontColor": "#ffffff"
+                  },
+                  "placement": {
+                    "fit": "contain",
+                    "hAlign": "center",
+                    "vAlign": "middle"
+                  }
+                }
+              ],
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          ],
+          "assets": {},
+          "m0": "20(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1)",
+          "fps": 30,
+          "durationMs": 5000,
+          "children": {
+            "fill": {
+              "kind": "mosaic_document",
+              "version": 1,
+              "assets": {},
+              "m0": "1{1}",
+              "sources": [
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=black@0",
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                },
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=#f97316",
+                  "overlay": {
+                    "startAtSec": 0.1,
+                    "alpha": "(min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1))))",
+                    "xExpr": "(w*0.26666666666666666)*((min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1)))))-w",
+                    "yExpr": "0"
+                  },
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                }
+              ],
+              "fps": 30,
+              "durationMs": 5000,
+              "size": {
+                "width": 1920,
+                "height": 1080
+              },
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          },
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        "bar-1": {
+          "kind": "mosaic_document",
+          "version": 1,
+          "sources": [
+            {
+              "type": "mosaic",
+              "ref": "fill",
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            },
+            {
+              "type": "text",
+              "visual": {
+                "backgroundColor": "black@0"
+              },
+              "layers": [
+                {
+                  "content": {
+                    "kind": "literal",
+                    "text": "15"
+                  },
+                  "style": {
+                    "fontSize": 26,
+                    "fontColor": "#ffffff"
+                  },
+                  "placement": {
+                    "fit": "contain",
+                    "hAlign": "center",
+                    "vAlign": "middle"
+                  }
+                }
+              ],
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          ],
+          "assets": {},
+          "m0": "20(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1)",
+          "fps": 30,
+          "durationMs": 5000,
+          "children": {
+            "fill": {
+              "kind": "mosaic_document",
+              "version": 1,
+              "assets": {},
+              "m0": "1{1}",
+              "sources": [
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=black@0",
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                },
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=#f97316",
+                  "overlay": {
+                    "startAtSec": 0.16,
+                    "alpha": "(min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1))))",
+                    "xExpr": "(w*0.5)*((min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1)))))-w",
+                    "yExpr": "0"
+                  },
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                }
+              ],
+              "fps": 30,
+              "durationMs": 5000,
+              "size": {
+                "width": 1920,
+                "height": 1080
+              },
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          },
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        "bar-2": {
+          "kind": "mosaic_document",
+          "version": 1,
+          "sources": [
+            {
+              "type": "mosaic",
+              "ref": "fill",
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            },
+            {
+              "type": "text",
+              "visual": {
+                "backgroundColor": "black@0"
+              },
+              "layers": [
+                {
+                  "content": {
+                    "kind": "literal",
+                    "text": "23"
+                  },
+                  "style": {
+                    "fontSize": 26,
+                    "fontColor": "#ffffff"
+                  },
+                  "placement": {
+                    "fit": "contain",
+                    "hAlign": "center",
+                    "vAlign": "middle"
+                  }
+                }
+              ],
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          ],
+          "assets": {},
+          "m0": "20(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1)",
+          "fps": 30,
+          "durationMs": 5000,
+          "children": {
+            "fill": {
+              "kind": "mosaic_document",
+              "version": 1,
+              "assets": {},
+              "m0": "1{1}",
+              "sources": [
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=black@0",
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                },
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=#f97316",
+                  "overlay": {
+                    "startAtSec": 0.22,
+                    "alpha": "(min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1))))",
+                    "xExpr": "(w*0.7666666666666667)*((min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1)))))-w",
+                    "yExpr": "0"
+                  },
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                }
+              ],
+              "fps": 30,
+              "durationMs": 5000,
+              "size": {
+                "width": 1920,
+                "height": 1080
+              },
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          },
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        "bar-3": {
+          "kind": "mosaic_document",
+          "version": 1,
+          "sources": [
+            {
+              "type": "mosaic",
+              "ref": "fill",
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            },
+            {
+              "type": "text",
+              "visual": {
+                "backgroundColor": "black@0"
+              },
+              "layers": [
+                {
+                  "content": {
+                    "kind": "literal",
+                    "text": "12"
+                  },
+                  "style": {
+                    "fontSize": 26,
+                    "fontColor": "#ffffff"
+                  },
+                  "placement": {
+                    "fit": "contain",
+                    "hAlign": "center",
+                    "vAlign": "middle"
+                  }
+                }
+              ],
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          ],
+          "assets": {},
+          "m0": "20(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1)",
+          "fps": 30,
+          "durationMs": 5000,
+          "children": {
+            "fill": {
+              "kind": "mosaic_document",
+              "version": 1,
+              "assets": {},
+              "m0": "1{1}",
+              "sources": [
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=black@0",
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                },
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=#f97316",
+                  "overlay": {
+                    "startAtSec": 0.28,
+                    "alpha": "(min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1))))",
+                    "xExpr": "(w*0.4)*((min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1)))))-w",
+                    "yExpr": "0"
+                  },
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                }
+              ],
+              "fps": 30,
+              "durationMs": 5000,
+              "size": {
+                "width": 1920,
+                "height": 1080
+              },
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          },
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        "bar-4": {
+          "kind": "mosaic_document",
+          "version": 1,
+          "sources": [
+            {
+              "type": "mosaic",
+              "ref": "fill",
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            },
+            {
+              "type": "text",
+              "visual": {
+                "backgroundColor": "black@0"
+              },
+              "layers": [
+                {
+                  "content": {
+                    "kind": "literal",
+                    "text": "30"
+                  },
+                  "style": {
+                    "fontSize": 26,
+                    "fontColor": "#ffffff"
+                  },
+                  "placement": {
+                    "fit": "contain",
+                    "hAlign": "center",
+                    "vAlign": "middle"
+                  }
+                }
+              ],
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          ],
+          "assets": {},
+          "m0": "20(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1)",
+          "fps": 30,
+          "durationMs": 5000,
+          "children": {
+            "fill": {
+              "kind": "mosaic_document",
+              "version": 1,
+              "assets": {},
+              "m0": "1{1}",
+              "sources": [
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=black@0",
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                },
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=#f97316",
+                  "overlay": {
+                    "startAtSec": 0.33999999999999997,
+                    "alpha": "(min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1))))",
+                    "xExpr": "(w*1)*((min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1)))))-w",
+                    "yExpr": "0"
+                  },
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                }
+              ],
+              "fps": 30,
+              "durationMs": 5000,
+              "size": {
+                "width": 1920,
+                "height": 1080
+              },
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          },
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        "bar-5": {
+          "kind": "mosaic_document",
+          "version": 1,
+          "sources": [
+            {
+              "type": "mosaic",
+              "ref": "fill",
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            },
+            {
+              "type": "text",
+              "visual": {
+                "backgroundColor": "black@0"
+              },
+              "layers": [
+                {
+                  "content": {
+                    "kind": "literal",
+                    "text": "18"
+                  },
+                  "style": {
+                    "fontSize": 26,
+                    "fontColor": "#ffffff"
+                  },
+                  "placement": {
+                    "fit": "contain",
+                    "hAlign": "center",
+                    "vAlign": "middle"
+                  }
+                }
+              ],
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          ],
+          "assets": {},
+          "m0": "20(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1)",
+          "fps": 30,
+          "durationMs": 5000,
+          "children": {
+            "fill": {
+              "kind": "mosaic_document",
+              "version": 1,
+              "assets": {},
+              "m0": "1{1}",
+              "sources": [
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=black@0",
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                },
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=#f97316",
+                  "overlay": {
+                    "startAtSec": 0.4,
+                    "alpha": "(min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1))))",
+                    "xExpr": "(w*0.6)*((min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1)))))-w",
+                    "yExpr": "0"
+                  },
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                }
+              ],
+              "fps": 30,
+              "durationMs": 5000,
+              "size": {
+                "width": 1920,
+                "height": 1080
+              },
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          },
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        "bar-6": {
+          "kind": "mosaic_document",
+          "version": 1,
+          "sources": [
+            {
+              "type": "mosaic",
+              "ref": "fill",
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            },
+            {
+              "type": "text",
+              "visual": {
+                "backgroundColor": "black@0"
+              },
+              "layers": [
+                {
+                  "content": {
+                    "kind": "literal",
+                    "text": "25"
+                  },
+                  "style": {
+                    "fontSize": 26,
+                    "fontColor": "#ffffff"
+                  },
+                  "placement": {
+                    "fit": "contain",
+                    "hAlign": "center",
+                    "vAlign": "middle"
+                  }
+                }
+              ],
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          ],
+          "assets": {},
+          "m0": "20(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1)",
+          "fps": 30,
+          "durationMs": 5000,
+          "children": {
+            "fill": {
+              "kind": "mosaic_document",
+              "version": 1,
+              "assets": {},
+              "m0": "1{1}",
+              "sources": [
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=black@0",
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                },
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=#f97316",
+                  "overlay": {
+                    "startAtSec": 0.45999999999999996,
+                    "alpha": "(min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1))))",
+                    "xExpr": "(w*0.8333333333333334)*((min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1)))))-w",
+                    "yExpr": "0"
+                  },
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                }
+              ],
+              "fps": 30,
+              "durationMs": 5000,
+              "size": {
+                "width": 1920,
+                "height": 1080
+              },
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          },
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        "bar-7": {
+          "kind": "mosaic_document",
+          "version": 1,
+          "sources": [
+            {
+              "type": "mosaic",
+              "ref": "fill",
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            },
+            {
+              "type": "text",
+              "visual": {
+                "backgroundColor": "black@0"
+              },
+              "layers": [
+                {
+                  "content": {
+                    "kind": "literal",
+                    "text": "9"
+                  },
+                  "style": {
+                    "fontSize": 26,
+                    "fontColor": "#ffffff"
+                  },
+                  "placement": {
+                    "fit": "contain",
+                    "hAlign": "center",
+                    "vAlign": "middle"
+                  }
+                }
+              ],
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          ],
+          "assets": {},
+          "m0": "20(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1)",
+          "fps": 30,
+          "durationMs": 5000,
+          "children": {
+            "fill": {
+              "kind": "mosaic_document",
+              "version": 1,
+              "assets": {},
+              "m0": "1{1}",
+              "sources": [
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=black@0",
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                },
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=#f97316",
+                  "overlay": {
+                    "startAtSec": 0.52,
+                    "alpha": "(min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1))))",
+                    "xExpr": "(w*0.3)*((min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1)))))-w",
+                    "yExpr": "0"
+                  },
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                }
+              ],
+              "fps": 30,
+              "durationMs": 5000,
+              "size": {
+                "width": 1920,
+                "height": 1080
+              },
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          },
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        "bar-8": {
+          "kind": "mosaic_document",
+          "version": 1,
+          "sources": [
+            {
+              "type": "mosaic",
+              "ref": "fill",
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            },
+            {
+              "type": "text",
+              "visual": {
+                "backgroundColor": "black@0"
+              },
+              "layers": [
+                {
+                  "content": {
+                    "kind": "literal",
+                    "text": "21"
+                  },
+                  "style": {
+                    "fontSize": 26,
+                    "fontColor": "#ffffff"
+                  },
+                  "placement": {
+                    "fit": "contain",
+                    "hAlign": "center",
+                    "vAlign": "middle"
+                  }
+                }
+              ],
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          ],
+          "assets": {},
+          "m0": "20(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1)",
+          "fps": 30,
+          "durationMs": 5000,
+          "children": {
+            "fill": {
+              "kind": "mosaic_document",
+              "version": 1,
+              "assets": {},
+              "m0": "1{1}",
+              "sources": [
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=black@0",
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                },
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=#f97316",
+                  "overlay": {
+                    "startAtSec": 0.58,
+                    "alpha": "(min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1))))",
+                    "xExpr": "(w*0.7)*((min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1)))))-w",
+                    "yExpr": "0"
+                  },
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                }
+              ],
+              "fps": 30,
+              "durationMs": 5000,
+              "size": {
+                "width": 1920,
+                "height": 1080
+              },
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          },
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        "bar-9": {
+          "kind": "mosaic_document",
+          "version": 1,
+          "sources": [
+            {
+              "type": "mosaic",
+              "ref": "fill",
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            },
+            {
+              "type": "text",
+              "visual": {
+                "backgroundColor": "black@0"
+              },
+              "layers": [
+                {
+                  "content": {
+                    "kind": "literal",
+                    "text": "14"
+                  },
+                  "style": {
+                    "fontSize": 26,
+                    "fontColor": "#ffffff"
+                  },
+                  "placement": {
+                    "fit": "contain",
+                    "hAlign": "center",
+                    "vAlign": "middle"
+                  }
+                }
+              ],
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          ],
+          "assets": {},
+          "m0": "20(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1)",
+          "fps": 30,
+          "durationMs": 5000,
+          "children": {
+            "fill": {
+              "kind": "mosaic_document",
+              "version": 1,
+              "assets": {},
+              "m0": "1{1}",
+              "sources": [
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=black@0",
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                },
+                {
+                  "type": "lavfi",
+                  "fitMode": "tile",
+                  "lavfi": "color=#f97316",
+                  "overlay": {
+                    "startAtSec": 0.64,
+                    "alpha": "(min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1))))",
+                    "xExpr": "(w*0.4666666666666667)*((min(1,max(0,lt/1.1)))*(min(1,max(0,lt/1.1)))*(3-2*(min(1,max(0,lt/1.1)))))-w",
+                    "yExpr": "0"
+                  },
+                  "editor": {
+                    "owner": "user"
+                  },
+                  "engine": {
+                    "renderStatus": "ok"
+                  }
+                }
+              ],
+              "fps": 30,
+              "durationMs": 5000,
+              "size": {
+                "width": 1920,
+                "height": 1080
+              },
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          },
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        }
+      },
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "editor": {
+        "owner": "user"
+      },
+      "engine": {
+        "renderStatus": "ok"
+      }
+    },
+    "plot-area": {
+      "kind": "mosaic_document",
+      "version": 1,
+      "sources": [
+        {
+          "type": "mosaic",
+          "ref": "grid",
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "mosaic",
+          "ref": "bars-stack",
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "lavfi",
+          "color": "#ffffff",
+          "fitMode": "content",
+          "size": {
+            "wExpr": "max(1, TW*0.002)",
+            "hExpr": "TH"
+          },
+          "placement": {
+            "fit": "contain",
+            "hAlign": "left",
+            "vAlign": "middle"
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "lavfi",
+          "color": "#ffffff",
+          "fitMode": "content",
+          "size": {
+            "wExpr": "max(1, TW*0.002)",
+            "hExpr": "TH"
+          },
+          "placement": {
+            "fit": "contain",
+            "hAlign": "right",
+            "vAlign": "middle"
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        }
+      ],
+      "assets": {},
+      "m0": "1{1{1{1}}}",
+      "children": {
+        "grid": {
+          "kind": "mosaic_document",
+          "version": 1,
+          "assets": {},
+          "m0": "200(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-)",
+          "sources": [
+            {
+              "type": "lavfi",
+              "color": "#ffffff",
+              "fitMode": "tile",
+              "visual": {
+                "opacity": 0.12
+              },
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            },
+            {
+              "type": "lavfi",
+              "color": "#ffffff",
+              "fitMode": "tile",
+              "visual": {
+                "opacity": 0.12
+              },
+              "editor": {
+                "owner": "user"
+              },
+              "engine": {
+                "renderStatus": "ok"
+              }
+            }
+          ],
+          "durationMs": 5000,
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "fps": 30,
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        }
+      },
+      "durationMs": 5000,
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "fps": 30,
+      "editor": {
+        "owner": "user"
+      },
+      "engine": {
+        "renderStatus": "ok"
+      }
+    },
+    "labels": {
+      "kind": "mosaic_document",
+      "version": 1,
+      "assets": {},
+      "m0": "100[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,25(0,0,10[1,1,1,1,1,1,1,1,1,1],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1),0,0,0,0,0,0,25(0,0,-,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,305(0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-,0,0,0,0,0,0,0,0,0,0,0,0,0,1))]",
+      "sources": [
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "Quarterly throughput"
+              },
+              "style": {
+                "fontSize": 50,
+                "fontColor": "#f1f5f9"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "middle"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "alpha"
+              },
+              "style": {
+                "fontSize": 19,
+                "fontColor": "#cbd5e1"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "middle"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "beta"
+              },
+              "style": {
+                "fontSize": 19,
+                "fontColor": "#cbd5e1"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "middle"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "gamma"
+              },
+              "style": {
+                "fontSize": 19,
+                "fontColor": "#cbd5e1"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "middle"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "delta"
+              },
+              "style": {
+                "fontSize": 19,
+                "fontColor": "#cbd5e1"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "middle"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "epsilon"
+              },
+              "style": {
+                "fontSize": 19,
+                "fontColor": "#cbd5e1"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "middle"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "zeta"
+              },
+              "style": {
+                "fontSize": 19,
+                "fontColor": "#cbd5e1"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "middle"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "eta"
+              },
+              "style": {
+                "fontSize": 19,
+                "fontColor": "#cbd5e1"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "middle"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "theta"
+              },
+              "style": {
+                "fontSize": 19,
+                "fontColor": "#cbd5e1"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "middle"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "iota"
+              },
+              "style": {
+                "fontSize": 19,
+                "fontColor": "#cbd5e1"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "middle"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "kappa"
+              },
+              "style": {
+                "fontSize": 19,
+                "fontColor": "#cbd5e1"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "middle"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "mosaic",
+          "ref": "plot-area",
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "0"
+              },
+              "style": {
+                "fontSize": 17,
+                "fontColor": "#94a3b8"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "left",
+                "vAlign": "top"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "10"
+              },
+              "style": {
+                "fontSize": 17,
+                "fontColor": "#94a3b8"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "top"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "20"
+              },
+              "style": {
+                "fontSize": 17,
+                "fontColor": "#94a3b8"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "center",
+                "vAlign": "top"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "text",
+          "visual": {
+            "backgroundColor": "black@0"
+          },
+          "layers": [
+            {
+              "content": {
+                "kind": "literal",
+                "text": "30"
+              },
+              "style": {
+                "fontSize": 17,
+                "fontColor": "#94a3b8"
+              },
+              "placement": {
+                "fit": "contain",
+                "hAlign": "right",
+                "vAlign": "top"
+              }
+            }
+          ],
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        }
+      ],
+      "fps": 30,
+      "durationMs": 5000,
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "editor": {
+        "owner": "user"
+      },
+      "engine": {
+        "renderStatus": "ok"
+      }
+    },
+    "chart-frame": {
+      "kind": "mosaic_document",
+      "version": 1,
+      "assets": {},
+      "m0": "1{1}",
+      "children": {},
+      "sources": [
+        {
+          "type": "lavfi",
+          "color": "#0f172a",
+          "effects": {
+            "rounding": {
+              "cornerStyle": "rounded",
+              "borderRadius": 0.15
+            },
+            "stroke": {
+              "position": "inner",
+              "width": 0.002,
+              "color": "#ffffff",
+              "alpha": 0.1
+            }
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        },
+        {
+          "type": "mosaic",
+          "ref": "labels",
+          "placement": {
+            "inset": {
+              "top": 0.06666666666666667,
+              "bottom": 0.06666666666666667,
+              "left": 0.0375,
+              "right": 0.0375
+            }
+          },
+          "editor": {
+            "owner": "user"
+          },
+          "engine": {
+            "renderStatus": "ok"
+          }
+        }
+      ],
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "fps": 30,
+      "durationMs": 5000,
+      "editor": {
+        "owner": "user"
+      },
+      "engine": {
+        "renderStatus": "ok"
+      }
+    }
+  },
+  "sources": [
+    {
+      "type": "mosaic",
+      "ref": "chart-frame",
+      "editor": {
+        "owner": "user"
+      },
+      "engine": {
+        "renderStatus": "ok"
+      }
+    }
+  ],
+  "size": {
+    "width": 1920,
+    "height": 1080
+  },
+  "fps": 30,
+  "durationMs": 5000,
+  "editor": {
+    "owner": "user"
+  },
+  "engine": {
+    "renderStatus": "ok"
+  }
+}

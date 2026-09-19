@@ -1,0 +1,265 @@
+/**
+ * Generate PROPS-SHAPE.md — the prop-surface audit for the template shelf.
+ *
+ * Usage:  node dist/gen-props-shape.js   (or: npm run audit:props)
+ *
+ * Companion to TEMPLATE-AUDIT.md. That one PROBES GEOMETRY (renders defaultProps
+ * across canvases to classify ratio/absolute positioning). This one is a purely
+ * STATIC read of every registered template's `propsSchema` — no rendering — to
+ * surface the PROP SURFACE for two things:
+ *
+ *   1. Per-template UX shape — required vs optional split, how many loose flat
+ *      props vs collapsible groups, groups missing `fields` (which render as a
+ *      raw JSON bag in the Make panel), agent-only props.
+ *   2. Cross-template CONSISTENCY — do the same concepts use the same prop names
+ *      and shapes across templates? (e.g. `title` vs `titles`, `barColor` vs
+ *      `lineColor` vs `color`, who exposes `theme` / `renderMode` / a background
+ *      knob.) A concept under different names/shapes is a rename/normalize target.
+ *
+ * Deterministic: reads static schema objects (no wall-clock/random), reproducible.
+ */
+import * as fs from "node:fs";
+import * as path from "node:path";
+
+import type { MosaicTemplate } from "@m0saic/types";
+import { getTemplate, listRegisteredTemplateIds } from "@m0saic/template-utils";
+
+import "./m0saic"; // side-effect: register every template
+
+const ROOT = path.resolve(__dirname, "..");
+const OUT = path.join(ROOT, "PROPS-SHAPE.md");
+
+type AnyDef = {
+  type?: string;
+  required?: boolean;
+  fields?: Record<string, AnyDef>;
+  meta?: { ui?: { primary?: boolean; hidden?: boolean; consumer?: string; collapsedByDefault?: boolean } };
+};
+
+type PropInfo = {
+  name: string;
+  type: string;
+  required: boolean;
+  primary: boolean;
+  agent: boolean;
+  hidden: boolean;
+  isGroup: boolean;
+  hasFields: boolean;
+  fieldNames: string[];
+};
+
+type TemplateShape = {
+  id: string;
+  role: string;
+  tier: string;
+  version: string;
+  props: PropInfo[];
+};
+
+/** Concepts we WANT to be consistent across the shelf, with the name variants
+ *  seen in the wild. Presence is checked by any of the aliases. */
+const STANDARD_KNOBS: { key: string; label: string; aliases: string[] }[] = [
+  { key: "theme", label: "theme", aliases: ["theme"] },
+  { key: "anim", label: "anim", aliases: ["anim", "animate", "animation", "reduceMotion"] },
+  { key: "renderMode", label: "renderMode", aliases: ["renderMode"] },
+  { key: "title", label: "title", aliases: ["title", "titles"] },
+  { key: "bg", label: "background", aliases: ["backgroundColor", "background", "bg"] },
+  { key: "preset", label: "preset", aliases: ["preset"] },
+  { key: "seed", label: "seed", aliases: ["seed"] },
+];
+
+function shapeOf(id: string): TemplateShape | null {
+  let tpl: MosaicTemplate | undefined;
+  try {
+    tpl = getTemplate(id);
+  } catch {
+    return null;
+  }
+  if (!tpl) return null;
+  const schema = (tpl as { propsSchema?: Record<string, AnyDef> }).propsSchema ?? {};
+  const props: PropInfo[] = Object.entries(schema).map(([name, def]) => {
+    const ui = def?.meta?.ui ?? {};
+    const isGroup = def?.type === "group";
+    const fieldNames = def?.fields ? Object.keys(def.fields) : [];
+    return {
+      name,
+      type: String(def?.type ?? "?"),
+      required: !!def?.required,
+      primary: !!ui.primary,
+      agent: ui.consumer === "agent",
+      hidden: !!ui.hidden,
+      isGroup,
+      hasFields: fieldNames.length > 0,
+      fieldNames,
+    };
+  });
+  return {
+    id,
+    role: String((tpl as { role?: string }).role ?? ((tpl as { primitive?: boolean }).primitive ? "primitive" : "—")),
+    tier: String((tpl as { capabilities?: { tier?: string } }).capabilities?.tier ?? "—"),
+    version: String((tpl as { version?: number }).version ?? "—"),
+    props,
+  };
+}
+
+// ── Collect ────────────────────────────────────────────────────────────────
+const ids = listRegisteredTemplateIds().sort();
+const shapes: TemplateShape[] = [];
+for (const id of ids) {
+  const s = shapeOf(id);
+  if (s) shapes.push(s);
+}
+
+// ── Aggregates ───────────────────────────────────────────────────────────────
+const isReqBlock = (p: PropInfo) => p.required || p.primary; // what the Make panel shows up top
+const isFlatOptional = (p: PropInfo) => !isReqBlock(p) && !p.isGroup && !p.agent && !p.hidden;
+
+// Prop-name frequency across the shelf.
+const nameFreq = new Map<string, { count: number; types: Set<string>; templates: string[] }>();
+for (const s of shapes) {
+  for (const p of s.props) {
+    if (p.hidden) continue;
+    const e = nameFreq.get(p.name) ?? { count: 0, types: new Set<string>(), templates: [] };
+    e.count += 1;
+    e.types.add(p.type);
+    e.templates.push(shortId(s.id));
+    nameFreq.set(p.name, e);
+  }
+}
+
+function shortId(id: string): string {
+  return id.replace(/^@m0saic\//, "");
+}
+
+// ── Render report ────────────────────────────────────────────────────────────
+const lines: string[] = [];
+const push = (s = "") => lines.push(s);
+
+push("# Template Props-Shape Audit");
+push();
+push("> Generated by `gen-props-shape.ts` (static read of every registered `propsSchema` — no rendering).");
+push("> Companion to `TEMPLATE-AUDIT.md`: that one probes GEOMETRY (ratio/absolute); this inspects the PROP SURFACE for UX + cross-template consistency.");
+push(`> ${shapes.length} templates.`);
+push();
+
+// 1. Standard-knob coverage
+push("## 1. Standard-knob coverage");
+push();
+push("Which templates expose the common knobs (by any known alias). A gap on a chart/primitive, or the same concept under different names, is a consistency target.");
+push();
+push(`| template | role | req | opt-flat | groups | agent | ${STANDARD_KNOBS.map((k) => k.label).join(" | ")} |`);
+push(`|---|---|--:|--:|--:|--:|${STANDARD_KNOBS.map(() => ":--:").join("|")}|`);
+for (const s of shapes) {
+  const names = new Set(s.props.map((p) => p.name));
+  const req = s.props.filter(isReqBlock).length;
+  const flat = s.props.filter(isFlatOptional).length;
+  const groups = s.props.filter((p) => p.isGroup).length;
+  const agent = s.props.filter((p) => p.agent).length;
+  const cells = STANDARD_KNOBS.map((k) => {
+    const hit = k.aliases.find((a) => names.has(a));
+    return hit ? (hit === k.label ? "✓" : hit) : "—";
+  });
+  push(`| \`${shortId(s.id)}\` | ${s.role} | ${req} | ${flat} | ${groups} | ${agent} | ${cells.join(" | ")} |`);
+}
+push();
+
+// 2. Prop-name frequency
+push("## 2. Prop-name frequency (top-level)");
+push();
+push("Every top-level prop name across the shelf. **Same concept under different names or types = a rename/normalize target.** Watch for near-duplicates (e.g. `title` vs `titles`, `barColor`/`lineColor`/`color`).");
+push();
+push("| prop | # | type(s) | templates |");
+push("|---|--:|---|---|");
+const freqRows = [...nameFreq.entries()].sort((a, b) => b[1].count - a[1].count || a[0].localeCompare(b[0]));
+for (const [name, e] of freqRows) {
+  const tmpls = e.templates.length <= 6 ? e.templates.join(", ") : `${e.templates.slice(0, 6).join(", ")} +${e.templates.length - 6}`;
+  push(`| \`${name}\` | ${e.count} | ${[...e.types].join(", ")} | ${tmpls} |`);
+}
+push();
+
+// 3. JSON-bag risk: group props without fields
+push("## 3. JSON-bag risk — `type:\"group\"` without `fields`");
+push();
+push("A group with no `fields:` schema renders as a raw `{ }` JSON textarea in the Make panel (no labeled sub-fields). Add `fields`.");
+push();
+const bagRows: string[] = [];
+for (const s of shapes) {
+  for (const p of s.props) {
+    if (p.isGroup && !p.hasFields) bagRows.push(`| \`${shortId(s.id)}\` | \`${p.name}\` |`);
+  }
+}
+if (bagRows.length) {
+  push("| template | prop |");
+  push("|---|---|");
+  bagRows.forEach(push);
+} else {
+  push("_None — every group declares `fields`._");
+}
+push();
+
+// 4. Flat-heavy templates (grouping candidates)
+push("## 4. Flat-heavy templates (grouping candidates)");
+push();
+push("Templates with many loose flat optional props (no group) — a long, un-collapsible Optional list (what `charts/bar-graph/v2` looked like before its reorg). Candidates for a prop-UX grouping pass.");
+push();
+const flatHeavy = shapes
+  .map((s) => ({ id: s.id, flat: s.props.filter(isFlatOptional) }))
+  .filter((x) => x.flat.length >= 4)
+  .sort((a, b) => b.flat.length - a.flat.length);
+if (flatHeavy.length) {
+  push("| template | flat-optional | props |");
+  push("|---|--:|---|");
+  for (const x of flatHeavy) push(`| \`${shortId(x.id)}\` | ${x.flat.length} | ${x.flat.map((p) => p.name).join(", ")} |`);
+} else {
+  push("_None — no template has ≥4 loose flat optional props._");
+}
+push();
+
+// 4b. Intermixed flat/group ordering — a flat optional appearing AFTER a group
+// in declaration order (= display order on the Make page). Reads messy; flat
+// props should come first, groups last.
+push("## 4b. Intermixed flat / group ordering");
+push();
+push("Templates where a loose flat optional is declared **after** a group prop, so the Make panel sandwiches flat fields between collapsible groups. Fix = reorder (flat first, groups last) — non-breaking. (`charts/stat-card/v1` and `charts/bar-graph/v2` are already clean.)");
+push();
+const intermixRows: string[] = [];
+for (const s of shapes) {
+  const optionals = s.props.filter((p) => !isReqBlock(p) && !p.hidden && !p.agent);
+  let seenGroup = false;
+  let firstFlatAfterGroup: string | null = null;
+  for (const p of optionals) {
+    if (p.isGroup) seenGroup = true;
+    else if (seenGroup && firstFlatAfterGroup == null) firstFlatAfterGroup = p.name;
+  }
+  if (firstFlatAfterGroup) {
+    const order = optionals.map((p) => (p.isGroup ? `▸${p.name}` : p.name)).join(", ");
+    intermixRows.push(`| \`${shortId(s.id)}\` | \`${firstFlatAfterGroup}\` | ${order} |`);
+  }
+}
+if (intermixRows.length) {
+  push("| template | first flat-after-group | optional order (▸ = group) |");
+  push("|---|---|---|");
+  intermixRows.forEach(push);
+} else {
+  push("_None — every template keeps flat optionals before its groups._");
+}
+push();
+
+// 5. Per-template shape
+push("## 5. Per-template shape");
+push();
+for (const s of shapes) {
+  const req = s.props.filter(isReqBlock);
+  const groups = s.props.filter((p) => p.isGroup);
+  const flat = s.props.filter(isFlatOptional);
+  const agent = s.props.filter((p) => p.agent);
+  push(`### \`${shortId(s.id)}\`  — ${s.role} · ${s.tier} · v${s.version}`);
+  push(`- **required/primary:** ${req.length ? req.map((p) => `${p.name}${p.required ? "*" : ""} (${p.type})`).join(", ") : "—"}`);
+  push(`- **groups:** ${groups.length ? groups.map((p) => `${p.name}${p.hasFields ? `{${p.fieldNames.join(", ")}}` : " ⚠️no-fields"}`).join(" · ") : "—"}`);
+  push(`- **flat optional:** ${flat.length ? flat.map((p) => `${p.name} (${p.type})`).join(", ") : "—"}`);
+  if (agent.length) push(`- **agent:** ${agent.map((p) => p.name).join(", ")}`);
+  push();
+}
+
+fs.writeFileSync(OUT, lines.join("\n"));
+console.log(`[gen-props-shape] wrote ${path.relative(ROOT, OUT)} (${shapes.length} templates, ${nameFreq.size} distinct prop names)`);
