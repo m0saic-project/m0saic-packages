@@ -1,0 +1,211 @@
+{
+  "m0saicVersion": "1.0.0",
+  "ffmpeg": {
+    "snapshot": "N-124278-gcc3ca17127-20260430",
+    "date": "2026-04-30",
+    "source": "BtbN",
+    "binarySource": "BtbN FFmpeg-Builds (win64 lgpl)",
+    "profile": "lgpl",
+    "gplEnabled": false,
+    "libx264": false,
+    "libx265": false,
+    "btbnReleaseTag": "autobuild-2026-04-30-13-44",
+    "btbnReleaseUrl": "https://github.com/BtbN/FFmpeg-Builds/releases/tag/autobuild-2026-04-30-13-44",
+    "retentionNote": "Pinned to BtbN's last-of-month autobuild — retained by GitHub through ~2028-04-30 per BtbN's release retention policy.",
+    "features": {
+      "av1": true,
+      "nvenc": true,
+      "vaapi": true
+    }
+  },
+  "ffmpegGpl": {
+    "snapshot": "N-124278-gcc3ca17127-20260430",
+    "date": "2026-04-30",
+    "source": "BtbN",
+    "binarySource": "BtbN FFmpeg-Builds (win64 gpl)",
+    "profile": "gpl",
+    "gplEnabled": true,
+    "libx264": true,
+    "libx265": true,
+    "btbnReleaseTag": "autobuild-2026-04-30-13-44",
+    "btbnReleaseUrl": "https://github.com/BtbN/FFmpeg-Builds/releases/tag/autobuild-2026-04-30-13-44",
+    "retentionNote": "Pinned to BtbN's last-of-month autobuild — retained by GitHub through ~2028-04-30 per BtbN's release retention policy.",
+    "features": {
+      "av1": true,
+      "nvenc": true,
+      "vaapi": true
+    }
+  },
+  "vendorRepo": {
+    "name": "m0saic-ffmpeg-base",
+    "url": "https://github.com/m0saic-project/m0saic-ffmpeg-base",
+    "releaseTag": "ffmpeg-N-124278",
+    "note": "Standalone vendor package that routes m0saic's pinned baseline ffmpeg. Mirror currently INACTIVE: LGPL binaries are fetched directly from BtbN and GPL from origin (BtbN / martin-riedl) at the user's request. When activated, its releases redistribute the LGPL binaries plus the exact-corresponding FFmpeg source (LGPL-2.1 compliance), with BtbN as the fallback; GPL is always origin-fetched, never redistributed."
+  },
+  "platforms": {
+    "win32-x64": {
+      "lgpl": {
+        "available": true,
+        "snapshot": "N-124278-gcc3ca17127-20260430",
+        "date": "2026-04-30",
+        "profile": "lgpl",
+        "source": "BtbN FFmpeg-Builds (win64 lgpl)",
+        "vendored": false,
+        "redistributable": false,
+        "infoUrl": "https://github.com/BtbN/FFmpeg-Builds/releases/tag/autobuild-2026-04-30-13-44",
+        "licenseNote": "LGPL-2.1 build from BtbN. Fetched from BtbN at setup time; not redistributed by m0saic while the mirror is inactive.",
+        "artifacts": [
+          {
+            "tools": ["ffmpeg", "ffprobe"],
+            "archive": "zip",
+            "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-04-30-13-44/ffmpeg-N-124278-gcc3ca17127-win64-lgpl.zip",
+            "sha256": "bb2af8d24de9dd52bccfe2e48538a586c05d157b4498bffe67f09d7c3f168c98"
+          }
+        ]
+      },
+      "gpl": {
+        "available": true,
+        "snapshot": "N-124278-gcc3ca17127-20260430",
+        "date": "2026-04-30",
+        "profile": "gpl",
+        "source": "BtbN FFmpeg-Builds (win64 gpl)",
+        "vendored": false,
+        "redistributable": false,
+        "infoUrl": "https://github.com/BtbN/FFmpeg-Builds/releases/tag/autobuild-2026-04-30-13-44",
+        "licenseNote": "GPL-3.0 build (libx264/x265). Not redistributed by m0saic — fetched from BtbN at the user's request.",
+        "artifacts": [
+          {
+            "tools": ["ffmpeg", "ffprobe"],
+            "archive": "zip",
+            "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-04-30-13-44/ffmpeg-N-124278-gcc3ca17127-win64-gpl.zip",
+            "sha256": "78545d113869d92a5423385c4793fe19fa91707c087535f79b24daad2d2bb3b0"
+          }
+        ]
+      }
+    },
+    "darwin-arm64": {
+      "lgpl": {
+        "available": false,
+        "reason": "No LGPL macOS ffmpeg exists from any third-party source (martin-riedl / evermeet / OSXExperts / Homebrew are all GPL). Own-built LGPL binaries at the pin commit are planned via m0saic-ffmpeg-base CI.",
+        "trackingUrl": "https://github.com/m0saic-project/m0saic-ffmpeg-base"
+      },
+      "gpl": {
+        "available": true,
+        "snapshot": "N-124279-g0f6ba39122",
+        "date": "2026-05-01",
+        "profile": "gpl",
+        "source": "martin-riedl.de (macOS arm64 snapshot, signed)",
+        "vendored": false,
+        "redistributable": false,
+        "infoUrl": "https://ffmpeg.martin-riedl.de/info/detail/macos/arm64/1777624525_N-124279-g0f6ba39122",
+        "licenseNote": "GPL-3.0 build (libx264/x265, full drawtext stack), one commit after the Windows pin. Signed binaries. Not redistributed by m0saic — fetched from martin-riedl.de at the user's request.",
+        "artifacts": [
+          {
+            "tools": ["ffmpeg"],
+            "archive": "zip",
+            "url": "https://ffmpeg.martin-riedl.de/download/macos/arm64/1777624525_N-124279-g0f6ba39122/ffmpeg.zip",
+            "sha256": "f89b897fe521bb2688214ef7371d3a3495e2075f1a76b39e73c8d0ac90226c3a"
+          },
+          {
+            "tools": ["ffprobe"],
+            "archive": "zip",
+            "url": "https://ffmpeg.martin-riedl.de/download/macos/arm64/1777624525_N-124279-g0f6ba39122/ffprobe.zip",
+            "sha256": "4d5f595818bd47d1234247e58e4070f2dc07251a0d159fa3dbed0c0a727b7839"
+          }
+        ]
+      }
+    },
+    "darwin-x64": {
+      "lgpl": {
+        "available": false,
+        "reason": "Same macOS LGPL gap as arm64, plus upstream Intel sunset (martin-riedl stopped Intel snapshots 2026-01; releases end 2027-01). Own-built x86_64 cross-compile planned with the arm64 pipeline.",
+        "trackingUrl": "https://github.com/m0saic-project/m0saic-ffmpeg-base"
+      },
+      "gpl": {
+        "available": false,
+        "reason": "martin-riedl Intel snapshots froze at N-122320 (2026-01-01) — pre-baseline. Intel Macs currently fall back to Homebrew/PATH detection.",
+        "trackingUrl": "https://ffmpeg.martin-riedl.de/"
+      }
+    },
+    "linux-x64": {
+      "lgpl": {
+        "available": true,
+        "snapshot": "N-124278-gcc3ca17127-20260430",
+        "date": "2026-04-30",
+        "profile": "lgpl",
+        "source": "BtbN FFmpeg-Builds (linux64 lgpl)",
+        "vendored": false,
+        "redistributable": false,
+        "infoUrl": "https://github.com/BtbN/FFmpeg-Builds/releases/tag/autobuild-2026-04-30-13-44",
+        "licenseNote": "LGPL-2.1 build from BtbN. glibc >= 2.28. Fetched from BtbN at setup time; not redistributed by m0saic while the mirror is inactive.",
+        "artifacts": [
+          {
+            "tools": ["ffmpeg", "ffprobe"],
+            "archive": "tar.xz",
+            "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-04-30-13-44/ffmpeg-N-124278-gcc3ca17127-linux64-lgpl.tar.xz",
+            "sha256": "b59a92139fc9678a9905ad62659047a2a0cd7e971387dd0857ebab8a663c9c86"
+          }
+        ]
+      },
+      "gpl": {
+        "available": true,
+        "snapshot": "N-124278-gcc3ca17127-20260430",
+        "date": "2026-04-30",
+        "profile": "gpl",
+        "source": "BtbN FFmpeg-Builds (linux64 gpl)",
+        "vendored": false,
+        "redistributable": false,
+        "infoUrl": "https://github.com/BtbN/FFmpeg-Builds/releases/tag/autobuild-2026-04-30-13-44",
+        "licenseNote": "GPL-3.0 build (libx264/x265). Not redistributed by m0saic — fetched from BtbN at the user's request.",
+        "artifacts": [
+          {
+            "tools": ["ffmpeg", "ffprobe"],
+            "archive": "tar.xz",
+            "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-04-30-13-44/ffmpeg-N-124278-gcc3ca17127-linux64-gpl.tar.xz",
+            "sha256": "cd50a631135f90fecd0166c5134e32326825bc6bd11da4bf4ea24d5cb2f79f1f"
+          }
+        ]
+      }
+    },
+    "linux-arm64": {
+      "lgpl": {
+        "available": true,
+        "snapshot": "N-124278-gcc3ca17127-20260430",
+        "date": "2026-04-30",
+        "profile": "lgpl",
+        "source": "BtbN FFmpeg-Builds (linuxarm64 lgpl)",
+        "vendored": false,
+        "redistributable": false,
+        "infoUrl": "https://github.com/BtbN/FFmpeg-Builds/releases/tag/autobuild-2026-04-30-13-44",
+        "licenseNote": "LGPL-2.1 build from BtbN. glibc >= 2.28. Fetched from BtbN at setup time; not redistributed by m0saic while the mirror is inactive.",
+        "artifacts": [
+          {
+            "tools": ["ffmpeg", "ffprobe"],
+            "archive": "tar.xz",
+            "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-04-30-13-44/ffmpeg-N-124278-gcc3ca17127-linuxarm64-lgpl.tar.xz",
+            "sha256": "3f3a158d6c0a65d124f428da8b6be59bd34343bdb9dffa9e5c2998bac1848e6b"
+          }
+        ]
+      },
+      "gpl": {
+        "available": true,
+        "snapshot": "N-124278-gcc3ca17127-20260430",
+        "date": "2026-04-30",
+        "profile": "gpl",
+        "source": "BtbN FFmpeg-Builds (linuxarm64 gpl)",
+        "vendored": false,
+        "redistributable": false,
+        "infoUrl": "https://github.com/BtbN/FFmpeg-Builds/releases/tag/autobuild-2026-04-30-13-44",
+        "licenseNote": "GPL-3.0 build (libx264/x265). Not redistributed by m0saic — fetched from BtbN at the user's request.",
+        "artifacts": [
+          {
+            "tools": ["ffmpeg", "ffprobe"],
+            "archive": "tar.xz",
+            "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-04-30-13-44/ffmpeg-N-124278-gcc3ca17127-linuxarm64-gpl.tar.xz",
+            "sha256": "841fc5ecaf06b0170791bdf4d0974f254c1c9f8b225c19d72f4174e22b0fc8e3"
+          }
+        ]
+      }
+    }
+  }
+}

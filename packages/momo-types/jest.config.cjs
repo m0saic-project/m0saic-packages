@@ -17,6 +17,9 @@ module.exports = {
   moduleNameMapper: {
       "^@m0saic/types$": "<rootDir>/../types/src",
       "^@m0saic/types/dist/(?:cjs/|esm/|types/)?(.*)$": "<rootDir>/../types/src/$1",
-      "^@m0saic/types/(.*)$": "<rootDir>/../types/src/$1"
+      "^@m0saic/types/(.*)$": "<rootDir>/../types/src/$1",
+      "^@m0saic/platform$": "<rootDir>/../platform/src",
+      "^@m0saic/platform/dist/(?:cjs/|esm/|types/)?(.*)$": "<rootDir>/../platform/src/$1",
+      "^@m0saic/platform/(.*)$": "<rootDir>/../platform/src/$1"
   },
 };

@@ -1,0 +1,211 @@
+{
+  "name": "@m0saic/platform",
+  "version": "0.2.0",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m0saic-project/m0saic-packages.git",
+    "directory": "packages/platform"
+  },
+  "homepage": "https://github.com/m0saic-project/m0saic-packages/tree/main/packages/platform#readme",
+  "bugs": {
+    "url": "https://github.com/m0saic-project/m0saic-packages/issues"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "browser": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./ffexpr": {
+      "types": "./dist/types/ffexpr/index.d.ts",
+      "browser": "./dist/cjs/ffexpr/index.js",
+      "import": "./dist/esm/ffexpr/index.js",
+      "require": "./dist/cjs/ffexpr/index.js"
+    },
+    "./mosaic/flatten": {
+      "types": "./dist/types/mosaic/flatten/index.d.ts",
+      "browser": "./dist/cjs/mosaic/flatten/index.js",
+      "import": "./dist/esm/mosaic/flatten/index.js",
+      "require": "./dist/cjs/mosaic/flatten/index.js"
+    },
+    "./mosaic/validate": {
+      "types": "./dist/types/mosaic/validate/index.d.ts",
+      "browser": "./dist/cjs/mosaic/validate/index.js",
+      "import": "./dist/esm/mosaic/validate/index.js",
+      "require": "./dist/cjs/mosaic/validate/index.js"
+    },
+    "./mosaic/loadMosaicDocument": {
+      "types": "./dist/types/mosaic/loadMosaicDocument.d.ts",
+      "import": "./dist/esm/mosaic/loadMosaicDocument.js",
+      "require": "./dist/cjs/mosaic/loadMosaicDocument.js"
+    },
+    "./mosaic/serializeMosaicDocument": {
+      "types": "./dist/types/mosaic/serializeMosaicDocument.d.ts",
+      "browser": "./dist/cjs/mosaic/serializeMosaicDocument.js",
+      "import": "./dist/esm/mosaic/serializeMosaicDocument.js",
+      "require": "./dist/cjs/mosaic/serializeMosaicDocument.js"
+    },
+    "./share": {
+      "types": "./dist/types/share/index.d.ts",
+      "browser": "./dist/cjs/share/index.js",
+      "import": "./dist/esm/share/index.js",
+      "require": "./dist/cjs/share/index.js"
+    },
+    "./template-repos": {
+      "types": "./dist/types/template-repos/index.d.ts",
+      "import": "./dist/esm/template-repos/index.js",
+      "require": "./dist/cjs/template-repos/index.js"
+    },
+    "./media": {
+      "types": "./dist/types/media/index.d.ts",
+      "import": "./dist/esm/media/index.js",
+      "require": "./dist/cjs/media/index.js"
+    },
+    "./toolchain": {
+      "types": "./dist/types/toolchain/index.d.ts",
+      "import": "./dist/esm/toolchain/index.js",
+      "require": "./dist/cjs/toolchain/index.js"
+    },
+    "./toolchain/ffmpeg": {
+      "types": "./dist/types/toolchain/ffmpeg/index.d.ts",
+      "browser": "./dist/cjs/toolchain/ffmpeg/index.js",
+      "import": "./dist/esm/toolchain/ffmpeg/index.js",
+      "require": "./dist/cjs/toolchain/ffmpeg/index.js"
+    },
+    "./toolchain/ffmpeg/install": {
+      "types": "./dist/types/toolchain/ffmpeg/install.d.ts",
+      "import": "./dist/esm/toolchain/ffmpeg/install.js",
+      "require": "./dist/cjs/toolchain/ffmpeg/install.js"
+    },
+    "./toolchain/versionCompare": {
+      "types": "./dist/types/toolchain/versionCompare.d.ts",
+      "browser": "./dist/cjs/toolchain/versionCompare.js",
+      "import": "./dist/esm/toolchain/versionCompare.js",
+      "require": "./dist/cjs/toolchain/versionCompare.js"
+    },
+    "./paths": {
+      "types": "./dist/types/paths/index.d.ts",
+      "import": "./dist/esm/paths/index.js",
+      "require": "./dist/cjs/paths/index.js"
+    },
+    "./output": {
+      "types": "./dist/types/output/index.d.ts",
+      "browser": "./dist/cjs/output/index.js",
+      "import": "./dist/esm/output/index.js",
+      "require": "./dist/cjs/output/index.js"
+    },
+    "./secrets": {
+      "types": "./dist/types/secrets/index.d.ts",
+      "import": "./dist/esm/secrets/index.js",
+      "require": "./dist/cjs/secrets/index.js"
+    },
+    "./host-connections": {
+      "types": "./dist/types/host-connections/index.d.ts",
+      "import": "./dist/esm/host-connections/index.js",
+      "require": "./dist/cjs/host-connections/index.js"
+    },
+    "./system": {
+      "types": "./dist/types/system/index.d.ts",
+      "import": "./dist/esm/system/index.js",
+      "require": "./dist/cjs/system/index.js"
+    },
+    "./telemetry": {
+      "types": "./dist/types/telemetry/index.d.ts",
+      "import": "./dist/esm/telemetry/index.js",
+      "require": "./dist/cjs/telemetry/index.js"
+    },
+    "./communityM/node": {
+      "types": "./dist/types/communityM/node/index.d.ts",
+      "import": "./dist/esm/communityM/node/index.js",
+      "require": "./dist/cjs/communityM/node/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "ffexpr": [
+        "dist/types/ffexpr/index.d.ts"
+      ],
+      "mosaic/flatten": [
+        "dist/types/mosaic/flatten/index.d.ts"
+      ],
+      "mosaic/validate": [
+        "dist/types/mosaic/validate/index.d.ts"
+      ],
+      "mosaic/loadMosaicDocument": [
+        "dist/types/mosaic/loadMosaicDocument.d.ts"
+      ],
+      "mosaic/serializeMosaicDocument": [
+        "dist/types/mosaic/serializeMosaicDocument.d.ts"
+      ],
+      "share": [
+        "dist/types/share/index.d.ts"
+      ],
+      "template-repos": [
+        "dist/types/template-repos/index.d.ts"
+      ],
+      "media": [
+        "dist/types/media/index.d.ts"
+      ],
+      "toolchain": [
+        "dist/types/toolchain/index.d.ts"
+      ],
+      "toolchain/ffmpeg": [
+        "dist/types/toolchain/ffmpeg/index.d.ts"
+      ],
+      "toolchain/ffmpeg/install": [
+        "dist/types/toolchain/ffmpeg/install.d.ts"
+      ],
+      "toolchain/versionCompare": [
+        "dist/types/toolchain/versionCompare.d.ts"
+      ],
+      "paths": [
+        "dist/types/paths/index.d.ts"
+      ],
+      "output": [
+        "dist/types/output/index.d.ts"
+      ],
+      "secrets": [
+        "dist/types/secrets/index.d.ts"
+      ],
+      "host-connections": [
+        "dist/types/host-connections/index.d.ts"
+      ],
+      "system": [
+        "dist/types/system/index.d.ts"
+      ],
+      "telemetry": [
+        "dist/types/telemetry/index.d.ts"
+      ],
+      "communityM/node": [
+        "dist/types/communityM/node/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "npm run build:types && npm run build:esm && npm run build:cjs",
+    "build:types": "tsc -p tsconfig.types.json",
+    "build:esm": "tsc -p tsconfig.esm.json && node scripts/fix-esm-imports.js && node -e \"require('fs').writeFileSync('dist/esm/package.json','{\\\"type\\\":\\\"module\\\"}\\n')\"",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "test": "npm run test:jest && npm run test:node",
+    "test:jest": "jest",
+    "test:node": "node --test __tests__/templateRepoReload.test.js"
+  },
+  "dependencies": {
+    "@m0saic/dsl": "^2.0.0",
+    "@m0saic/dsl-stdlib": "^3.0.0",
+    "@m0saic/types": "^0.2.0"
+  }
+}
