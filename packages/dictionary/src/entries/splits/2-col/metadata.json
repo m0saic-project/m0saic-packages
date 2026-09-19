@@ -1,0 +1,49 @@
+{
+  "id": "splits/2-col",
+  "title": "2-Column Split",
+  "sourceCount": 2,
+  "description": "Simple 2-up split: two equal side-by-side tiles.",
+  "category": "split",
+  "tags": [
+    "split",
+    "two-up",
+    "side-by-side",
+    "1x2",
+    "simple"
+  ],
+  "emphasizeAllEqually": true,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.6,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 2,
+    "passthroughCount": 0,
+    "nullCount": 0,
+    "groupCount": 1,
+    "nodeCount": 3,
+    "precisionCost": 2,
+    "precision": {
+      "maxSplitX": 2,
+      "maxSplitY": 1,
+      "maxSplitAny": 2
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 2,
+    "minHeightPx": 1
+  }
+}

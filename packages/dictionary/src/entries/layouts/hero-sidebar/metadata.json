@@ -1,0 +1,54 @@
+{
+  "id": "layouts/hero-sidebar",
+  "title": "Hero Sidebar",
+  "sourceCount": 3,
+  "description": "A common asymmetric layout with a full-height hero on the left and two stacked tiles on the right.",
+  "category": "layout",
+  "tags": [
+    "hero",
+    "sidebar-stack",
+    "asymmetric",
+    "1+2",
+    "promo",
+    "showcase"
+  ],
+  "emphasizeAllEqually": false,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.6,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    },
+    {
+      "width": 2560,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 3,
+    "passthroughCount": 0,
+    "nullCount": 0,
+    "groupCount": 2,
+    "nodeCount": 5,
+    "precisionCost": 2,
+    "precision": {
+      "maxSplitX": 2,
+      "maxSplitY": 2,
+      "maxSplitAny": 2
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 2,
+    "minHeightPx": 2
+  }
+}

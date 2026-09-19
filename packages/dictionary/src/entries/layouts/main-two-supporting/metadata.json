@@ -1,0 +1,50 @@
+{
+  "id": "layouts/main-two-supporting",
+  "title": "Main + Two Supporting",
+  "sourceCount": 3,
+  "description": "Tall main content area taking two-thirds of the height with two smaller side-by-side tiles below.",
+  "category": "layout",
+  "tags": [
+    "main",
+    "supporting",
+    "asymmetric",
+    "editorial",
+    "weighted"
+  ],
+  "emphasizeAllEqually": false,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.6,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "notes": "The 2:1 height ratio is baked into the layout geometry via a passthrough row slot.",
+  "complexity": {
+    "frameCount": 3,
+    "passthroughCount": 1,
+    "nullCount": 0,
+    "groupCount": 2,
+    "nodeCount": 6,
+    "precisionCost": 3,
+    "precision": {
+      "maxSplitX": 2,
+      "maxSplitY": 3,
+      "maxSplitAny": 3
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 2,
+    "minHeightPx": 2
+  }
+}

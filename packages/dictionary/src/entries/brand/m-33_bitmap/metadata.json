@@ -1,0 +1,54 @@
+{
+  "id": "brand/m-33_bitmap",
+  "title": "The M0saic M (Bitmap)",
+  "sourceCount": 36770,
+  "description": "272x272 bitmap m0saic pattern with 36770 source frames.",
+  "category": "brand",
+  "tags": [],
+  "emphasizeAllEqually": false,
+  "aspectRatio": {
+    "ideal": 1,
+    "label": "1:1",
+    "mode": "warn",
+    "min": 0.95,
+    "max": 1.05
+  },
+  "recommendedResolutions": [
+    {
+      "width": 272,
+      "height": 272
+    },
+    {
+      "width": 544,
+      "height": 544
+    }
+  ],
+  "artifacts": {
+    "pretty": false,
+    "tree": false,
+    "visual": true,
+    "visualArt": true,
+    "visualAreas": true
+  },
+  "complexity": {
+    "frameCount": 36770,
+    "passthroughCount": 0,
+    "nullCount": 37214,
+    "groupCount": 273,
+    "nodeCount": 74257,
+    "precisionCost": 272,
+    "precision": {
+      "maxSplitX": 272,
+      "maxSplitY": 272,
+      "maxSplitAny": 272
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 272,
+    "minHeightPx": 272
+  },
+  "sourceResolution": {
+    "width": 272,
+    "height": 272
+  }
+}

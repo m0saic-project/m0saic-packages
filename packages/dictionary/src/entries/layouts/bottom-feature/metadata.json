@@ -1,0 +1,49 @@
+{
+  "id": "layouts/bottom-feature",
+  "title": "Bottom Feature",
+  "sourceCount": 6,
+  "description": "Three-column top row with a double-wide feature tile anchoring the bottom. Bento-style irregular grid.",
+  "category": "layout",
+  "tags": [
+    "bento",
+    "irregular",
+    "hero",
+    "bottom",
+    "six-up"
+  ],
+  "emphasizeAllEqually": false,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.4,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 6,
+    "passthroughCount": 1,
+    "nullCount": 0,
+    "groupCount": 3,
+    "nodeCount": 10,
+    "precisionCost": 4,
+    "precision": {
+      "maxSplitX": 4,
+      "maxSplitY": 2,
+      "maxSplitAny": 4
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 4,
+    "minHeightPx": 2
+  }
+}

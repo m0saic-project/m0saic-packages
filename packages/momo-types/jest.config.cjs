@@ -26,6 +26,9 @@ module.exports = {
       "^@m0saic/text/(.*)$": "<rootDir>/../text/src/$1",
       "^@m0saic/template-utils$": "<rootDir>/../template-utils/src",
       "^@m0saic/template-utils/dist/(?:cjs/|esm/|types/)?(.*)$": "<rootDir>/../template-utils/src/$1",
-      "^@m0saic/template-utils/(.*)$": "<rootDir>/../template-utils/src/$1"
+      "^@m0saic/template-utils/(.*)$": "<rootDir>/../template-utils/src/$1",
+      "^@m0saic/dictionary$": "<rootDir>/../dictionary/src",
+      "^@m0saic/dictionary/dist/(?:cjs/|esm/|types/)?(.*)$": "<rootDir>/../dictionary/src/$1",
+      "^@m0saic/dictionary/(.*)$": "<rootDir>/../dictionary/src/$1"
   },
 };

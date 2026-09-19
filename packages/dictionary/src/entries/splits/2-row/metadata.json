@@ -1,0 +1,49 @@
+{
+  "id": "splits/2-row",
+  "title": "2-Row Split",
+  "sourceCount": 2,
+  "description": "Two equal stacked rows.",
+  "category": "split",
+  "tags": [
+    "split",
+    "two-up",
+    "stacked",
+    "vertical",
+    "simple"
+  ],
+  "emphasizeAllEqually": true,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.6,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 2,
+    "passthroughCount": 0,
+    "nullCount": 0,
+    "groupCount": 1,
+    "nodeCount": 3,
+    "precisionCost": 2,
+    "precision": {
+      "maxSplitX": 1,
+      "maxSplitY": 2,
+      "maxSplitAny": 2
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 1,
+    "minHeightPx": 2
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "layouts/stacked-pairs",
+  "title": "Stacked Pairs",
+  "sourceCount": 7,
+  "description": "Two rows of paired tiles over a three-column bottom row. An irregular bento-style grid.",
+  "category": "layout",
+  "tags": [
+    "bento",
+    "irregular",
+    "mixed-size",
+    "seven-up",
+    "dashboard"
+  ],
+  "emphasizeAllEqually": true,
+  "aspectRatio": {
+    "ideal": 1,
+    "label": "1:1",
+    "mode": "warn",
+    "min": 0.8,
+    "max": 1.4
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1080,
+      "height": 1080
+    },
+    {
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 7,
+    "passthroughCount": 0,
+    "nullCount": 0,
+    "groupCount": 4,
+    "nodeCount": 11,
+    "precisionCost": 3,
+    "precision": {
+      "maxSplitX": 3,
+      "maxSplitY": 3,
+      "maxSplitAny": 3
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 3,
+    "minHeightPx": 3
+  }
+}

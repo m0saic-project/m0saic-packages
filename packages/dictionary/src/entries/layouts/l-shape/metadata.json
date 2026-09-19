@@ -1,0 +1,48 @@
+{
+  "id": "layouts/l-shape",
+  "title": "L-Shape",
+  "sourceCount": 3,
+  "description": "Two tiles across the top and one tile at bottom-left, forming an L shape with a gap at bottom-right.",
+  "category": "layout",
+  "tags": [
+    "l-shape",
+    "asymmetric",
+    "editorial",
+    "three-up"
+  ],
+  "emphasizeAllEqually": false,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.6,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 3,
+    "passthroughCount": 0,
+    "nullCount": 1,
+    "groupCount": 3,
+    "nodeCount": 7,
+    "precisionCost": 2,
+    "precision": {
+      "maxSplitX": 2,
+      "maxSplitY": 2,
+      "maxSplitAny": 2
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 2,
+    "minHeightPx": 2
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "brand/qr",
+  "title": "M0saic Brand QR",
+  "sourceCount": 759,
+  "description": "1222×1222 brand QR (49×49 modules) with a labeled 272×272 centre safe area for the M0saic M.",
+  "category": "brand",
+  "tags": ["brand", "qr", "safe-area"],
+  "aspectRatio": {
+    "ideal": 1,
+    "label": "1:1",
+    "mode": "warn",
+    "min": 0.95,
+    "max": 1.05
+  },
+  "recommendedResolutions": [
+    { "width": 1222, "height": 1222 },
+    { "width": 2444, "height": 2444 }
+  ],
+  "artifacts": {
+    "pretty": false,
+    "tree": false
+  },
+  "complexity": {
+    "frameCount": 759,
+    "passthroughCount": 3339,
+    "nullCount": 459,
+    "groupCount": 46,
+    "nodeCount": 4603,
+    "precisionCost": 1222,
+    "precision": {
+      "maxSplitX": 1222,
+      "maxSplitY": 1222,
+      "maxSplitAny": 1222
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 951,
+    "minHeightPx": 951
+  },
+  "sourceResolution": {
+    "width": 1222,
+    "height": 1222
+  },
+  "labels": {
+    "r/ov1c0/ov2c0/gcolc746/fc746": {
+      "text": "safe-area"
+    }
+  }
+}

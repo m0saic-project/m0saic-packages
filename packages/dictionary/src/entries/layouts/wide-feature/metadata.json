@@ -1,0 +1,50 @@
+{
+  "id": "layouts/wide-feature",
+  "title": "Wide Feature",
+  "sourceCount": 7,
+  "description": "Double-wide feature tile at top-left with supporting tiles across two rows. Bento-style irregular grid.",
+  "category": "layout",
+  "tags": [
+    "bento",
+    "irregular",
+    "hero",
+    "wide",
+    "seven-up",
+    "dashboard"
+  ],
+  "emphasizeAllEqually": false,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.4,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 7,
+    "passthroughCount": 1,
+    "nullCount": 0,
+    "groupCount": 3,
+    "nodeCount": 11,
+    "precisionCost": 4,
+    "precision": {
+      "maxSplitX": 4,
+      "maxSplitY": 2,
+      "maxSplitAny": 4
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 4,
+    "minHeightPx": 2
+  }
+}

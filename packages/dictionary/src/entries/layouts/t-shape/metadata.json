@@ -1,0 +1,49 @@
+{
+  "id": "layouts/t-shape",
+  "title": "T-Shape",
+  "sourceCount": 4,
+  "description": "Three tiles across the top with a single centered tile below, forming a T shape.",
+  "category": "layout",
+  "tags": [
+    "t-shape",
+    "asymmetric",
+    "editorial",
+    "four-up",
+    "centered"
+  ],
+  "emphasizeAllEqually": false,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.6,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 4,
+    "passthroughCount": 0,
+    "nullCount": 2,
+    "groupCount": 3,
+    "nodeCount": 9,
+    "precisionCost": 3,
+    "precision": {
+      "maxSplitX": 3,
+      "maxSplitY": 2,
+      "maxSplitAny": 3
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 3,
+    "minHeightPx": 2
+  }
+}

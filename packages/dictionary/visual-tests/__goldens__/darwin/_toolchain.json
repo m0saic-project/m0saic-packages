@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "toolchain": {
+    "ffmpeg": {
+      "baseline": {
+        "snapshot": "N-124279-g0f6ba39122",
+        "profile": "gpl",
+        "libx264": true,
+        "source": "martin-riedl.de (macOS arm64 snapshot, signed)"
+      },
+      "runtime": {
+        "found": true,
+        "version": "ffmpeg version N-124279-g0f6ba39122-https://www.martin-riedl.de Copyright (c) 2000-2026 the FFmpeg developers",
+        "libavfilterMajor": 11,
+        "libx264": true
+      }
+    },
+    "ffprobe": {
+      "runtime": {
+        "found": true,
+        "version": "ffprobe version N-124279-g0f6ba39122-https://www.martin-riedl.de Copyright (c) 2007-2026 the FFmpeg developers"
+      }
+    }
+  }
+}

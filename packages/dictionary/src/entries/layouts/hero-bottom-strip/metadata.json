@@ -1,0 +1,54 @@
+{
+  "id": "layouts/hero-bottom-strip",
+  "title": "Hero Bottom Strip",
+  "sourceCount": 4,
+  "description": "A hero strip on top with three equal tiles along the bottom.",
+  "category": "layout",
+  "tags": [
+    "hero",
+    "1+3",
+    "strip-layout",
+    "header-with-grid",
+    "promo",
+    "highlight-row"
+  ],
+  "emphasizeAllEqually": false,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.6,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 4,
+    "passthroughCount": 0,
+    "nullCount": 0,
+    "groupCount": 2,
+    "nodeCount": 6,
+    "precisionCost": 3,
+    "precision": {
+      "maxSplitX": 3,
+      "maxSplitY": 2,
+      "maxSplitAny": 3
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 3,
+    "minHeightPx": 2
+  }
+}

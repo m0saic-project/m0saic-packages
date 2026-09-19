@@ -1,0 +1,47 @@
+{
+  "name": "@m0saic/dictionary",
+  "version": "0.2.0",
+  "private": false,
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "browser": "dist/browser.js",
+  "scripts": {
+    "test": "jest",
+    "test:visual": "jest --testNamePattern=goldens --runInBand",
+    "test:visual:update": "M0SAIC_UPDATE_GOLDENS=1 npm run test:visual",
+    "dictionary:validate": "node tools/validate.js",
+    "dictionary:generate": "node tools/generate-artifacts.js",
+    "dictionary:index": "node tools/generate-index.js",
+    "dictionary:build": "npm run dictionary:validate && npm run dictionary:generate && npm run dictionary:index && tsc -p tsconfig.json && node tools/copy-assets.js",
+    "build": "npm run dictionary:build",
+    "dictionary:new": "ts-node tools/create-new-entry.ts"
+  },
+  "keywords": [],
+  "author": "m0saic LLC",
+  "description": "Dictionary of known m0saic layouts for use in templates",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m0saic-project/m0saic-packages.git",
+    "directory": "packages/dictionary"
+  },
+  "homepage": "https://github.com/m0saic-project/m0saic-packages/tree/main/packages/dictionary#readme",
+  "bugs": {
+    "url": "https://github.com/m0saic-project/m0saic-packages/issues"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "dependencies": {
+    "@m0saic/dsl": "^2.0.0",
+    "@m0saic/dsl-file-formats": "^2.0.0",
+    "@m0saic/dsl-stdlib": "^3.0.0",
+    "@m0saic/types": "^0.2.0"
+  },
+  "devDependencies": {
+    "@m0saic/platform": "^0.2.0"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "id": "layouts/dense-dashboard",
+  "title": "Dense Dashboard",
+  "sourceCount": 11,
+  "description": "Three rows of four columns with a double-wide feature at bottom-left. High-density bento-style grid.",
+  "category": "layout",
+  "tags": [
+    "bento",
+    "irregular",
+    "dashboard",
+    "dense",
+    "eleven-up",
+    "hero"
+  ],
+  "emphasizeAllEqually": false,
+  "aspectRatio": {
+    "ideal": 1.3333333333333333,
+    "label": "4:3",
+    "mode": "warn",
+    "min": 1,
+    "max": 1.8
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 11,
+    "passthroughCount": 1,
+    "nullCount": 0,
+    "groupCount": 4,
+    "nodeCount": 16,
+    "precisionCost": 4,
+    "precision": {
+      "maxSplitX": 4,
+      "maxSplitY": 3,
+      "maxSplitAny": 4
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 4,
+    "minHeightPx": 3
+  }
+}

@@ -1,0 +1,10 @@
+export { entry as split2Col } from "./2-col";
+export { entry as split2Row } from "./2-row";
+export { entry as split3Col } from "./3-col";
+export { entry as split3Row } from "./3-row";
+export { entry as split4Col } from "./4-col";
+export { entry as split4Row } from "./4-row";
+export { entry as split2_1Col } from "./2-1-col";
+export { entry as split1_2Col } from "./1-2-col";
+export { entry as split2_1Row } from "./2-1-row";
+export { entry as split1_2Row } from "./1-2-row";

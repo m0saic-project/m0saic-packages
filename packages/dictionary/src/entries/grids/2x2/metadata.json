@@ -1,0 +1,49 @@
+{
+  "id": "grids/2x2",
+  "title": "2×2 Grid",
+  "sourceCount": 4,
+  "description": "Simple 2×2 grid with four equal tiles.",
+  "category": "grid",
+  "tags": [
+    "grid",
+    "uniform",
+    "2x2",
+    "simple",
+    "four-up"
+  ],
+  "emphasizeAllEqually": true,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.6,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 4,
+    "passthroughCount": 0,
+    "nullCount": 0,
+    "groupCount": 3,
+    "nodeCount": 7,
+    "precisionCost": 2,
+    "precision": {
+      "maxSplitX": 2,
+      "maxSplitY": 2,
+      "maxSplitAny": 2
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 2,
+    "minHeightPx": 2
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "layouts/feature-sidebar",
+  "title": "Feature Sidebar",
+  "sourceCount": 6,
+  "description": "Three-column top row with a tall feature tile and stacked sidebar below. Bento-style irregular grid.",
+  "category": "layout",
+  "tags": [
+    "bento",
+    "irregular",
+    "sidebar",
+    "tall-feature",
+    "six-up"
+  ],
+  "emphasizeAllEqually": false,
+  "aspectRatio": {
+    "ideal": 1,
+    "label": "1:1",
+    "mode": "warn",
+    "min": 0.8,
+    "max": 1.4
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1080,
+      "height": 1080
+    },
+    {
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 6,
+    "passthroughCount": 0,
+    "nullCount": 0,
+    "groupCount": 4,
+    "nodeCount": 10,
+    "precisionCost": 3,
+    "precision": {
+      "maxSplitX": 3,
+      "maxSplitY": 2,
+      "maxSplitAny": 3
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 3,
+    "minHeightPx": 4
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "grids/3x3",
+  "title": "3x3 Grid",
+  "sourceCount": 9,
+  "description": "Uniform grid with 3 columns and 3 rows.",
+  "category": "grid",
+  "tags": [
+    "grid",
+    "uniform",
+    "3x3",
+    "nine-up"
+  ],
+  "emphasizeAllEqually": true,
+  "aspectRatio": {
+    "ideal": 1,
+    "label": "1:1",
+    "mode": "warn",
+    "min": 0.9,
+    "max": 1.1
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1080,
+      "height": 1080
+    },
+    {
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 9,
+    "passthroughCount": 0,
+    "nullCount": 0,
+    "groupCount": 4,
+    "nodeCount": 13,
+    "precisionCost": 3,
+    "precision": {
+      "maxSplitX": 3,
+      "maxSplitY": 3,
+      "maxSplitAny": 3
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 3,
+    "minHeightPx": 3
+  }
+}

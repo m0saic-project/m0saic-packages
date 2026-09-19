@@ -1,0 +1,54 @@
+{
+  "id": "splits/3-row",
+  "title": "3-Row Split",
+  "sourceCount": 3,
+  "description": "A clean vertical 3-up layout with three equal stacked tiles.",
+  "category": "split",
+  "tags": [
+    "split",
+    "three-up",
+    "vertical",
+    "1x3",
+    "stacked",
+    "gallery-column"
+  ],
+  "emphasizeAllEqually": true,
+  "aspectRatio": {
+    "ideal": 0.5625,
+    "label": "9:16",
+    "mode": "warn",
+    "min": 0.5,
+    "max": 0.75
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1080,
+      "height": 1920
+    },
+    {
+      "width": 1080,
+      "height": 1350
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 3,
+    "passthroughCount": 0,
+    "nullCount": 0,
+    "groupCount": 1,
+    "nodeCount": 4,
+    "precisionCost": 3,
+    "precision": {
+      "maxSplitX": 1,
+      "maxSplitY": 3,
+      "maxSplitAny": 3
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 1,
+    "minHeightPx": 3
+  }
+}

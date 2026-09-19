@@ -1,0 +1,48 @@
+{
+  "id": "splits/4-col",
+  "title": "4-Column Split",
+  "sourceCount": 4,
+  "description": "Four equal side-by-side columns.",
+  "category": "split",
+  "tags": [
+    "split",
+    "four-up",
+    "horizontal",
+    "1x4"
+  ],
+  "emphasizeAllEqually": true,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.6,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 2560,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 4,
+    "passthroughCount": 0,
+    "nullCount": 0,
+    "groupCount": 1,
+    "nodeCount": 5,
+    "precisionCost": 4,
+    "precision": {
+      "maxSplitX": 4,
+      "maxSplitY": 1,
+      "maxSplitAny": 4
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 4,
+    "minHeightPx": 1
+  }
+}

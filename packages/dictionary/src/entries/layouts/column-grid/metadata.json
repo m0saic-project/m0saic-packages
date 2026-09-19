@@ -1,0 +1,49 @@
+{
+  "id": "layouts/column-grid",
+  "title": "Column Grid",
+  "sourceCount": 6,
+  "description": "Tall left column with a 2x2 grid on the right. Bento-style irregular grid.",
+  "category": "layout",
+  "tags": [
+    "bento",
+    "irregular",
+    "column",
+    "2x2",
+    "six-up"
+  ],
+  "emphasizeAllEqually": false,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.4,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 6,
+    "passthroughCount": 0,
+    "nullCount": 0,
+    "groupCount": 5,
+    "nodeCount": 11,
+    "precisionCost": 2,
+    "precision": {
+      "maxSplitX": 2,
+      "maxSplitY": 2,
+      "maxSplitAny": 2
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 4,
+    "minHeightPx": 2
+  }
+}

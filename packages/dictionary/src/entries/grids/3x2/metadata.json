@@ -1,0 +1,49 @@
+{
+  "id": "grids/3x2",
+  "title": "3x2 Grid",
+  "sourceCount": 6,
+  "description": "Uniform grid with 3 columns and 2 rows.",
+  "category": "grid",
+  "tags": [
+    "grid",
+    "uniform",
+    "3x2",
+    "six-up",
+    "landscape"
+  ],
+  "emphasizeAllEqually": true,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.6,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "complexity": {
+    "frameCount": 6,
+    "passthroughCount": 0,
+    "nullCount": 0,
+    "groupCount": 3,
+    "nodeCount": 9,
+    "precisionCost": 3,
+    "precision": {
+      "maxSplitX": 3,
+      "maxSplitY": 2,
+      "maxSplitAny": 3
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 3,
+    "minHeightPx": 2
+  }
+}

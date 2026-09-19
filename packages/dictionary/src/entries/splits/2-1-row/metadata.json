@@ -1,0 +1,51 @@
+{
+  "id": "splits/2-1-row",
+  "title": "2:1 Row Split",
+  "sourceCount": 2,
+  "description": "Two rows with a 2:1 height ratio — top row is twice as tall as the bottom.",
+  "category": "split",
+  "tags": [
+    "split",
+    "weighted",
+    "asymmetric",
+    "2:1",
+    "stacked",
+    "two-up"
+  ],
+  "emphasizeAllEqually": false,
+  "aspectRatio": {
+    "ideal": 1.7777777777777777,
+    "label": "16:9",
+    "mode": "warn",
+    "min": 1.6,
+    "max": 2
+  },
+  "recommendedResolutions": [
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1080,
+      "height": 1080
+    }
+  ],
+  "notes": "Weighted split: the 2:1 ratio is baked into the layout geometry via a passthrough slot.",
+  "complexity": {
+    "frameCount": 2,
+    "passthroughCount": 1,
+    "nullCount": 0,
+    "groupCount": 1,
+    "nodeCount": 4,
+    "precisionCost": 3,
+    "precision": {
+      "maxSplitX": 1,
+      "maxSplitY": 3,
+      "maxSplitAny": 3
+    }
+  },
+  "feasibility": {
+    "minWidthPx": 1,
+    "minHeightPx": 2
+  }
+}
