@@ -1,0 +1,21 @@
+{
+  "name": "m0saic-packages",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w packages/momo-types",
+    "test": "npm run test -w packages/momo-types"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.2",
+    "jest": "30.0.2",
+    "ts-jest": "^29.4.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.0.3",
+    "sharp": "^0.35.3",
+    "@resvg/resvg-wasm": "^2.6.2"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "name": "@m0saic/momo-types",
+  "version": "1.0.0",
+  "private": false,
+  "license": "Apache-2.0",
+  "description": "The vocabulary contract for the m0saic AI-human work-session protocol. Types-mostly (a few pure-function helpers, no runtime baggage) so any package — including published file-format and tooling packages — can share the shape cheaply. The heavy AI runtime lives in @m0saic/momo.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./scoring": {
+      "types": "./dist/scoring.d.ts",
+      "default": "./dist/scoring.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "scoring": [
+        "dist/scoring.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "jest --passWithNoTests"
+  },
+  "keywords": [
+    "m0saic",
+    "ai",
+    "agent",
+    "protocol",
+    "types"
+  ],
+  "author": "m0saic LLC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m0saic-project/m0saic-packages.git",
+    "directory": "packages/momo-types"
+  },
+  "homepage": "https://github.com/m0saic-project/m0saic-packages/tree/main/packages/momo-types#readme",
+  "bugs": {
+    "url": "https://github.com/m0saic-project/m0saic-packages/issues"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "dependencies": {
+    "@m0saic/dsl-file-formats": "^2.0.0"
+  }
+}

@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+tmp
+*.tgz
+.DS_Store
+Thumbs.db
+.buildcache.json
+*.tsbuildinfo
+**/__goldens__/__tmp__/
+**/__goldens__/*.__actual__.*
+**/__goldens__/**/*.actual.png

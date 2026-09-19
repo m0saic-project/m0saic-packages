@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "ignoreDeprecations": "6.0",
+    "esModuleInterop": true
+  },
+  "files": [],
+  "exclude": ["node_modules", "**/dist"]
+}
