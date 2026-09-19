@@ -1,0 +1,45 @@
+{
+  "name": "@m0saic/text",
+  "version": "0.2.0",
+  "private": false,
+  "description": "Node-only text → SVG glyph-path engine (opentype.js) with a bundled deterministic font. Shared by the renderer core and template-utils.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m0saic-project/m0saic-packages.git",
+    "directory": "packages/text"
+  },
+  "homepage": "https://github.com/m0saic-project/m0saic-packages/tree/main/packages/text#readme",
+  "bugs": {
+    "url": "https://github.com/m0saic-project/m0saic-packages/issues"
+  },
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "browser": {
+    "fs": false,
+    "path": false
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "assets",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@m0saic/dsl": "^2.0.0",
+    "@m0saic/dsl-stdlib": "^3.0.0",
+    "opentype.js": "^1.3.4"
+  },
+  "devDependencies": {
+    "@types/opentype.js": "^1.3.10"
+  }
+}

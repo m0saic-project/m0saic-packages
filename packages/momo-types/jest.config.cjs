@@ -20,6 +20,9 @@ module.exports = {
       "^@m0saic/types/(.*)$": "<rootDir>/../types/src/$1",
       "^@m0saic/platform$": "<rootDir>/../platform/src",
       "^@m0saic/platform/dist/(?:cjs/|esm/|types/)?(.*)$": "<rootDir>/../platform/src/$1",
-      "^@m0saic/platform/(.*)$": "<rootDir>/../platform/src/$1"
+      "^@m0saic/platform/(.*)$": "<rootDir>/../platform/src/$1",
+      "^@m0saic/text$": "<rootDir>/../text/src",
+      "^@m0saic/text/dist/(?:cjs/|esm/|types/)?(.*)$": "<rootDir>/../text/src/$1",
+      "^@m0saic/text/(.*)$": "<rootDir>/../text/src/$1"
   },
 };

@@ -1,0 +1,18 @@
+Roboto-Regular.ttf
+==================
+
+Font:    Roboto (Regular)
+Author:  Christian Robertson / Google
+License: Apache License, Version 2.0
+
+This font is distributed under the Apache License, Version 2.0 — the same
+license as @m0saic/template-utils. The full license text is in the package
+LICENSE file and at:
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Source: https://fonts.google.com/specimen/Roboto
+
+The font is bundled so that @m0saic/template-utils' text-to-path conversion
+(`textToPath`) produces deterministic glyph outlines on every platform,
+independent of the host's installed fonts.
