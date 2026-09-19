@@ -1,0 +1,9 @@
+export const DEFAULT_TEXT_SOURCE_STYLE_BORDER_WIDTH = 0.0; // % of min(w,h)
+export const DEFAULT_TEXT_SOURCE_STYLE_BORDER_COLOR = "#000000";
+export const DEFAULT_TEXT_SOURCE_STYLE_FONT_SIZE = 48;
+export const DEFAULT_TEXT_SOURCE_STYLE_COLOR = "#FFFFFF";
+export const DEFAULT_TEXT_SOURCE_STYLE_FONT_FAMILY = "Arial, sans-serif";
+export const DEFAULT_TEXT_SOURCE_STYLE_FONT_WEIGHT = 400; // CSS weight (100–900)
+export const DEFAULT_TEXT_SOURCE_STYLE_FONT_STYLE = "normal"; // "normal" | "italic"
+export const DEFAULT_TEXT_SOURCE_STYLE_BOX_COLOR = "none"; // no box behind glyphs
+export const DEFAULT_TEXT_SOURCE_STYLE_BOX_BORDER_WIDTH = 0; // px padding around glyphs

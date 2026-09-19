@@ -14,5 +14,9 @@ module.exports = {
   },
   testMatch: ["<rootDir>/src/**/*.test.ts"],
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
-  moduleNameMapper: {},
+  moduleNameMapper: {
+      "^@m0saic/types$": "<rootDir>/../types/src",
+      "^@m0saic/types/dist/(?:cjs/|esm/|types/)?(.*)$": "<rootDir>/../types/src/$1",
+      "^@m0saic/types/(.*)$": "<rootDir>/../types/src/$1"
+  },
 };

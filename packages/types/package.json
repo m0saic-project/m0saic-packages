@@ -1,0 +1,33 @@
+{
+  "name": "@m0saic/types",
+  "version": "0.2.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m0saic-project/m0saic-packages.git",
+    "directory": "packages/types"
+  },
+  "homepage": "https://github.com/m0saic-project/m0saic-packages/tree/main/packages/types#readme",
+  "bugs": {
+    "url": "https://github.com/m0saic-project/m0saic-packages/issues"
+  },
+  "private": false,
+  "type": "commonjs",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "assets/icons",
+    "LICENSE",
+    "NOTICE",
+    "README.md",
+    "schemas/mosaic.schema.json"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@m0saic/dsl": "^2.0.0"
+  }
+}

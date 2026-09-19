@@ -1,0 +1,771 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "m0saic://schemas/mosaic.schema.json",
+    "title": "m0saic .mosaic",
+    "description": "Schema for .mosaic files. Validates either a MosaicDocument (spatial) or MosaicDocumentPipeline (temporal), discriminated by `kind`.",
+    "oneOf": [
+      { "$ref": "#/$defs/MosaicDocument" },
+      { "$ref": "#/$defs/MosaicDocumentPipeline" }
+    ],
+    "$defs": {
+      "m0String": {
+        "type": "string",
+        "description": "m0 DSL string defining the spatial layout. This schema does not attempt to validate DSL grammar."
+      },
+  
+      "MosaicColor": {
+        "type": "string",
+        "description": "Any color string accepted by m0saic (e.g. named colors, hex colors, optional @alpha suffix). This schema cannot enumerate FfmpegNamedColor without its source type, so it validates shape broadly.",
+        "pattern": "^(none|#[0-9a-fA-F]{3}|#[0-9a-fA-F]{6}|#[0-9a-fA-F]{8}|[A-Za-z][A-Za-z0-9_-]*)(@([0-9]+(\\.[0-9]+)?))?$"
+      },
+  
+      "MosaicEngineMeta": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "renderStatus": { "type": "string", "enum": ["ok", "error"] },
+          "renderError": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "message": { "type": "string" },
+              "code": { "type": "string" }
+            },
+            "required": ["message"]
+          }
+        }
+      },
+  
+      "MosaicSourceEditorMeta": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "owner": { "type": "string", "enum": ["template", "user"] },
+          "label": { "type": "string" },
+          "binding": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "propKey": { "type": "string" },
+              "index": { "type": "number" }
+            },
+            "required": ["propKey"]
+          }
+        }
+      },
+  
+      "MosaicRenderableEditorMeta": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "owner": { "type": "string", "enum": ["template", "user"] },
+          "label": { "type": "string" },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "enum": ["template_call"] },
+              "templateId": { "type": "string" },
+              "templateVersion": { "type": "number" },
+              "props": {
+                "description": "Opaque template props payload (unknown in TS).",
+                "type": ["object", "array", "string", "number", "boolean", "null"]
+              }
+            },
+            "required": ["kind", "templateId", "props"]
+          }
+        }
+      },
+  
+      "MosaicAdvancedConfig": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "outputFormat": { "type": "string", "enum": ["mp4", "mp3"] },
+          "pixelFormat": { "type": "string" },
+          "videoCodec": { "type": "string" },
+          "bitrate": { "type": "string" },
+          "backgroundColor": { "$ref": "#/$defs/MosaicColor" }
+        }
+      },
+  
+      "MosaicConfig": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "sources": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/MosaicSource" }
+          },
+          "durationMs": { "type": "number" },
+          "fps": { "type": "number" },
+          "advancedConfig": { "$ref": "#/$defs/MosaicAdvancedConfig" }
+        },
+        "required": ["sources"]
+      },
+  
+      "LoopMode": { "type": "string", "enum": ["loop", "cut", "freeze"] },
+      "HorizontalAlign": { "type": "string", "enum": ["left", "center", "right"] },
+      "VerticalAlign": { "type": "string", "enum": ["top", "middle", "bottom"] },
+      "MosaicPlacementFit": { "type": "string", "enum": ["contain", "cover"] },
+  
+      "MosaicBoxFrac": {
+        "description": "Fraction(s) of tile size. Either a number, or an object with axis/per-side overrides.",
+        "anyOf": [
+          { "type": "number" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "top": { "type": "number" },
+              "right": { "type": "number" },
+              "bottom": { "type": "number" },
+              "left": { "type": "number" }
+            }
+          }
+        ]
+      },
+  
+      "MosaicSourceRect": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["x", "y", "w", "h"],
+        "properties": {
+          "x": { "type": "number", "minimum": 0, "description": "Window left edge, source-native px." },
+          "y": { "type": "number", "minimum": 0, "description": "Window top edge, source-native px." },
+          "w": { "type": "number", "minimum": 1, "description": "Window width, source-native px." },
+          "h": { "type": "number", "minimum": 1, "description": "Window height, source-native px." }
+        },
+        "description": "Source-rect windowing: crop the source to exactly this sub-rect FIRST; the window then behaves as the source for fit/effects. Spatial (source px) - the temporal sibling is overlay.window. v1: media sources only."
+      },
+
+      "MosaicPlacementContain": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fit": { "type": "string", "enum": ["contain"] },
+          "inset": { "$ref": "#/$defs/MosaicBoxFrac" },
+          "sourceRect": { "$ref": "#/$defs/MosaicSourceRect" },
+          "hAlign": { "$ref": "#/$defs/HorizontalAlign" },
+          "vAlign": { "$ref": "#/$defs/VerticalAlign" },
+          "padding": { "$ref": "#/$defs/MosaicBoxFrac" }
+        }
+      },
+  
+      "MosaicPlacementCover": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fit": { "type": "string", "const": "cover" },
+          "inset": { "$ref": "#/$defs/MosaicBoxFrac" },
+          "sourceRect": { "$ref": "#/$defs/MosaicSourceRect" },
+          "focusX": { "type": "number", "minimum": 0, "maximum": 1, "description": "Cover-crop anchor, horizontal. 0 keeps the left edge, 0.5 centers (default), 1 keeps the right edge." },
+          "focusY": { "type": "number", "minimum": 0, "maximum": 1, "description": "Cover-crop anchor, vertical. 0 keeps the top edge, 0.5 centers (default), 1 keeps the bottom edge." }
+        },
+        "required": ["fit"]
+      },
+  
+      "MosaicPlacementProps": {
+        "oneOf": [
+          { "$ref": "#/$defs/MosaicPlacementCover" },
+          { "$ref": "#/$defs/MosaicPlacementContain" }
+        ],
+        "description": "Placement props. If fit is 'cover', padding/hAlign/vAlign are forbidden by additionalProperties:false in the cover variant."
+      },
+  
+      "MosaicTextPlacementProps": {
+        "allOf": [
+          { "$ref": "#/$defs/MosaicPlacementProps" },
+          {
+            "type": "object",
+            "properties": {
+              "xExpr": { "type": "string" },
+              "yExpr": { "type": "string" }
+            }
+          }
+        ]
+      },
+  
+      "MosaicTextStyleProps": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "borderWidth": { "type": "number" },
+          "borderColor": { "$ref": "#/$defs/MosaicColor" },
+          "fontSize": { "type": "number" },
+          "fontColor": { "$ref": "#/$defs/MosaicColor" },
+          "fontFamily": { "type": "string" }
+        }
+      },
+  
+      "MosaicPlaybackProps": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "playSpeed": { "type": "number" },
+          "loopMode": { "$ref": "#/$defs/LoopMode" },
+          "clipStartMs": { "type": "number" },
+          "clipDurationMs": { "type": "number" }
+        }
+      },
+  
+      "RoundingOptions": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "borderRadius": { "type": "number" },
+          "cornerStyle": { "type": "string", "enum": ["rounded", "pill"] }
+        }
+      },
+  
+      "MosaicEffectProps": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "rounding": { "$ref": "#/$defs/RoundingOptions" },
+          "stroke": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "width": { "type": "number" },
+              "color": { "$ref": "#/$defs/MosaicColor" },
+              "alpha": { "type": "number" },
+              "position": { "type": "string", "enum": ["inner"] }
+            }
+          },
+          "dropShadow": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "dx": { "type": "number" },
+              "dy": { "type": "number" },
+              "blur": { "type": "number" },
+              "color": { "type": "string" }
+            }
+          },
+          "rotate": { "type": "number" },
+          "grade": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "brightness": { "type": "number", "minimum": -1, "maximum": 1 },
+              "contrast": { "type": "number", "minimum": 0, "maximum": 2 },
+              "saturation": { "type": "number", "minimum": 0, "maximum": 3 },
+              "gamma": { "type": "number", "minimum": 0.1, "maximum": 10 }
+            }
+          },
+          "blur": {
+            "oneOf": [
+              { "type": "number" },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["sigma"],
+                "properties": {
+                  "sigma": { "type": "number", "minimum": 0 },
+                  "backdrop": { "type": "boolean" }
+                }
+              }
+            ]
+          },
+          "noise": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["amount", "seed"],
+            "properties": {
+              "amount": { "type": "number", "minimum": 0, "maximum": 100 },
+              "seed": { "type": "number" }
+            }
+          },
+          "pixelize": { "type": "number", "minimum": 0 },
+          "chromaKey": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["color"],
+            "properties": {
+              "color": { "type": "string" },
+              "similarity": { "type": "number", "minimum": 0, "maximum": 1 },
+              "blend": { "type": "number", "minimum": 0, "maximum": 1 },
+              "despill": { "type": "boolean" }
+            }
+          },
+          "zoomInPercent": { "type": "number" },
+          "fadeInMs": { "type": "number" },
+          "fadeOutMs": { "type": "number" }
+        }
+      },
+  
+      "MosaicAudioProps": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "enabled": { "type": "boolean" },
+          "volume": { "type": "number" }
+        }
+      },
+  
+      "MosaicVisualProps": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "backgroundColor": { "$ref": "#/$defs/MosaicColor" },
+          "opacity": { "type": "number" },
+          "opacityExpr": { "type": "string" }
+        }
+      },
+  
+      "MosaicOverlayBlendMode": {
+        "type": "string",
+        "enum": ["normal", "add", "screen", "multiply"]
+      },
+  
+      "MosaicOverlayExpr": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "xExpr": { "type": "string" },
+          "yExpr": { "type": "string" },
+          "enable": { "type": "string" },
+          "alpha": { "type": "string" },
+          "blendMode": { "$ref": "#/$defs/MosaicOverlayBlendMode" },
+          "startAtSec": { "type": "number" }
+        }
+      },
+  
+      "MosaicMosaicSource": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": { "type": "string", "const": "mosaic" },
+          "ref": { "type": "string" },
+          "placement": { "$ref": "#/$defs/MosaicPlacementProps" },
+          "playback": { "$ref": "#/$defs/MosaicPlaybackProps" },
+          "effects": { "$ref": "#/$defs/MosaicEffectProps" },
+          "visual": { "$ref": "#/$defs/MosaicVisualProps" },
+          "audio": { "$ref": "#/$defs/MosaicAudioProps" },
+          "overlay": { "$ref": "#/$defs/MosaicOverlayExpr" },
+          "editor": { "$ref": "#/$defs/MosaicSourceEditorMeta" },
+          "engine": { "$ref": "#/$defs/MosaicEngineMeta" }
+        },
+        "required": ["type", "ref"]
+      },
+  
+      "MosaicMediaKind": {
+        "type": "string",
+        "enum": ["video", "audio", "image"]
+      },
+  
+      "MosaicMediaSource": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": { "type": "string", "const": "media" },
+          "mediaType": { "$ref": "#/$defs/MosaicMediaKind" },
+          "assetId": { "$ref": "#/$defs/AssetId" },
+          "placement": { "$ref": "#/$defs/MosaicPlacementProps" },
+          "playback": { "$ref": "#/$defs/MosaicPlaybackProps" },
+          "effects": { "$ref": "#/$defs/MosaicEffectProps" },
+          "visual": { "$ref": "#/$defs/MosaicVisualProps" },
+          "audio": { "$ref": "#/$defs/MosaicAudioProps" },
+          "overlay": { "$ref": "#/$defs/MosaicOverlayExpr" },
+          "editor": { "$ref": "#/$defs/MosaicSourceEditorMeta" },
+          "engine": { "$ref": "#/$defs/MosaicEngineMeta" }
+        },
+        "required": ["type", "mediaType", "assetId"]
+      },
+
+      "AssetId": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$",
+        "description": "Opaque identifier for an entry in the document's asset manifest. Letters, digits, '_', '-', '.'; first char must not be '.' or '-'; 1..128 chars. The raw filesystem path / URL belongs in the asset entry's value, never in the key."
+      },
+
+      "MosaicAssetCommon": {
+        "type": "object",
+        "properties": {
+          "displayName": { "type": "string" },
+          "mediaType": { "$ref": "#/$defs/MosaicMediaKind" }
+        }
+      },
+
+      "MosaicAsset": {
+        "description": "On-disk asset entry. Engine-synthesized kinds (lavfi, node-output) MUST NOT appear in serialized JSON.",
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "file" },
+              "path": { "type": "string", "minLength": 1 },
+              "displayName": { "type": "string" },
+              "mediaType": { "$ref": "#/$defs/MosaicMediaKind" }
+            },
+            "required": ["kind", "path"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "url" },
+              "url": { "type": "string", "minLength": 1 },
+              "displayName": { "type": "string" },
+              "mediaType": { "$ref": "#/$defs/MosaicMediaKind" }
+            },
+            "required": ["kind", "url"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "data-uri" },
+              "uri": { "type": "string", "minLength": 1 },
+              "displayName": { "type": "string" },
+              "mediaType": { "$ref": "#/$defs/MosaicMediaKind" }
+            },
+            "required": ["kind", "uri"]
+          }
+        ]
+      },
+
+      "MosaicAssetManifest": {
+        "type": "object",
+        "description": "Per-document asset manifest. Keys are AssetIds; values are MosaicAsset entries.",
+        "additionalProperties": { "$ref": "#/$defs/MosaicAsset" },
+        "propertyNames": { "$ref": "#/$defs/AssetId" }
+      },
+  
+      "MosaicTextEval": { "type": "string", "enum": ["once", "frame"] },
+  
+      "MosaicTextContent": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "literal" },
+              "text": { "type": "string" }
+            },
+            "required": ["kind", "text"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "expr" },
+              "expr": { "type": "string" },
+              "eval": { "$ref": "#/$defs/MosaicTextEval" }
+            },
+            "required": ["kind", "expr"]
+          }
+        ]
+      },
+  
+      "MosaicTextRenderMode": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "image" }
+            },
+            "required": ["kind"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "video" }
+            },
+            "required": ["kind"]
+          }
+        ]
+      },
+  
+      "MosaicTextLayer": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "content": { "$ref": "#/$defs/MosaicTextContent" },
+          "style": { "$ref": "#/$defs/MosaicTextStyleProps" },
+          "placement": { "$ref": "#/$defs/MosaicTextPlacementProps" },
+          "effects": { "$ref": "#/$defs/MosaicEffectProps" },
+          "visual": { "$ref": "#/$defs/MosaicVisualProps" },
+          "overlay": { "$ref": "#/$defs/MosaicOverlayExpr" }
+        },
+        "required": ["content"]
+      },
+  
+      "MosaicTextSource": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": { "type": "string", "const": "text" },
+          "layers": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/$defs/MosaicTextLayer" }
+          },
+          "renderMode": { "$ref": "#/$defs/MosaicTextRenderMode" },
+          "style": { "$ref": "#/$defs/MosaicTextStyleProps" },
+          "placement": { "$ref": "#/$defs/MosaicTextPlacementProps" },
+          "playback": { "$ref": "#/$defs/MosaicPlaybackProps" },
+          "effects": { "$ref": "#/$defs/MosaicEffectProps" },
+          "visual": { "$ref": "#/$defs/MosaicVisualProps" },
+          "overlay": { "$ref": "#/$defs/MosaicOverlayExpr" },
+          "engine": { "$ref": "#/$defs/MosaicEngineMeta" },
+          "editor": { "$ref": "#/$defs/MosaicSourceEditorMeta" }
+        },
+        "required": ["type", "layers"]
+      },
+  
+      "MosaicLavfiPlaybackProps": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "playSpeed": { "type": "number" },
+          "loopMode": { "$ref": "#/$defs/LoopMode" },
+          "clipDurationMs": { "type": "number" }
+        }
+      },
+  
+      "MosaicLavfiBase": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": { "type": "string", "const": "lavfi" },
+          "fitMode": { "type": "string", "enum": ["tile", "content"] },
+          "size": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "wExpr": { "type": "string" },
+              "hExpr": { "type": "string" }
+            }
+          },
+          "overlay": { "$ref": "#/$defs/MosaicOverlayExpr" },
+          "placement": { "$ref": "#/$defs/MosaicPlacementProps" },
+          "playback": { "$ref": "#/$defs/MosaicLavfiPlaybackProps" },
+          "effects": { "$ref": "#/$defs/MosaicEffectProps" },
+          "visual": { "$ref": "#/$defs/MosaicVisualProps" },
+          "editor": { "$ref": "#/$defs/MosaicSourceEditorMeta" },
+          "engine": { "$ref": "#/$defs/MosaicEngineMeta" }
+        },
+        "required": ["type"]
+      },
+  
+      "MosaicLavfiSource": {
+        "description": "Exactly one of {lavfi} or {color} must be present.",
+        "oneOf": [
+          {
+            "allOf": [
+              { "$ref": "#/$defs/MosaicLavfiBase" },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "type": { "type": "string", "const": "lavfi" },
+                  "lavfi": { "type": "string" }
+                },
+                "required": ["lavfi"]
+              }
+            ]
+          },
+          {
+            "allOf": [
+              { "$ref": "#/$defs/MosaicLavfiBase" },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "type": { "type": "string", "const": "lavfi" },
+                  "color": { "$ref": "#/$defs/MosaicColor" }
+                },
+                "required": ["color"]
+              }
+            ]
+          }
+        ]
+      },
+  
+      "MosaicSource": {
+        "oneOf": [
+          { "$ref": "#/$defs/MosaicMosaicSource" },
+          { "$ref": "#/$defs/MosaicMediaSource" },
+          { "$ref": "#/$defs/MosaicTextSource" },
+          { "$ref": "#/$defs/MosaicLavfiSource" },
+          { "$ref": "#/$defs/MosaicRefSource" },
+          { "$ref": "#/$defs/MosaicDataSource" }
+        ]
+      },
+
+      "MosaicRefSource": {
+        "type": "object",
+        "description": "Back-edge mirror source. Mirrors the rendered pixels of another cell in the same renderable (same-doc or earlier pipeline step).",
+        "additionalProperties": true,
+        "properties": {
+          "type": { "type": "string", "const": "ref" },
+          "flattenedStableKey": {
+            "type": "string",
+            "description": "Post-flatten stableKey of the target cell — always in the global flattened keyspace regardless of where the ref source is authored."
+          },
+          "stepIndex": {
+            "type": "number",
+            "description": "Pipeline step index of the target. Omitted for same-doc refs; set to an earlier step's index for cross-step refs."
+          }
+        },
+        "required": ["type", "flattenedStableKey"]
+      },
+
+      "MosaicDataSource": {
+        "type": "object",
+        "description": "Data-only source — contributes variables to template scope but occupies no m0 cell and produces no pixels.",
+        "additionalProperties": true,
+        "properties": {
+          "type": { "type": "string", "const": "data" },
+          "id": { "type": "string" }
+        },
+        "required": ["type"]
+      },
+  
+      "MosaicDocument": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "type": "string", "const": "mosaic_document" },
+          "version": { "type": "number", "const": 1 },
+          "m0": { "$ref": "#/$defs/m0String" },
+          "assets": { "$ref": "#/$defs/MosaicAssetManifest" },
+          "config": { "$ref": "#/$defs/MosaicConfig" },
+          "children": {
+            "type": "object",
+            "description": "Map of child renderables keyed by template-defined IDs.",
+            "additionalProperties": {
+              "oneOf": [
+                { "$ref": "#/$defs/MosaicDocument" },
+                { "$ref": "#/$defs/MosaicDocumentPipeline" }
+              ]
+            }
+          },
+          "editor": { "$ref": "#/$defs/MosaicRenderableEditorMeta" },
+          "engine": { "$ref": "#/$defs/MosaicEngineMeta" }
+        },
+        "required": ["kind", "version", "m0", "assets", "config"]
+      },
+  
+      "MosaicPipelineTransition": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string", "const": "cut" }
+            },
+            "required": ["type"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string", "const": "fade" },
+              "durationMs": { "type": "number", "exclusiveMinimum": 0 }
+            },
+            "required": ["type", "durationMs"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string", "const": "xfade" },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "fade", "wipeleft", "wiperight", "wipeup", "wipedown",
+                  "slideleft", "slideright", "slideup", "slidedown",
+                  "circlecrop", "rectcrop", "distance", "fadeblack",
+                  "fadewhite", "radial", "smoothleft", "smoothright",
+                  "smoothup", "smoothdown", "circleopen", "circleclose",
+                  "vertopen", "vertclose", "horzopen", "horzclose",
+                  "dissolve", "pixelize", "diagtl", "diagtr", "diagbl",
+                  "diagbr", "hlslice", "hrslice", "vuslice", "vdslice",
+                  "hblur", "fadegrays", "wipetl", "wipetr", "wipebl",
+                  "wipebr", "squeezeh", "squeezev", "zoomin", "fadefast",
+                  "fadeslow", "hlwind", "hrwind", "vuwind", "vdwind",
+                  "coverleft", "coverright", "coverup", "coverdown",
+                  "revealleft", "revealright", "revealup", "revealdown"
+                ]
+              },
+              "durationMs": { "type": "number", "exclusiveMinimum": 0 }
+            },
+            "required": ["type", "kind", "durationMs"]
+          }
+        ]
+      },
+  
+      "PipelineStepBase": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "durationMs": { "type": "number" },
+          "transitionToNext": { "$ref": "#/$defs/MosaicPipelineTransition" }
+        },
+        "required": ["durationMs"]
+      },
+  
+      "MosaicPipelineStep": {
+        "description": "Exactly one of {file} or {ref} must be present.",
+        "oneOf": [
+          {
+            "allOf": [
+              { "$ref": "#/$defs/PipelineStepBase" },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "durationMs": { "type": "number" },
+                  "transitionToNext": { "$ref": "#/$defs/MosaicPipelineTransition" },
+                  "file": { "$ref": "#/$defs/MosaicDocument" }
+                },
+                "required": ["file", "durationMs"]
+              }
+            ]
+          },
+          {
+            "allOf": [
+              { "$ref": "#/$defs/PipelineStepBase" },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "durationMs": { "type": "number" },
+                  "transitionToNext": { "$ref": "#/$defs/MosaicPipelineTransition" },
+                  "ref": { "type": "string" }
+                },
+                "required": ["ref", "durationMs"]
+              }
+            ]
+          }
+        ]
+      },
+  
+      "MosaicDocumentPipeline": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "type": "string", "const": "mosaic_pipeline" },
+          "version": { "type": "number", "const": 1 },
+          "steps": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/MosaicPipelineStep" }
+          },
+          "defaultTransition": { "$ref": "#/$defs/MosaicPipelineTransition" },
+          "fps": { "type": "number" },
+          "cacheKey": { "type": "string" },
+          "editor": { "$ref": "#/$defs/MosaicRenderableEditorMeta" },
+          "engine": { "$ref": "#/$defs/MosaicEngineMeta" }
+        },
+        "required": ["kind", "version", "steps"]
+      }
+    }
+  }

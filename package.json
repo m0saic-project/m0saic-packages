@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build -w packages/momo-types",
+    "build": "npm run build -w packages/momo-types && npm run build -w packages/types",
     "test": "npm run test -w packages/momo-types"
   },
   "devDependencies": {

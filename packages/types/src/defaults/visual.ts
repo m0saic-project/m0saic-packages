@@ -1,0 +1,2 @@
+export const DEFAULT_VISUAL_BACKGROUND = "#000000";
+export const DEFAULT_VISUAL_OPACITY = 1.0;
