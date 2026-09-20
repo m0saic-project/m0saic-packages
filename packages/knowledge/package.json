@@ -1,0 +1,37 @@
+{
+  "name": "@m0saic/knowledge",
+  "version": "0.2.0",
+  "private": false,
+  "license": "MIT",
+  "description": "The m0saic knowledge base for agents and authors: the m0 handbook, the engine mental models, and the template-authoring contract, as plain Markdown. Point your coding agent at README.md before it writes a template.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "node test/docs.test.mjs --build",
+    "test": "node --test test/docs.test.mjs"
+  },
+  "keywords": [
+    "m0saic",
+    "m0",
+    "templates",
+    "knowledge-base",
+    "agents",
+    "AGENTS.md"
+  ],
+  "author": "m0saic LLC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m0saic-project/m0saic-packages.git",
+    "directory": "packages/knowledge"
+  },
+  "homepage": "https://github.com/m0saic-project/m0saic-packages/tree/main/packages/knowledge#readme",
+  "bugs": {
+    "url": "https://github.com/m0saic-project/m0saic-packages/issues"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "LICENSE",
+    "README.md"
+  ]
+}

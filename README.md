@@ -20,6 +20,7 @@ Each package sits in `packages/<name>` and publishes to npm as `@m0saic/<name>`.
 | [`dictionary`](./packages/dictionary) | MIT | Named layout entries (the brand M, patterns, QR codes, masks, generators) — the canonical shape library. |
 | [`dsl-react`](./packages/dsl-react) | Apache-2.0 | Render m0 DSL layouts as positioned React regions — the Layout → React bridge. |
 | [`templates`](./packages/templates) | MIT | The built-in template library — brand, hero, demos, media, ui, primitives, forensic — with its generated `template-manifest.json`. |
+| [`knowledge`](./packages/knowledge) | MIT | The knowledge base as plain Markdown — the m0 handbook, the engine mental models, the template-authoring contract. Point a coding agent at its README before it writes a template. |
 
 ### Elsewhere
 
@@ -82,7 +83,7 @@ npm run build      # every package, in dependency order
 npm test
 ```
 
-The build order is the dependency order: `momo-types → types → platform → text → template-utils → dictionary → dsl-react → templates`. `npm install` pulls `@m0saic/dsl*` and `@m0saic/community-m` from npm — neither is a workspace here.
+The build order is the dependency order: `momo-types → types → platform → text → template-utils → dictionary → dsl-react → templates → knowledge` (`knowledge` is Markdown only; its build is a self-check). `npm install` pulls `@m0saic/dsl*` and `@m0saic/community-m` from npm — neither is a workspace here.
 
 ---
 
@@ -91,7 +92,7 @@ The build order is the dependency order: `momo-types → types → platform → 
 Two licenses, chosen per package (see the table above and each package's own `LICENSE`):
 
 - **Apache-2.0** — `momo-types`, `types`, `platform`, `text`, `template-utils`, `dsl-react`. See [`LICENSE`](./LICENSE) and [`NOTICE`](./NOTICE) at the root; each of these packages ships both.
-- **MIT** — `dictionary`, `templates`. The template libraries are MIT so you can copy a template into your own project without ceremony. (The community repos linked above are MIT too; the sandbox corpus is Apache-2.0.)
+- **MIT** — `dictionary`, `templates`, `knowledge`. The template libraries and the knowledge base are MIT so you can copy a template into your own project without ceremony. (The community repos linked above are MIT too; the sandbox corpus is Apache-2.0.)
 
 m0saic and the m0saic logo are trademarks of m0saic LLC. Neither license grants permission to use the trade names, trademarks, service marks, or product names of m0saic LLC, except as required for reasonable and customary use in describing the origin of the work.
 

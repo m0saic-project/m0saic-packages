@@ -1,6 +1,14 @@
 import { spawnSync } from "child_process";
 import { sanitizedFfmpegEnv, STRIPPED_FFMPEG_ENV_VARS } from "./childEnv";
 
+// Windows environment names are case-insensitive, and the shell decides the
+// spelling: a child launched from PowerShell reports `Path`, one from Git Bash
+// reports `PATH`. `process.env` papers over that, a JSON round-trip does not.
+const envGet = (env: Record<string, string>, name: string): string | undefined => {
+  const key = Object.keys(env).find((k) => k.toUpperCase() === name.toUpperCase());
+  return key === undefined ? undefined : env[key];
+};
+
 describe("sanitizedFfmpegEnv", () => {
   const dirty: NodeJS.ProcessEnv = {
     PATH: "/usr/bin:/bin",
@@ -52,9 +60,9 @@ describe("sanitizedFfmpegEnv", () => {
     );
     expect(r.status).toBe(0);
     const childEnv = JSON.parse(r.stdout) as Record<string, string>;
-    expect(childEnv).not.toHaveProperty("FFREPORT");
-    expect(childEnv).not.toHaveProperty("FFMPEG_DATADIR");
-    expect(childEnv.AV_LOG_FORCE_NOCOLOR).toBe("1");
-    expect(typeof childEnv.PATH).toBe("string");
+    expect(envGet(childEnv, "FFREPORT")).toBeUndefined();
+    expect(envGet(childEnv, "FFMPEG_DATADIR")).toBeUndefined();
+    expect(envGet(childEnv, "AV_LOG_FORCE_NOCOLOR")).toBe("1");
+    expect(typeof envGet(childEnv, "PATH")).toBe("string");
   });
 });
