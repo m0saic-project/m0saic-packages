@@ -127,6 +127,25 @@ seam's `outputHintsResolve` convention (THROW posture) checks it returns an
 object, is deterministic at `defaultProps`, and agrees with the static hints
 for every field it returns there. Precedence: [`../output-resolution-tree.md`](../output-resolution-tree.md) §size.
 
+**Image or video is part of the same answer (2026-09-26).** `format` rides the same
+resolver. A template whose kind depends on its inputs — a `media` prop that accepts
+both kinds — declares it per props, `resolveOutputHints: (props) => ({ format: … })`,
+and its static `outputHints.format` is that function's value at `defaultProps`, which
+for an EMPTY media slot is **image** even when the template is "for" video (the
+`outputHintsResolve` throw holds the two equal). The resolver is pure and prop-only:
+it runs before any probe, so a path's extension is the evidence available. Exactly
+three answers exist — the static hint at defaults, the resolver at the current
+props, and the user's override — and nothing else authors one. Every host asks the
+author through `resolveTemplateOutputHints(tmpl, props).format` and passes it into
+`createDesignContext` / `createEngineContext` as `format`, so the `format` the
+`defineMosaicTemplate` wrapper stamps on the rendered document is a RECORD of the
+decision, never a source of it. `inferOutputKind` (`@m0saic/platform`) is a last
+resort for a bare `.mosaic` opened cold with no template behind it, and since
+2026-09-26 it counts a `type: "media"` video source as motion (`videoMedia`) — the
+omission that made footage-through-a-mask read as a still. The defect class and the
+seven-surface audit that produced this rule:
+(internal design history).
+
 ## The lattice declarations — `lattice` (2026-09-16)
 
 **Convention `latticeSmooth` (throw):** every split count above 12 in the rendered

@@ -1,6 +1,6 @@
 {
   "name": "@m0saic/knowledge",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": false,
   "license": "MIT",
   "description": "The m0saic knowledge base for agents and authors: the m0 handbook, the engine mental models, and the template-authoring contract, as plain Markdown. Point your coding agent at README.md before it writes a template.",

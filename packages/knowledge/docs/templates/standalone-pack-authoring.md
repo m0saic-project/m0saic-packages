@@ -151,6 +151,14 @@ Two authoring facts, both learned on the starters:
 - **Aspect-awareness.** Stress vertical / square / horizontal. A wide card may need a
   different layout (timeline's `orientation:"auto"`); clamp edge content so it can't
   spill the card.
+- **Image or video → the same resolver (2026-09-26).** A template with a media slot
+  that accepts both kinds answers per props — `resolveOutputHints: (props) => ({ format })`
+  from a pure check on the media path's extension — and its static `outputHints.format`
+  is that value at `defaultProps`. An empty slot renders a still, so the honest static
+  answer is usually **image** (the seam's `outputHintsResolve` throw keeps the two
+  equal). Never let a host guess from the document: `inferOutputKind` is a last resort
+  for a bare `.mosaic`, not a decision. Reference: `reference/template-flags.md`
+  § "A canvas that is a knob".
 - **A canvas that is a knob → `resolveOutputHints(props)`.** When a prop picks the
   output size (a `platform` knob: YouTube 1920×1080 vs TikTok 1080×1920), declare
   the resolver on the template so hosts SEED the right target before rendering
@@ -158,6 +166,57 @@ Two authoring facts, both learned on the starters:
   `render` still reads `ctx.target` and lays out at any size. At `defaultProps` it
   must agree with the static `outputHints` (`outputHintsResolve`, throw). Rules:
   [`philosophy-and-contract.md`](philosophy-and-contract.md) §"Output contract".
+- ⛔ **Filling the canvas: `document.backgroundColor`, never a full-frame rect.** This is
+  the **`canvasFill` convention, and it THROWS** (2026-09-25) — the build and
+  `m0saic doctor` both refuse a root document carrying a static, opaque, full-canvas colour
+  source. A base rect is a click target that shadows everything behind it, selected any time
+  the pointer is not on a smaller tile, and it is redundant: `doc.backgroundColor` fills the
+  canvas with no rect at all. Only a STATIC, opaque, unshaped fill counts — a curtain wipe
+  (`overlay.enable` / `window`), a scrim (`overlay.alpha`), a masked shape, a rounded card
+  (`effects`) and an inset fill (`placement`) are all legitimate and never flagged.
+  Templates already frozen are exempt. `bindingsDeclared` also accepts a colour prop that IS the document background
+  with neither a binding nor a declaration, because such a prop has no rect to bind.
+  - ⚠️ **The one case that needs a rect: a template COMPOSED INTO another.** The engine
+    lifts `backgroundColor` from the PRIMARY OUTPUT document only, so a child document's
+    own background is silently ignored (tracked at
+    (internal design history) — founder
+    owns the engine fix).
+  - **The declared escape** — an opt-in dev prop, NOT a rect in the default shape.
+    Defaulting it to `true` is ALSO how a template tells `canvasFill` that its rect is
+    deliberate; declaring it `false` is no escape:
+
+    ```ts
+    useNestedBackgroundColor: {
+      type: "boolean", required: false,
+      description: "Compose-time: also paint the background as a full-frame rect, for when this template is nested inside another (a child document's own backgroundColor is ignored by the engine).",
+      meta: { ui: { hidden: true, label: "Nested background rect" } },
+    }
+    ```
+
+    `defaultProps` leaves it **false / absent**, so a standalone render never grows the
+    rect. A template that composes this one passes `useNestedBackgroundColor: true` in the
+    child's props. Keep `backgroundColor` set as well — it costs nothing and keeps the
+    standalone path identical.
+  - **The m0 move is ONE wrap.** `F{…}` prepends exactly one full-canvas frame and the
+    wrapped layout follows in order (`F{2[1,1]}` → `1280x720@0,0`, `1280x360@0,0`,
+    `1280x360@0,360` at 720p), so frame 0 is the base and the content overlays it:
+
+    ```ts
+    if (props.useNestedBackgroundColor) {
+      return { ...doc, m0: `F{${doc.m0}}`, sources: [colorSource(bg), ...doc.sources] };
+    }
+    ```
+
+    `F` is pretty syntax: it **canonicalizes to `1{…}`**, and the file formats never emit
+    pretty form, so on disk the wrapper reads `1{…}`. Every source index shifts by one, so
+    anything keyed by `sourceIndex` (never a binding — those key by prop) moves with it.
+  - `meta.ui.hidden` is deliberate: this is a compose-time flag a parent sets
+    programmatically, not a knob a human picks (and hidden props are outside
+    `bindingsDeclared`'s roll call — a boolean is anyway).
+  - **When the engine fix lands, this prop goes away**: delete it, delete the rect, keep
+    `backgroundColor`. That is the whole point of it being opt-in and hidden rather than
+    baked into every template's shape.
+
 - **Prop bindings — the rect that SHOWS a prop is its handle in Make.**
   `bindProp(src, key)` / `bindProps(src, entries)` / `bindPropPath(src, key, path,
   kind)` / `bindPropRange(...)` (`@m0saic/template-utils`) stamp `editor.binding` on
@@ -166,7 +225,14 @@ Two authoring facts, both learned on the starters:
   are never bindable) and the preview shows one glyph per thing the tile can do (T
   text · 123 number · swatch colour · move rect · picture media), collapsing to ONE
   dot on a small tile. Bind even when the value is empty (the rect is a handle to
-  ADD). The full contract — kinds, `onClear`, `seedDraft`, `kind: "media"` (a rect
+  ADD). ⛔ **`bindingsDeclared` (0.3.0) THROWS** when a prop that could carry a handle
+  is neither bound nor named in `template.bindings.unbound` with its reason
+  (`{ fps: "timing" }`) — free-text and colour strings, numbers, media, one element of a
+  basic list, one leaf of json/list/array, and a regions-picker rect must all be
+  accounted for; booleans, closed sets, groups, the m0 family, code and hidden/human
+  props never are. Templates in `frozen.manifest.json` are exempt. On a rect that
+  already binds another prop the fix is `bindProps`, never a second `bindProp` — it
+  would replace the first. The full contract — kinds, `onClear`, `seedDraft`, `kind: "media"` (a rect
   that takes a dropped file), `companion`, starter media — is
   [`reference/prop-bindings.md`](reference/prop-bindings.md).
   **`kind: "rect"` (2026-09-15) — a rendered cell edited IN PLACE:** a `json` prop

@@ -17,7 +17,7 @@ Root `COMMANDS.md` (monorepo document, not published) documents the inline-DSL s
 
 ## Entry routing — inline-DSL mode is first-class
 
-Before commander ever runs, `index.ts:5915-5920` inspects `process.argv[2]`:
+Before commander ever runs, `index.ts:~7279-7285` inspects `process.argv[2]`:
 `isInlineM0()` (`inlineDsl.ts:36-41`) treats ANY first arg that is not a flag and
 not in `KNOWN_SUBCOMMANDS` as an inline m0 string and dispatches to
 `handleInlineDsl` instead of `program.parseAsync`.
@@ -26,7 +26,7 @@ not in `KNOWN_SUBCOMMANDS` as an inline m0 string and dispatches to
 m0saic "2(1,1)"            # static wireframe → output.png (default mode "wire")
 m0saic "2(1,1)" --anim     # animated wireframe → output.mp4
 m0saic "2(1,1)" --wire     # explicit static (same as default)
-m0saic layout.m0           # .m0 / .m0c paths also accepted (index.ts:5787-5805)
+m0saic layout.m0           # .m0 / .m0c paths also accepted (index.ts:~7184-7270)
 ```
 
 - Args after the string parse via `parseInlineArgs` (`inlineDsl.ts:123`): `-w/-h`
@@ -34,39 +34,48 @@ m0saic layout.m0           # .m0 / .m0c paths also accepted (index.ts:5787-5805)
   `--save-m0`, `--prefer-pretty-m0`/`--prefer-canonical-m0`, `--disable-ui`,
   `--format`, `--alpha`, `--validate-only`, `--report`, `--toolchain`, plus the
   dev-gated dump flags (below).
-- The string is validated with `validateM0String` before render (index.ts:5808);
+- The string is validated with `validateM0String` before render (index.ts:~7222);
   whitespace is stripped. Always shell-quote the DSL (parens/brackets).
 - Output extension is coerced to match mode (`resolveInlineOutput`,
   `inlineDsl.ts:86` — `--anim -o out.png` → `out.mp4`).
 - Mode maps onto the wireframe handlers: `wire` → `handleWireframe`, `anim` →
-  `handleAnimatedWireframe` (index.ts:5846-5850).
+  `handleAnimatedWireframe` (index.ts:~7264-7266).
 
 ## Command table
 
-14 `.command(` registrations in `index.ts` + `telemetry` registered by
-`registerTelemetryCommand(program)` (index.ts:5784 → `utils/telemetry.ts:372`).
-Two of the 14 sit inside `if (DEV_MODE) { … }` and are absent from the public
+18 `.command(` registrations in `index.ts` + `telemetry` registered by
+`registerTelemetryCommand(program)` (index.ts:~7138 → `utils/telemetry.ts:~372`).
+Two of the 18 sit inside `if (DEV_MODE) { … }` and are absent from the public
 help — see the DEV-GATED rows below.
+
+> **Line numbers are loose signposts, written `~NNNN`** (founder ruling
+> 2026-09-25). `index.ts` is ~7,200 lines and every number in this doc had drifted
+> within weeks. **The greppable symbol is the anchor; the number only says
+> roughly where to look.** A number that has moved is not a defect and does not
+> earn a fix pass — correct one when you are editing that row anyway, and
+> otherwise leave it.
 
 | Command (index.ts line) | What it does |
 |---|---|
-| `make <input>` (4143) | Primary render: template id / `.mosaic` / `.mosaicx` → video or image. Full flag surface below. |
+| `make <input>` (~5095) | Primary render: template id / `.mosaic` / `.mosaicx` → video or image. Full flag surface below. |
 | `hello-world` | The first render — a thin alias for `make @m0saic/hello-world/v1` (the brand card; output defaults to `hello-world.mp4`). With `--template-repo <path...>` / `--community-repo <path>` it renders the loaded repo's **front door** instead: the first repo (load order) whose `repo.helloWorld` names a template that registered, announced as `Front door: <id> — <repo>'s hello-world`; no repos, or none that name one → the core card with a one-line why. Takes `-o -w -h --fps --durationMs --props --quiet --verbose` (no engine surface). Picker: the CLI source (not published). |
-| `make-wireframe` (4372) | Static wireframe PNG from `--m0 <string>` or `--mfile <path>`. |
-| `make-wireframe-animated` (4448) | Animated wireframe MP4 from `--m0`/`--mfile`; extra `--disable-ui`. |
-| `flatten <input>` (4531) | Inline all `type:mosaic` children of a `.mosaic`/template into one flat JSON doc — no render. |
-| `resolve <input>` (4642) | `.mosaicx` recipe → resolved `.mosaic` provenance doc, no ffmpeg; `--flatten` also inlines children. |
-| `list-templates` (4751) | Print registered template ids (`--json`); annotates primitive/internal/deprecated. |
-| `doctor <repoDir>` | **Public since 0.2.0** (dev-gated at 0.1.0; founder ruling 2026-09-16, BURN-DOWN D5 → publish). Run the template conventions over a template repo folder — the same checks its build gate (`tools/check-registry.mjs`) runs, from outside (agents, reviewers, forks, CI on a fork): definition-time + render-time conventions (the 13 throw-posture ones incl. `latticeSmooth`) and, when the repo commits `layout-fingerprints/` or `.layout.m0` sidecars, the fingerprint diff. `--json` (one object: `ok, repo, mode, loadDiagnostics, rendered, skipped, errors, warnings, notes, fingerprints`), `--sweep` (also render on the standard 1080p canvases → `canvasEnvelope`), `--entry <path>`, `--src <dir>`. Loads through `loadTemplateRepoFromPath` under the external origin scope, so conventions RECORD rather than throw and one bad template never hides the rest. **Runs the repo's template module bodies in-process** — prints a trust warning to stderr (not under `--json`). Exit 1 on any error-severity finding or a fatal load diagnostic. It is the pack-publishing contract for community/starter authors ("the publish requirement for packs"). Impl: the CLI source (not published); locked public by `__tests__/cli.surface.test.js`. |
-| `browse-templates` (4794) | **DEV-GATED** (whole command inside `if (DEV_MODE)`, 4792): interactive TTY picker (template → variant → confirm → delegates to `make`). It drives the E2E variant matrix and writes to `test-output/` — a development harness, not a user surface. |
-| `momo <message…>` (5042) | **DEV-GATED** (whole command inside `if (DEV_MODE)`, 5040): relay English geometry instruction to Momo in a running Mosaic Desktop over the loopback bridge; exit 0 applied / 2 not-applied / 1 couldn't-run. |
-| `open [file]` (5345) | Open a file in Mosaic Desktop, or `--template` / `--make` to open the Make page via the bridge. See below. |
-| `setup` (5496) | Download + install the pinned ffmpeg toolchain (`--gpl` default / `--lgpl` / `--yes` / `--platform-key`). Idempotent: detects installed golden slot or a PATH ffmpeg with libx264. **The only path that downloads** — renders never do. TTY asks `Download the pinned GPL ffmpeg build now?`; non-TTY / `CI` need explicit approval — `--yes` (or the `--gpl` / `--lgpl` repair flags), otherwise `No terminal to ask for approval on.` + exit 1, nothing downloaded. Ends `✓ ffmpeg is ready. Now run your m0saic command again.` |
-| `activate <key>` (5612) | Validate + store a license key at `~/m0saic/license.json` (`M0SAIC_PRODUCT_KEY` env wins over the file). |
-| `license` (5659) | Show tier/holder/expiry; `--remove` returns to free tier. |
-| `update` (5711) | Check npm for a newer release; offers `npm i -g m0saic@latest`. |
-| `versions` (5750) | Print package versions + ffmpeg baseline/runtime + resolved toolchain (`--json`). |
-| `telemetry` (via helper) | Subcommands `status` (default) · `set-mode <standard\|local-only\|ghost>` · `list` · `preview` · `flush` · `clear`. Since 0.2.0 PUBLISHED builds transmit (Standard mode): day summary + today-so-far rollups after renders via a detached worker, to `https://m0saic.io/api/telemetry`. Workspace builds are dormant. Gates for harnesses: `M0SAIC_TELEMETRY=ghost` (nothing recorded), `M0SAIC_TELEMETRY_ENDPOINT=off` (nothing sent), `CI` (no send unless the endpoint is set by env). Full reference: `TELEMETRY.md` at the repo root. |
+| `make-wireframe` (~5462) | Static wireframe PNG from `--m0 <string>` or `--mfile <path>`. |
+| `make-wireframe-animated` (~5568) | Animated wireframe MP4 from `--m0`/`--mfile`; extra `--disable-ui`. |
+| `flatten <input>` (~5680) | Inline all `type:mosaic` children of a `.mosaic`/template into one flat JSON doc — no render. |
+| `resolve <input>` (~5800) | `.mosaicx` recipe → resolved `.mosaic` provenance doc, no ffmpeg; `--flatten` also inlines children. |
+| `list-templates` (~5946) | Print registered template ids (`--json`); annotates primitive/internal/deprecated. |
+| `doctor <repoDir>` | **Public since 0.2.0** (dev-gated at 0.1.0; founder ruling 2026-09-16, BURN-DOWN D5 → publish). Run the template conventions over a template repo folder — the same checks its build gate (`tools/check-registry.mjs`) runs, from outside (agents, reviewers, forks, CI on a fork): definition-time + render-time conventions (the 13 throw-posture ones incl. `latticeSmooth`) and, when the repo commits `layout-fingerprints/` or `.layout.m0` sidecars, the fingerprint diff. `--json` (one object: `ok, repo, mode, loadDiagnostics, rendered, skipped, errors, warnings, notes, fingerprints, conventions`), `--sweep` (also render on the standard 1080p canvases → `canvasEnvelope`), `--entry <path>`, `--src <dir>`. Loads through `loadTemplateRepoFromPath` under the external origin scope, so conventions RECORD rather than throw and one bad template never hides the rest. **Runs the repo's template module bodies in-process** — prints a trust warning to stderr (not under `--json`). Exit 1 on any error-severity finding or a fatal load diagnostic. It is the pack-publishing contract for community/starter authors ("the publish requirement for packs"). Impl: the CLI source (not published); locked public by `__tests__/cli.surface.test.js`. |
+| `browse-templates` (~6033) | **DEV-GATED** (whole command inside `if (DEV_MODE)`, 4792): interactive TTY picker (template → variant → confirm → delegates to `make`). It drives the E2E variant matrix and writes to `test-output/` — a development harness, not a user surface. |
+| `momo <message…>` (~6282) | **DEV-GATED** (whole command inside `if (DEV_MODE)`, 5040): relay English geometry instruction to Momo in a running Mosaic Desktop over the loopback bridge; exit 0 applied / 2 not-applied / 1 couldn't-run. |
+| `init <name>` (~6464) | Scaffold a template workspace — the compact starter twin, renamed to the user's handle. `--dir`, `--handle`, `--display-name`. Shares ONE scaffold with Desktop's Start pane (`scaffoldTemplateWorkspace` in `@m0saic/product`), so the two cannot drift. Deliberately does NOT write the trust store: loading an external repo is the user's consent, recorded by the app in `~/m0saic/template-trust.json`. Prints the install / build / fingerprint line and the Add-source hint. |
+| `mcp` (~6538) | Run the CLI as an **MCP server** over stdio — the agent-facing surface. See below. |
+| `open [file]` (~6608) | Open a file in Mosaic Desktop, or `--template` / `--make` to open the Make page via the bridge. See below. |
+| `setup` (~6830) | Download + install the pinned ffmpeg toolchain (`--gpl` default / `--lgpl` / `--yes` / `--platform-key`). Idempotent: detects installed golden slot or a PATH ffmpeg with libx264. **The only path that downloads** — renders never do. TTY asks `Download the pinned GPL ffmpeg build now?`; non-TTY / `CI` need explicit approval — `--yes` (or the `--gpl` / `--lgpl` repair flags), otherwise `No terminal to ask for approval on.` + exit 1, nothing downloaded. Ends `✓ ffmpeg is ready. Now run your m0saic command again.` |
+| `activate <key>` (~7000) | Validate + store a license key at `~/m0saic/license.json` (`M0SAIC_PRODUCT_KEY` env wins over the file). **A VERIFIED key — valid, in grace, expired or revoked — also sends ONE notice to m0saic.io from a detached worker (`utils/licenseActivation.ts` → `licenseActivationWorker.js`): the key's `keyId`, the outcome, `surface: "cli"`, the CLI's major.minor. Never the token, the email or the install id. Sent in EVERY telemetry mode — the one signal outside them (founder ruling 2026-09-26); honours `M0SAIC_TELEMETRY_ENDPOINT=off`, `CI` (unless the endpoint came from env) and dormancy (a dev checkout never sends); ignores the mode and `DO_NOT_TRACK`. The command prints "Told m0saic.io this key was used …" after the verdict, and `--help` says so. An unverified key sends nothing.** `TELEMETRY.md` §1.16. |
+| `license` (~6991) | Show tier/holder/expiry; `--remove` returns to free tier. |
+| `update` (~7050) | Check npm for a newer release; offers `npm i -g m0saic@latest`. |
+| `versions` (~7116) | Print **every bundled `@m0saic/*` package**, grouped by tier (language / substrate / product — the CLI bundles no community package) + ffmpeg baseline/runtime + resolved toolchain. `--json`: `packages` holds ALL bundled packages (a superset of the old `templates`/`types` pair, so scripts keep working). Classification comes from `@m0saic/platform` `describeMosaicPackage`, shared with Desktop's Tools → About this build (2026-09-26). |
+| `telemetry` (via helper) | Subcommands `status` (default) · `set-mode <standard\|local-only\|ghost>` · `list` · `preview` · `flush` · `clear`. Since 0.2.0 PUBLISHED builds transmit (Standard mode): day summary + today-so-far rollups after renders via a detached worker, to `https://m0saic.io/api/telemetry`. Workspace builds are dormant. Gates for harnesses: `M0SAIC_TELEMETRY=ghost` (nothing recorded), `M0SAIC_TELEMETRY_ENDPOINT=off` (nothing sent), `CI` (no send unless the endpoint is set by env). **Modes govern usage telemetry only: `activate` is in `CLI_USAGE_SKIPPED_COMMANDS`** — its notice is identity-less, and the rollup deliberately carries no `cli.command.activate` counter beside it (the pairing would link an install id to a key id). `status` / `preview` cannot list the notice: it is never queued. Full reference: `TELEMETRY.md` at the repo root (§1.16 for the notice). |
 
 > **`decode-watermark` is GONE** (removed 2026-07-28). Recovering a forensic
 > watermark is now an ordinary template — `@m0saic/forensic/watermark/verify/v1`,
@@ -74,18 +83,18 @@ help — see the DEV-GATED rows below.
 > family. The old `--ffmpeg <path>` override it carried is now the template's
 > `ffmpegPath` prop.
 
-## `make` input routing (index.ts:4348-4367)
+## `make` input routing (index.ts:~5340-5372)
 
 1. Extension `.mosaic` → `handleMosaicFile` — parse JSON renderable, resolve
    relative media against the file's dir, plan + render.
-2. Extension `.mosaicx` → `handleMosaicxFile` (3419) — the **resolve-then-render
+2. Extension `.mosaicx` → `handleMosaicxFile` (~4214) — the **resolve-then-render
    branch**: absolutize asset paths → apply the doc's `runner` block as option
    defaults (explicit flags win) → sibling `.m0v` auto-discovery → route
    `--inputs`/`--input-dir` into the single `template_invocation`'s
    `props.sourceIds` (ambiguous multi-invocation → error; zero inputs on an
    input-requiring template → renders a usage-card and exits non-zero) →
    `resolveMosaicx` → write resolved doc to a tmp `.mosaic` → delegate to
-   `handleMosaicFile` (3631) so the post-resolve render path is shared.
+   `handleMosaicFile` (~4460, defined ~4475) so the post-resolve render path is shared.
    **Two roots accepted** (2026-08-14): `mosaicx_document` and
    `mosaicx_pipeline` (a root-level template chain — see
    `templates/data-pipeline.md`). The header echoes which one it read
@@ -157,7 +166,7 @@ the JSON:
 ## `make` flags
 
 **Core** — `-w/--width` and `-h/--height` are `requiredOption`s. Then:
-`-o/--output` (defaults `out.mp4` / `out.png`, index.ts:172-173), `--fps` (1–120),
+`-o/--output` (defaults `out.mp4` / `out.png`, index.ts:~172-173), `--fps` (1–120),
 `--durationMs` (>0), `--format`/`--output-kind` (`video|image`),
 `--alpha`/`--no-alpha`, `--props <jsonOrPath>` (inline JSON **or** `@path/to/json`
 — `utils/readJsonArg.ts:18` strips the `@` and reads the file),
@@ -171,7 +180,7 @@ mosaic; prints `Validation DEGRADED`), `--report` (`.output.json` /
 `--template-repo-entry <file>` (external template repos), `--community-repo <path>`
 (ONE checkout of the official community repo — see the community gate below).
 
-**Encode surface** (index.ts:4231-4338, mirrors the Make page's Advanced panel;
+**Encode surface** (index.ts:~4231-4338, mirrors the Make page's Advanced panel;
 precedence: flags > `.m0v` preset > doc-on-disk > engine default):
 `--target <preset>` (`web-mp4|web-webm|alpha-mov|image-png|image-jpeg|animated-gif|audio-mp3|audio-wav`),
 `--container`, `--video-codec`, `--audio-codec`, `--pixel-format`, `--bitrate`
@@ -189,10 +198,10 @@ over `--input-dir`), `--input-dir <path>` (+ `--recursive` for depth-first walk)
 **`.m0v`**: `--m0v <path>` loads a Mosaic Vocabulary file two ways — named
 outputs onto `ctx.userIntent.outputs` (template-consultative) AND a post-render
 merge onto the renderable **by index** when entry counts match
-(index.ts:4218-4221; `BaseRenderOptions` docstring 541-557).
+(index.ts:~4218-4221; `BaseRenderOptions` docstring ~541-557).
 
 **Toolchain**: `--toolchain <name>` is a **global program option**
-(index.ts:526), not make-specific — a named entry from `m0saic.local.json`, with
+(index.ts:~526), not make-specific — a named entry from `m0saic.local.json`, with
 implicit `gpl`/`lgpl` golden slots merged in. Resolution precedence: `--toolchain`
 flag > `M0SAIC_TOOLCHAIN` env > config `defaultToolchain` > PATH/golden fallback
 (`utils/toolchainConfig.ts:129`). There is **no** `--ffmpeg` anywhere on the CLI
@@ -212,7 +221,7 @@ Spell every `setup` hint with `cliSetupCommand()` (`utils/invocation.ts`):
 timing rolled up by mosaic node (names the bottleneck panel/template).
 
 **DEV-GATED** (each wrapped in `.hideHelp(!DEV_MODE)`; `DEV_MODE =
-process.env.M0SAIC_DEV === "1"` at index.ts:58, compile-stripped to `false` in
+process.env.M0SAIC_DEV === "1"` at index.ts:~71, compile-stripped to `false` in
 the published artifact): `--dev` (commands + timings), `--print-commands`,
 `--save-plan [path]`, `--save-commands [path]`. Same gating inside inline-DSL
 mode (`inlineDsl.ts:148-154`). Also dev-gated: the whole `momo` command, the
@@ -230,7 +239,7 @@ and neither is `doctor` (public since 0.2.0).
 
 **Three reserved identities, exact-match, nothing else is checked:** template
 namespaces `@m0saic/` and `@m0saic-dev/`, repo id `@m0saic-community`
-(`index.ts:907-909`; registry compare is case-insensitive, `templateRegistry.ts:112`).
+(`index.ts:~907-909`; registry compare is case-insensitive, `templateRegistry.ts:~112`).
 Every other namespace / repo id is open. `--template-repo` never grants anything.
 
 **The grant.** `--community-repo <path>` says "this IS the official repo"; the
@@ -338,7 +347,7 @@ ordinary repos); the community checkout loads only this way".
 `make-wireframe` / `make-wireframe-animated` take the layout as `--m0 <string>`
 (inline DSL — the flag is `--m0`, not `--m0saic`) or `--mfile <path>`, plus the
 same core/save/report/`--m0v`/`--output-pattern` surface as `make` (no encode
-surface, no `--inputs`). Animated adds `--disable-ui` (index.ts:4504).
+surface, no `--inputs`). Animated adds `--disable-ui` (index.ts:~4504).
 
 ## `m0saic open` — pointer only
 
@@ -353,6 +362,72 @@ https://github.com/m0saic-project/m0saic-packages/blob/main/packages/templates/d
 <file.mosaicx>` opens an authored `.mosaicx` in Make and adopts it for the
 agent loop.
 
+## `m0saic mcp` — the agent surface (2026-09-25)
+
+MCP has three primitives; this server implements **tools** only (model-invoked).
+Transport is newline-delimited JSON-RPC 2.0 over stdio, hand-rolled in
+`src/mcp/server.ts` (~230 lines, **zero runtime deps**: the official SDK carries
+17, including express, hono, cors, jose and ajv, and the CLI vendors its whole
+closure into the published tarball). `initialize` echoes the client's
+`protocolVersion`; a tool that throws returns `isError: true` rather than a
+JSON-RPC error, so the model sees the failure instead of the transport eating it.
+
+The 14 tools (`src/mcp/tools.ts`), in three groups:
+
+- **Knowledge** — `knowledge_list`, `knowledge_read`, `knowledge_search`. The
+  `@m0saic/knowledge` docs, so an agent reads the handbook instead of guessing.
+- **Local, no app needed** — `list_templates`, `template_props`, `validate_m0`,
+  `workspace_scaffold`, `render_still`, `doctor`.
+- **Through the loopback bridge into a running Desktop** — `desktop_status`,
+  `desktop_open_in_make`, `desktop_reload_sources`, `desktop_read_verdict`,
+  `desktop_layout`.
+
+Two rules the implementation enforces:
+
+- **`render_still` pins `M0SAIC_CLI=/usr/bin/false`.** `@m0saic/benchmark/run/v1`
+  re-invokes `argv[1]`; without the pin a render from inside the CLI fork-bombs.
+- **Failures return a HINT, never raw stderr** (`findFailureHint`). Engine text is
+  moat: the argv and the filtergraph never cross to a model.
+
+`src/mcp/bridgeClient.ts` is the transport for the desktop tools. A 404 means
+`route-missing` — "this Desktop is too old for that route" — not "the app is
+down"; the compat warning prints once per process. The full route table is
+`docs/compat-bridges.md`.
+
+**`--agent-note` / `--agent-question` are PUBLIC** as of this line (the DEV_MODE
+strip is gone and `__tests__/cli.surface.test.js` asserts they appear in the
+published help — the lock was inverted, not removed). With `--template` they seed
+a note / question into Make's File tab for the reviewer to answer.
+
+## `m0saic doctor` answers a VERSIONED question (2026-09-25)
+
+Conventions change, so "does this repo pass?" is the wrong question — the right one is **which line
+does it pass at.** `report.conventions` carries it:
+
+```
+conventions: meets 0.2.0 (shipped at 0.2.0).
+  behind 0.3.0: bindingsDeclared, canvasFill
+  9 of 96 template(s) behind — a vN+1 on each clears it.
+```
+
+- **`meets`** — the newest m0saic line every template in the repo satisfies (error severity only; a
+  `record` warning is advice, not a failure to meet a line).
+- **`behind`** — the lines it does not meet, with the rules that fail, oldest first.
+- **`shippedAt`** — the repo's own `frozen.manifest.json` `release`.
+- **`lagOnly`** — true when EVERY failure comes from a line newer than `shippedAt`. The footer then
+  says so explicitly: *"Not a defect: these templates met the conventions of their day. Fix at the
+  next vN."*
+
+**A template is allowed to lag.** It met the conventions of its day; the rules moved; the fix is its
+next `vN`. What the rules guarantee is that **NEW** templates meet the CURRENT line — which is why the
+postures throw (founder: "we need to be greedy about adding conventions because agents, especially
+non-frontier ones, won't"). The exit code is still 1 on any error, because the status is informational
+and the message carries the meaning.
+
+`TEMPLATE_CONVENTION_SINCE` in `@m0saic/template-utils` is the map of rule → line. Everything
+pre-0.3.0 reads `0.2.0`: at that freeze the whole shipped fleet passed every rule then in force, so it
+is a true lower bound rather than a guessed date.
+
 ## Failure modes
 
 - `spawnSync m0saic EACCES` — the CLI isn't built/linked on this machine:
@@ -365,7 +440,7 @@ agent loop.
   change, breaking probe-based assertions. Check `npm run tier:status` first;
   full rule in the maintainers' agent contract §7.7 (not published).
 - Non-zero ffmpeg exits print a core-computed failure classification after the
-  exit-code line (`printFfmpegFailure`, index.ts:98) — read it before rerunning
+  exit-code line (`printFfmpegFailure`, index.ts:~113) — read it before rerunning
   with `--verbose`.
 - Invalid m0 strings fail fast at validation (`validateM0String`), not inside
   ffmpeg; `SPLIT_EXCEEDS_AXIS` means the split count exceeds the pixel axis —

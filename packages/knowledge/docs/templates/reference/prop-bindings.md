@@ -59,6 +59,127 @@ Rules:
 Order the entries the way a double-click should read them: `fields[0]` is the
 primary action (a plain double-click); the badge row offers every kind.
 
+## The roll call — `bindingsDeclared` (THROW, 2026-09-25)
+
+**Every prop that CAN carry a canvas handle is either bound, or declared.** A new template that does
+neither fails the build. Founder ruling: "if it makes sense to bind, we do — or warn if it's not."
+
+```ts
+bindings: { unbound: { fps: "timing", gap: "geometry", seed: "determinism" } }
+```
+
+One honest word is the point — the reason is for a reviewer. Keys are dotted exactly as `propsSchema`
+nests them (`titles.title`).
+
+### The complete surface — one ruling per control
+
+`MUST ACCOUNT` = bind it, or name it in `bindings.unbound`. `NEVER` = not a canvas thing; the
+right-hand panel is its surface, and the rule stays silent.
+
+| Prop / flavour | Handle | Convention |
+|---|---|---|
+| `string`, free text | `string` | **MUST ACCOUNT** |
+| `string` + `isColor` / `colorPicker` | `color` | **MUST ACCOUNT** |
+| `number` | `number` | **MUST ACCOUNT** |
+| `media` | `media` (also a drop target) | **MUST ACCOUNT** |
+| `string[]` · `number[]` · `media[]` | per element, by index | **MUST ACCOUNT** (bound anywhere on the prop counts) |
+| `json` · `list` · `array` | per leaf, `path` + `kind` | **MUST ACCOUNT** (any leaf counts) |
+| `json` + `picker: "regions"` | `rect` | **MUST ACCOUNT** |
+| `string` / `number` + closed set (`oneOf`, `options`, `optionsFrom…`) | — | **NEVER** — a picker is a mode, not a value on canvas |
+| `boolean` | — | **NEVER** — a one-way door: `false` renders no rect to click |
+| `group` | — | **NEVER** — a container; its fields are walked individually |
+| `m0` · `m0c` · `m0p` | — | **NEVER** — the value IS the composition of every rect, not one of them |
+| `code` | — | **NEVER** — read-only by contract; a handle implies editing |
+| anything `ui.hidden` or `consumer: "human"` | — | **NEVER** |
+
+Why the `m0` family is excluded, since it is the tempting one: a layout prop has no clickable element.
+All 10 shipped layout props (wireframe, dsl-tutorial, screencap-grid v1/v2, watermark, qr-animate,
+camera-debug) drive the ROOT composition — you would have to select the whole grid, which the canvas
+cannot express. If a template ever nests a layout prop into ONE cell, that cell is a real handle and a
+sixth kind (`"layout"`) becomes worth having. None does today.
+
+**Bindable ≠ has a rect.** The predicate says a `number` is always inline-editable; whether any rect
+*shows* it is the template's business. `durationMs`, `fps`, `gap`, `seed`, `padding` are all
+accountable and correctly unbound — which is exactly why the rule takes a declaration instead of
+guessing from the pixels.
+
+**A colour that IS `document.backgroundColor` needs nothing** — no binding, no declaration. It has no
+source and no rect, so no handle can exist, and it is the way a canvas SHOULD be filled: a full-frame
+base rect becomes a click target that shadows everything behind it whenever the pointer is not on a
+smaller tile (founder direction 2026-09-25). Matched case-insensitively, root or child.
+
+**A binding in a nested CHILD counts.** A template that composes its content into a child document
+(the hello-world card puts everything in a `card` child) reaches its props perfectly well — Make
+resolves a binding through children. **But the audit renders at `defaultProps`,** so a rect the
+template only creates when a prop is non-empty reads as unbound. That is the "bind even when the value
+is empty" rule biting: bind it unconditionally, or declare it.
+
+**A stale declaration is a violation too:** naming a prop that cannot carry a handle, naming one that
+is in fact bound, or leaving the reason empty. An entry claims a reviewer looked at that prop.
+
+**Exempt:** any template hashed in the repo's `frozen.manifest.json`. It shipped before the
+convention, it is never edited in place, and the fix would be a vN+1 nobody will write. A repo with no
+manifest has shipped nothing and holds every template to the rule.
+
+## The in-context line — `bindingHints` (THROW, 2026-09-27)
+
+**Every bound rect shows one line in context.** Make puts it under the inline editor when a person
+double-clicks, on the tile card's row, and in the handle's hover tooltip — what changing the value
+does and what it looks like, so nobody has to open the settings pane or a manual to understand a knob.
+Founder ruling: a production-grade template adheres to all the surfaces of the ecosystem, and the
+canvas is now the primary one; "it's better to take this tax now."
+
+The line comes from either of two places, and the gate accepts either:
+
+| Where | How | Reaches |
+|---|---|---|
+| the prop | `propsSchema.<key>.description = "…"` | every rect bound to that prop |
+| the binding | `bindProp(src, key, i, { hint: "…" })` · a `bindProps` entry's `hint` · `withBindingHint(src, "…")` (composes with every binder) | that rect only — the wording for THIS place |
+
+One plain sentence, never markdown, never the value itself ("The month this calendar shows; the grid
+re-flows to its weeks", not "October"). Make trims it and caps it near 200 characters. The tax is
+therefore one honest sentence per bound prop, paid once in the schema; a per-rect `hint` is for the
+cases where the same prop means something different in different places.
+
+**Needs none:** a `companion` leaf (filled only by a media drop, never shown in a form), and any prop
+that is not bound (an `unbound` declaration already carries its reason). A binding on an unknown prop
+is `bindingsSound`'s finding, not this one.
+
+**Exempt:** any template hashed in the repo's `frozen.manifest.json`, like the roll call — it reports
+in `lagging`, never `findings`. The CLI ignores the field entirely; it is extra data there.
+
+## The `bindingsCover` convention — what the gate checks
+
+The roll call above is the gate. `bindingsCover` is the WEAKER SECOND SIGNAL kept beside it
+(posture `record` → a warning): it reads the drawn text, so it is the only rule that can catch a prop
+bound to the WRONG rect, and it still fires on frozen templates where the roll call cannot. Both
+`check-registry.mjs` copies and `m0saic doctor <repo>` run both.
+
+- A **free-text `string`** prop — not `meta.ui.hidden`, not `consumer: "human"`, not a closed /
+  picked set — whose default is ≥2 characters and appears verbatim in drawn text must be bound.
+- A **`number`** prop, same exclusions, whose default appears in drawn text in one of its honest
+  spellings: `String(v)`, `toLocaleString("en-US")`, and `toFixed(1|2)` **only when the value already
+  has decimals** (nothing draws an integer count as `"1.0"`, but chrome draws versions that read that
+  way). A one-character spelling never counts.
+- Numbers match on a **digit boundary**: `12` is not read out of `2012` or `3.12`, and a drawn
+  `1,200` is not read as the prop `200`.
+- Coverage is per PROP, not per rect — a prop bound anywhere on the root document is covered.
+
+### One rect, two props — a composite line
+
+`"@qsbuilds · 2026 on GitHub"` is one rect drawing two props, and a single `editor.binding` names one
+of them. A bare `bindProp` there would REPLACE the existing handle, so the rule says so and names the
+fix that keeps both:
+
+```ts
+bindProps(src, [{ propKey: "handle" }, { propKey: "year", kind: "number" }])
+```
+
+— several handles on one rect — or split the line so each prop gets its own rect. (`year-card/v1` is
+the live example; it is frozen, so its fix is v2 and it warns until then.)
+
+Colour coverage is not checked: a colour is never drawn as text, so it needs a different detector.
+
 ## Authoring helpers (`@m0saic/template-utils`)
 
 - `bindProp(src, propKey, index?)` — the basic case.

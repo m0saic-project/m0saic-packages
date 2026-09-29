@@ -71,8 +71,24 @@ doc.children["<child-key>"] = {
 };
 ```
 
-`color: "black@0"` is the idiomatic transparent base. Intermediates carry alpha by
-default, so the composite stays clean.
+`color: "black@0"` is the idiomatic transparent base **for the child's own
+framebuffer.** Whether the child's INTERMEDIATE keeps that transparency on the hop
+back to the parent depends on the ROOT's deliverable, not on a default:
+
+- under an image / `.mov` / alpha root it does;
+- under an **mp4 root** (the single-flat path) only a child that paints an image,
+  text, or alpha media (`qtrle` / `png` / `.mov`) is encoded as an alpha carrier
+  (`qtrle` / `argb`). A child made only of lavfi tiles and masks comes back
+  **opaque** — 0.3.0 plan item **R4** (the Rainier pack works around it with one
+  image tile);
+- a **stitched** child (a node past the chunk budget) composites its final stitch
+  over an opaque background regardless (`buildChunkCommands.ts` `isFinalOpaqueVideo`)
+  — plan item **R23**.
+
+So a `black@0` base does not by itself make the composite clean. Until the engine
+carries alpha for those cases: put one image or text tile in a transparent child,
+and keep it under the chunk budget. (Corrected 2026-09-28 from the Rainier build;
+was "intermediates carry alpha by default".)
 
 ### Cost, and when to skip it
 
