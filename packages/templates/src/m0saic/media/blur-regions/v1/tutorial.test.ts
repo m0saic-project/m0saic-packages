@@ -41,7 +41,10 @@ describe("blur-regions tutorial", () => {
       expect(step.durationMs).toBe(ms);
       const doc = step.file as MosaicDocument;
       const assets = Object.values(doc.assets ?? {}) as Array<{ path?: string }>;
-      expect(assets.some((a) => (a.path ?? "").includes("screen_recordings"))).toBe(true);
+      // the packaged clip, resolved from this module's own folder (W4): five up = the package root
+      const shipped = assets.find((a) => (a.path ?? "").includes("assets/templates/@m0saic__media__blur-regions__v1/tutorial/"));
+      expect(shipped).toBeDefined();
+      expect(shipped!.path!.startsWith(`${__dirname}/../../../../../assets/templates/`)).toBe(true);
       const labels = (doc.sources ?? []).map((s) => (s as { editor?: { label?: string } }).editor?.label).filter(Boolean);
       expect(labels).toContain(`recording ${name}`);
     }

@@ -218,11 +218,48 @@ export type MosaicAnalyticsRollupMetrics = {
  *    frames themselves), plus host fingerprint for environment
  *    bucketing.
  */
+/**
+ * Which product minted the install (2026-09-27). Desktop and CLI installs
+ * used to be indistinguishable on the wire, so a download click could never
+ * be followed to an install.
+ */
+export type MosaicInstallSurface = "cli" | "desktop";
+
+/**
+ * How the CLI was launched for its first counted run: `npx m0saic …` (the
+ * one-liner on flyers, READMEs and HN comments) or an installed `m0saic`.
+ * CLI only; Desktop omits it.
+ */
+export type MosaicInstallInvocation = "npx" | "global";
+
+/**
+ * An opt-in campaign tag the USER passes (`--from wearedevelopers`,
+ * `M0SAIC_FROM=…`), so a printed one-liner can say where an install came
+ * from. Lower-case slug, 2–24 chars; anything else is dropped client-side.
+ * Never inferred, never derived from the machine — it is the user's word.
+ */
+export type MosaicInstallSource = string;
+
+/** Lower-case slug: `[a-z0-9]` then up to 23 of `[a-z0-9-]`. Shared by the client filter and the server validator. */
+export const MOSAIC_INSTALL_SOURCE_RE = /^[a-z0-9][a-z0-9-]{1,23}$/;
+
+/**
+ * Launch context a host attaches to `install_completed` (all optional —
+ * 0.2.x clients send none). Closed enums plus one bounded slug; nothing
+ * that names a machine.
+ */
+export type MosaicInstallContext = {
+  surface?: MosaicInstallSurface;
+  invocation?: MosaicInstallInvocation;
+  source?: MosaicInstallSource;
+};
+
 export type MosaicAnalyticsImmediateEvent =
-  | (MosaicAnalyticsEnvelope & {
-      kind: "install_completed";
-      host: MosaicHostFingerprint;
-    })
+  | (MosaicAnalyticsEnvelope &
+      MosaicInstallContext & {
+        kind: "install_completed";
+        host: MosaicHostFingerprint;
+      })
   | (MosaicAnalyticsEnvelope & {
       kind: "update_completed";
       host: MosaicHostFingerprint;

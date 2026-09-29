@@ -2,8 +2,10 @@ import baselineJson from "./baseline.json";
 import releaseDatesFile from "./release-dates.json";
 
 /**
- * One profile entry inside `baseline.json` (`ffmpeg` or `ffmpegGpl`).
- * Mirrors the JSON exactly — see baseline.json for the source of truth.
+ * The pinned build entry inside `baseline.json` (`ffmpegGpl`). Mirrors the
+ * JSON exactly — see baseline.json for the source of truth. (The `ffmpeg`
+ * LGPL twin was removed 2026-09-22: m0saic redistributes nothing, so the one
+ * baseline is the GPL build fetched from its origin at the user's request.)
  */
 export interface FfmpegBuildEntry {
   snapshot: string;
@@ -29,20 +31,20 @@ export interface FfmpegArtifact {
   /** Which tools this archive provides (BtbN archives carry both; martin-riedl ships one per zip). */
   tools: Array<"ffmpeg" | "ffprobe">;
   archive: "zip" | "tar.xz";
-  /** Preferred download URL (the m0saic-ffmpeg-base mirror for vendored LGPL builds). */
+  /** Download URL at the build's origin. */
   url: string;
-  /** Origin fallback when the mirror asset isn't published yet (or is unreachable). */
+  /** Alternate origin URL when the primary is unreachable. */
   upstreamUrl?: string;
   /** Pinned hex digest — downloads that don't hash to this are rejected. */
   sha256: string;
 }
 
-/** A concrete, installable build target for one platform-arch + variant. */
+/** A concrete, installable build target for one platform-arch. */
 export interface FfmpegPlatformTarget {
   available: true;
   snapshot: string;
   date: string;
-  profile: "lgpl" | "gpl";
+  profile: "gpl";
   source: string;
   /** True when the binaries are served from m0saic-ffmpeg-base releases. */
   vendored: boolean;
@@ -53,7 +55,7 @@ export interface FfmpegPlatformTarget {
   artifacts: FfmpegArtifact[];
 }
 
-/** A platform-arch + variant with no installable build (documented gap). */
+/** A platform-arch with no installable build (documented gap). */
 export interface FfmpegPlatformGap {
   available: false;
   reason: string;
@@ -62,13 +64,12 @@ export interface FfmpegPlatformGap {
 
 export type FfmpegPlatformEntry = FfmpegPlatformTarget | FfmpegPlatformGap;
 
-/** Per-platform variant map: `platforms["darwin-arm64"].gpl` etc. */
+/** Per-platform map: `platforms["darwin-arm64"].gpl`. One build per platform. */
 export interface FfmpegPlatformVariants {
-  lgpl: FfmpegPlatformEntry;
   gpl: FfmpegPlatformEntry;
 }
 
-/** The standalone vendor repo that mirrors LGPL binaries + source. */
+/** The standalone vendor repo that documents the pinned baseline (redistributes nothing). */
 export interface FfmpegVendorRepo {
   name: string;
   url: string;
@@ -85,7 +86,6 @@ export interface FfmpegVendorRepo {
  */
 export interface FfmpegBaseline {
   m0saicVersion: string;
-  ffmpeg: FfmpegBuildEntry;
   ffmpegGpl: FfmpegBuildEntry;
   vendorRepo: FfmpegVendorRepo;
   platforms: Record<string, FfmpegPlatformVariants>;
@@ -107,12 +107,11 @@ export function getPlatformKey(
 }
 
 /**
- * Resolve the manifest entry for a platform-arch + variant. Unknown
- * platform keys resolve to a synthetic gap entry (never undefined) so
- * callers have one shape to branch on.
+ * Resolve the pinned build for a platform-arch. Unknown platform keys
+ * resolve to a synthetic gap entry (never undefined) so callers have one
+ * shape to branch on. (Took a `variant` first argument until 2026-09-22.)
  */
 export function getFfmpegPlatformEntry(
-  variant: "lgpl" | "gpl",
   platformKey: string = getPlatformKey(),
 ): FfmpegPlatformEntry {
   const variants = ffmpegBaseline.platforms[platformKey];
@@ -123,7 +122,7 @@ export function getFfmpegPlatformEntry(
       trackingUrl: ffmpegBaseline.vendorRepo.url,
     };
   }
-  return variants[variant];
+  return variants.gpl;
 }
 
 /**
@@ -133,7 +132,7 @@ export function getFfmpegPlatformEntry(
  */
 export interface FfmpegBaselineRef {
   snapshot: string;
-  profile: "lgpl" | "gpl";
+  profile: "gpl";
   libx264: boolean;
   source: string;
 }
@@ -145,32 +144,28 @@ export interface FfmpegBaselineRef {
  * pinned build differs by OS (Windows/Linux pin the BtbN build; macOS pins the
  * martin-riedl build one commit later).
  *
- * Picks the first *available* variant in preference order — `gpl` FIRST
- * (founder ruling 2026-07-19: the official m0saic baseline is the pinned GPL
- * build on every platform — x264/x265 are the standard; a runtime without
- * them is degraded) then `lgpl` (kept for the future bundled/mirrored case).
- * `libx264` is derived from the profile (libx264 is GPL-only, so it tracks the
- * `gpl` profile exactly). Falls back to the top-level build entry for platforms
- * with no pinned target (e.g. Intel macOS).
+ * The one baseline is the pinned GPL build on every platform (founder ruling
+ * 2026-07-19: x264/x265 are the standard; a runtime without them is degraded;
+ * 2026-09-22: the LGPL rail is gone — nothing is redistributed, so there is
+ * no second build to prefer). Falls back to the top-level `ffmpegGpl` entry
+ * for platforms with no pinned target (e.g. Intel macOS).
  */
 export function resolveFfmpegBaseline(
   platformKey: string = getPlatformKey(),
 ): FfmpegBaselineRef {
-  for (const variant of ["gpl", "lgpl"] as const) {
-    const entry = getFfmpegPlatformEntry(variant, platformKey);
-    if (entry.available) {
-      return {
-        snapshot: entry.snapshot,
-        profile: entry.profile,
-        libx264: entry.profile === "gpl",
-        source: entry.source,
-      };
-    }
+  const entry = getFfmpegPlatformEntry(platformKey);
+  if (entry.available) {
+    return {
+      snapshot: entry.snapshot,
+      profile: "gpl",
+      libx264: true,
+      source: entry.source,
+    };
   }
-  const bl = ffmpegBaseline.ffmpeg;
+  const bl = ffmpegBaseline.ffmpegGpl;
   return {
     snapshot: bl.snapshot,
-    profile: bl.profile === "gpl" ? "gpl" : "lgpl",
+    profile: "gpl",
     libx264: bl.libx264,
     source: bl.source,
   };

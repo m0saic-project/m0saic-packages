@@ -1,7 +1,7 @@
 {
   "release": "0.2.0",
-  "tag": "v0.2.0",
-  "commit": "ff419c83b2c0260d80fc3e21c19b52eaa6187fde",
+  "tag": "v0.2.0 (pending — the tag lands at npm publish; hashes bind from this commit)",
+  "commit": "cf5ebc182bbfda29d3f7f2a0079ae723c930b70d",
   "note": "Frozen at the 0.2.0 cut (release/0.2.0 = dev; founder ruling: hard lock at the cut, not at the tag). Comments only; behavioural change = new vN+1. Hash v2 preserves newlines (ASI); registry pins bind id → registering file + definition hash (definition fields + the compiled render / renderLite / renderCover bodies; registered templates are deep-frozen). After git tag v0.2.0, --update-freeze may change only tag/commit/note.",
   "hashVersion": 2,
   "files": {
@@ -241,7 +241,7 @@
     "src/m0saic/media/blur-regions/v1/blur-regions.ts": "a8be1427dd53e686d7c1ea70b13bcd75b2cb687ef9234f0cb9b3d5be083a3af7",
     "src/m0saic/media/blur-regions/v1/index.ts": "844bd41d82d9ea1a96b7ab1e193bbb34ec62fbef2eb1922cdd955c77e7336647",
     "src/m0saic/media/blur-regions/v1/plan.ts": "0ade38aaf081ee97f58f10fbb82fe78796f206f43035fbcd76c45a7f858f7949",
-    "src/m0saic/media/blur-regions/v1/tutorial.ts": "5fa5e5afb3d8534bb33e32714cab21c7ba1d31b64dc416a434f3ea513ec65e2d",
+    "src/m0saic/media/blur-regions/v1/tutorial.ts": "f9a6e205d3150902e0ae47e825de5328f26430a0a333b868bdba1754398981fb",
     "src/m0saic/media/highlights/v1/highlights.ts": "662aacbaa6035ae078c479e549a5b0c15214a0141be545ae5b6a37db72981776",
     "src/m0saic/media/highlights/v1/index.ts": "0df9ebc6f1e5be906b9111db8615c7b4615f0bdfa85078be7c2fa18b5dee8319",
     "src/m0saic/media/highlights/v1/pipeline.ts": "f6afb4d303048de476fe44643ebd0f14c058a087525a060424c1f9ebaeb5f59e",

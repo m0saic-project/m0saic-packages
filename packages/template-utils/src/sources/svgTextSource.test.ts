@@ -32,6 +32,15 @@ describe("svgLabel", () => {
     expect(source.layers[0]?.style?.fontSize).toBeGreaterThanOrEqual(12);
   });
 
+  it("hAlign and fontFamily reach the layer (P9 / P18); the defaults are centre and the bundled face", () => {
+    const left = svgLabel("Hello", 400, 100, { hAlign: "left", fontFamily: "Helvetica Neue" }) as { layers?: Array<{ placement?: { hAlign?: string }; style?: { fontFamily?: string } }> };
+    expect(left.layers?.[0]?.placement?.hAlign).toBe("left");
+    expect(left.layers?.[0]?.style?.fontFamily).toBe("Helvetica Neue");
+    const plain = svgLabel("Hello", 400, 100) as { layers?: Array<{ placement?: { hAlign?: string }; style?: { fontFamily?: string } }> };
+    expect(plain.layers?.[0]?.placement?.hAlign).toBe("center");
+    expect(plain.layers?.[0]?.style).not.toHaveProperty("fontFamily");
+  });
+
   it("honors vAlign/padding pass-through", () => {
     const source = svgLabel("caption", 640, 360, {
       vAlign: "bottom",

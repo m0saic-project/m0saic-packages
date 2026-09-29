@@ -2,6 +2,7 @@ import type {
   MosaicFlushResult,
   MosaicTelemetrySettingsFile,
   MosaicUpstreamEndpointSource,
+  MosaicInstallContext,
 } from "@m0saic/types";
 import { isUpstreamAllowed } from "@m0saic/types";
 import { checkAndEnqueueLifecycle } from "./lifecycle";
@@ -200,13 +201,19 @@ export function runUpstreamMaintenance(opts: {
   env?: NodeJS.ProcessEnv;
   nowMs?: number;
   flush?: boolean;
+  /** Launch context for a first-ever run — stamped on `install_completed` (2026-09-27). */
+  install?: MosaicInstallContext;
 }): void {
   const passthrough = {
     ...(opts.nowMs !== undefined ? { nowMs: opts.nowMs } : {}),
     ...(opts.env !== undefined ? { env: opts.env } : {}),
   };
   try {
-    checkAndEnqueueLifecycle({ currentVersion: opts.currentVersion, ...passthrough });
+    checkAndEnqueueLifecycle({
+      currentVersion: opts.currentVersion,
+      ...passthrough,
+      ...(opts.install !== undefined ? { install: opts.install } : {}),
+    });
   } catch {
     /* best effort */
   }

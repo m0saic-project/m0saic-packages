@@ -98,6 +98,28 @@ describe("FLATTENED_STABLE_KEY_PATTERN", () => {
     }
   });
 
+  it("accepts the engine's own path keys (P34): root, group, frame and overlay segments", () => {
+    for (const ok of [
+      "r",
+      "r/fc0",
+      "r/pc3",
+      "r/gcolc0/fc1",
+      "r/gcolc0/growc1/fc2",
+      "r/ov1c0",
+      "r/fc0/ov1c0",
+      "r/ov1c0/gcolc56/fc38",
+      "r/gcolc106/fc1436",
+    ]) {
+      expect(isFlattenedStableKey(ok)).toBe(true);
+    }
+  });
+
+  it("rejects malformed path keys", () => {
+    for (const bad of ["r/", "r//fc0", "r/xc1", "r/fc", "r/gcolc0/", "x/fc0", "/r/fc0", "r/fc0/gcolc1 "]) {
+      expect(isFlattenedStableKey(bad)).toBe(false);
+    }
+  });
+
   it("rejects identifier-invalid suffixes and shapes outside STRICT_IDENTIFIER", () => {
     // NB: strings like "c_intro" / "C0_intro" / "c0intro" parse as
     // bare STRICT_IDENTIFIERs (the c<N>_ prefix is optional). They

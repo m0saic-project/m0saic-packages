@@ -283,6 +283,18 @@ try {
 
 const ids = templateUtils.listRegisteredTemplateIds().map(String);
 
+// The ids this repo has SHIPPED — the manifest's registry pins. A convention
+// introduced after a template shipped is not applied to it retroactively
+// (`bindingsDeclared`, 2026-09-25): the fix would be a vN+1 nobody will write,
+// so the finding would be permanent noise rather than a gate. A repo with no
+// manifest ships nothing yet and holds every template to the current rules.
+const FREEZE_MANIFEST = require("../dist/freeze.js").readFreezeManifest(ROOT);
+const SHIPPED_IDS = new Set(Object.keys(FREEZE_MANIFEST?.registry ?? {}));
+// The line those ids shipped at. A convention newer than it is LAG on them, not a
+// defect — reported below, never fatal.
+const SHIPPED_AT = typeof FREEZE_MANIFEST?.release === "string" ? FREEZE_MANIFEST.release : null;
+const lagging = new Map(); // convention → Set<templateId>
+
 // ── Stage 0c: registry pins ────────────────────────────────────────────────
 // The file hashes (Stage 0) cannot see a NEW, unfrozen file registering a
 // shipped id, or a pack barrel repointed at a different registering module
@@ -452,13 +464,24 @@ const bitmapDeclared = [];
 let rendered = 0;
 for (const id of ids) {
   const template = templateUtils.getTemplate(id);
-  const audit = await templateUtils.auditRenderedTemplate(template, SWEEP ? { sweepCanvases: templateUtils.STANDARD_SWEEP_CANVASES } : {});
+  // `shipped` exempts a template from conventions introduced after it shipped
+  // (today: `bindingsDeclared`). The manifest's registry pins are the record of
+  // what shipped; a repo with no manifest holds every template to the current
+  // conventions.
+  const audit = await templateUtils.auditRenderedTemplate(template, {
+    ...(SWEEP ? { sweepCanvases: templateUtils.STANDARD_SWEEP_CANVASES } : {}),
+    ...(SHIPPED_AT && SHIPPED_IDS.has(String(id)) ? { shippedAt: SHIPPED_AT } : {}),
+  });
   if (audit.skipped) {
     skipped.push(`${id}: ${audit.skipped}`);
     continue;
   }
   rendered++;
   report.rendered = rendered;
+  for (const f of audit.lagging ?? []) {
+    if (!lagging.has(f.convention)) lagging.set(f.convention, new Set());
+    lagging.get(f.convention).add(f.templateId ?? String(id));
+  }
   if (audit.layout) layouts.push({ id: audit.templateId, layout: audit.layout });
   for (const f of audit.findings) {
     if (isMuted(f.templateId ?? id)) { suppressed.render++; continue; }
@@ -488,6 +511,24 @@ if (warnings2.length) {
   warn(`[check-registry] ⚠ ${warnings2.length} render-time warning(s) (record posture — fix when you touch the template):`);
   printFindings("⚠", warnings2);
 }
+// ── Poster time (Phase 7 I, 2026-09-27) ────────────────────────────────────
+// A video template that animates in from t=0 opens on an empty first frame in
+// Make unless it declares `outputHints.posterTimeMs`. Make now derives the
+// fullest frame when the hint is absent, but the author knows the frame they
+// mean. WARN only, and only for templates the freeze does not hold — a
+// shipped template cannot change, and nagging about it would teach nothing.
+{
+  const noPoster = ids.filter((id) => {
+    if (SHIPPED_IDS.has(String(id))) return false;
+    const t = templateUtils.getTemplate(id);
+    const oh = t && t.outputHints;
+    return !!oh && oh.format && oh.format.kind === "video" && typeof oh.posterTimeMs !== "number";
+  });
+  if (noPoster.length) {
+    warn(`[check-registry] \u26a0 ${noPoster.length} unfrozen video template(s) declare no outputHints.posterTimeMs — Make opens them on the fullest frame it can find; declare the frame you mean: ${noPoster.map(String).join(", ")}`);
+  }
+}
+
 // ── Stage 3: layout fingerprints ───────────────────────────────────────────
 // The flattened layout at the hinted canvas, committed per template as a
 // native `.m0` sidecar next to its source (`# size:` = the canvas, `# title:`
@@ -526,6 +567,26 @@ if (mutedTotal > 0) {
   say(`[check-registry] \u2139 ${mutedTotal} finding(s) on ${DEPRECATED.size} deprecated template(s) suppressed (advice only \u2014 freeze + fingerprints still apply). M0SAIC_INCLUDE_DEPRECATED=1 to see them.`);
 } else if (DEPRECATED.size && INCLUDE_DEPRECATED) {
   say(`[check-registry] \u2139 ${DEPRECATED.size} deprecated template(s) INCLUDED in convention checks (M0SAIC_INCLUDE_DEPRECATED=1).`);
+}
+// ── The conventions LEVEL of the shipped fleet ─────────────────────────────
+// Old templates are allowed to lag (founder ruling 2026-09-25): they met the
+// conventions of their day and the fix is their next vN. Suppressing the finding
+// silently, though, hid the list the eventual vN pass needs — so it is counted
+// here, never fatal. `m0saic doctor` prints the same answer for a repo from
+// outside; this is the same question asked from inside the build.
+{
+  const behindIds = new Set();
+  for (const ids2 of lagging.values()) for (const t of ids2) behindIds.add(t);
+  report.conventions = {
+    shippedAt: SHIPPED_AT,
+    current: templateUtils.conventionVersions().slice(-1)[0] ?? null,
+    behind: [...lagging.entries()].map(([convention, ids2]) => ({ convention, templates: ids2.size })),
+    templatesBehind: behindIds.size,
+  };
+  if (behindIds.size > 0) {
+    const rules = [...lagging.entries()].map(([c, ids2]) => `${c} (${ids2.size})`).join(", ");
+    say(`[check-registry] \u2139 conventions: the fleet shipped at ${SHIPPED_AT}; ${behindIds.size} template(s) are behind ${report.conventions.current} on ${rules}. Not a defect \u2014 they met the conventions of their day; each clears at its next vN. \`m0saic doctor .\` lists them.`);
+  }
 }
 if (SWEEP) say(`[check-registry] (sweep) each template was also rendered on ${templateUtils.STANDARD_SWEEP_CANVASES.length} standard canvases for the canvasEnvelope rule.`);
 say(`[check-registry] ✓ ${rendered} templates rendered at their defaults — render-time conventions hold (${skipped.length} skipped: capability tier / inputs required).`);

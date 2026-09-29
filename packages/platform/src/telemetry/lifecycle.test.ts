@@ -4,7 +4,7 @@ import * as path from "path";
 import { M0SAIC_TMP_PREFIX } from "../paths/tempPrefix";
 import { listOutbox } from "./outbox";
 import { loadTelemetrySettings, setTelemetryMode } from "./settingsStore";
-import { checkAndEnqueueLifecycle } from "./lifecycle";
+import { checkAndEnqueueLifecycle, sanitizeInstallContext } from "./lifecycle";
 
 const originalEnv = process.env.M0SAIC_ROOT;
 let fixture: string;
@@ -80,5 +80,37 @@ describe("checkAndEnqueueLifecycle", () => {
     });
     expect(res.enqueued).toBeNull();
     expect(listOutbox()).toHaveLength(0);
+  });
+});
+
+describe("install context on install_completed (2026-09-27)", () => {
+  it("stamps surface / invocation / source on the FIRST event only, never on update_completed", () => {
+    const first = checkAndEnqueueLifecycle({
+      currentVersion: "0.3.0", nowMs: 1000, env: {},
+      install: { surface: "cli", invocation: "npx", source: "wearedevelopers" },
+    });
+    expect(first.enqueued).toBe("install_completed");
+    expect(listOutbox()[0].payload).toMatchObject({ kind: "install_completed", surface: "cli", invocation: "npx", source: "wearedevelopers" });
+    const moved = checkAndEnqueueLifecycle({ currentVersion: "0.4.0", nowMs: 2000, env: {}, install: { surface: "cli", source: "hn" } });
+    expect(moved.enqueued).toBe("update_completed");
+    const upd = listOutbox()[1].payload as Record<string, unknown>;
+    expect("source" in upd).toBe(false);
+    expect("surface" in upd).toBe(false);
+  });
+
+  it("a 0.2.x-style call with no context sends exactly the old shape", () => {
+    checkAndEnqueueLifecycle({ currentVersion: "0.3.0", nowMs: 1000, env: {} });
+    expect(Object.keys(listOutbox()[0].payload).sort()).toEqual(["host", "installId", "kind", "schemaVersion", "timestamp"]);
+  });
+
+  it("⭐ sanitizes: closed enums only, and the source is a bounded lower-case slug or nothing", () => {
+    expect(sanitizeInstallContext(undefined)).toEqual({});
+    expect(sanitizeInstallContext({ surface: "web" as never, invocation: "curl" as never })).toEqual({});
+    expect(sanitizeInstallContext({ source: "  WeAreDevelopers " })).toEqual({ source: "wearedevelopers" });
+    expect(sanitizeInstallContext({ source: "We Are Developers" })).toEqual({});
+    expect(sanitizeInstallContext({ source: "x" })).toEqual({});
+    expect(sanitizeInstallContext({ source: "a".repeat(30) })).toEqual({});
+    expect(sanitizeInstallContext({ source: "someone@example.com" })).toEqual({});
+    expect(sanitizeInstallContext({ surface: "desktop", source: "card" })).toEqual({ surface: "desktop", source: "card" });
   });
 });

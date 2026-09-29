@@ -162,6 +162,15 @@ export type MosaicSourceEditorMeta = {
      *  out of the text form and the badge row. Needs `seedDraft`. */
     companion?: boolean;
     /**
+     * One human-readable line shown IN CONTEXT when a person edits this rect
+     * — under the inline editor, on the tile card, in the handle's tooltip:
+     * what changing the value does and what it looks like ("The month this
+     * calendar shows; the grid re-flows to its weeks"). Optional (0.3.0):
+     * absent, editors fall back to the prop's `description`. Plain text, one
+     * sentence; editors cap it around 200 characters.
+     */
+    hint?: string;
+    /**
      * Character span `[start, end)` of the STRING leaf this rect edits — one
      * line of a multi-line prop (a code state, a lyric block). The editor
      * shows and writes only this slice; the rest of the leaf is untouched.
@@ -190,6 +199,15 @@ export type MosaicSourceEditorMeta = {
     onClear?: "remove-element" | "unset-leaf";
     seedDraft?: string;
     companion?: boolean;
+    /**
+     * One human-readable line shown IN CONTEXT when a person edits this rect
+     * — under the inline editor, on the tile card, in the handle's tooltip:
+     * what changing the value does and what it looks like ("The month this
+     * calendar shows; the grid re-flows to its weeks"). Optional (0.3.0):
+     * absent, editors fall back to the prop's `description`. Plain text, one
+     * sentence; editors cap it around 200 characters.
+     */
+    hint?: string;
     range?: { start: number; end: number };
     focus?: { start: number; end: number };
   }>;
@@ -608,8 +626,16 @@ export type MosaicEngineMeta = {
    * from 1, because a valid file WAS produced) plus `renderStatus` /
    * `renderErrorCodes` in the `--report` sidecar. The desktop UI uses the
    * same marker to disable Make. Abort: never. Report: always.
+   *
+   * `"incomplete"` (0.3.0, R8): the template is WAITING ON AN INPUT only the
+   * host can supply — a source not yet picked, takes not yet marked — and
+   * says so on a card (`makeIncompleteMosaic`). Reported like an error (exit
+   * 3, `renderStatus` in the sidecar; a picture that tells you what is
+   * missing) and it gates Make the same way, but Make never blames the last
+   * edit for it: no undo bar, no "can't render" copy; instead it opens the
+   * pane or the tool that takes the input.
    */
-  renderStatus?: "ok" | "error";
+  renderStatus?: "ok" | "error" | "incomplete";
 
   /**
    * Optional human-readable error details.

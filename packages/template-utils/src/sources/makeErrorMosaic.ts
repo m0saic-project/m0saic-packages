@@ -6,8 +6,49 @@ import type {
 } from "@m0saic/types";
 import { toM0String } from "@m0saic/dsl-stdlib";
 
-function asciiOnly(s: string): string {
-  return s.replace(/[^\x20-\x7E]/g, "?");
+/**
+ * The card's copy, in characters its face can draw (P11, 2026-09-27). The
+ * old rule replaced EVERY non-ASCII character with "?" — the ASCII law the
+ * conventions retired when `svgGlyphCoverage` started asking the real font —
+ * so m0saic's own messages arrived mangled: "Take Cutter ? the clip?s length"
+ * for an em dash and a curly quote. The bundled face (Roboto) covers Latin,
+ * Latin-1 and Extended, Greek, Cyrillic, general punctuation and currency;
+ * those pass. The symbols our copy leans on but the face lacks (arrows,
+ * check marks, the warning sign) become their ASCII spelling. Anything else
+ * — emoji, CJK — is still "?", because a "?" beats tofu on an error card.
+ */
+const SYMBOL_SPELLING: Record<string, string> = {
+  "→": "->", // →
+  "←": "<-", // ←
+  "↔": "<->", // ↔
+  "⇒": "=>", // ⇒
+  "✓": "OK", // ✓
+  "✔": "OK", // ✔
+  "✗": "x", // ✗
+  "✘": "x", // ✘
+  "⚠": "!", // ⚠
+  "•": "*", // •
+  "×": "x", // ×
+  "≈": "~", // ≈
+  "≤": "<=", // ≤
+  "≥": ">=", // ≥
+  "≠": "!=", // ≠
+  " ": " ", // nbsp
+  " ": " ",
+  " ": " ",
+};
+const FACE_COVERS =
+  /[\x20-\x7E¡-ɏͰ-ϿЀ-ӿ‐-‧‰-⁞₠-⃏]/;
+
+export function readableText(s: string): string {
+  let out = "";
+  for (const ch of s) {
+    const spelled = SYMBOL_SPELLING[ch];
+    if (spelled !== undefined) out += spelled;
+    else if (FACE_COVERS.test(ch)) out += ch;
+    else out += "?";
+  }
+  return out;
 }
 
 function wrapLines(msg: string, maxCols: number): string[] {
@@ -47,12 +88,16 @@ export function makeErrorMosaic(
 
     /** Optional machine-ish code for UI/debug */
     errorCode?: string;
+    /** `"incomplete"` (0.3.0): waiting on an input, not broken — see
+     *  {@link makeIncompleteMosaic}. Default `"error"`. */
+    status?: "error" | "incomplete";
   }
 ): MosaicDocument {
   const W = opts.width;
   const H = opts.height;
 
-  const title = opts.title ?? "Template Error";
+  const status = opts.status ?? "error";
+  const title = opts.title ?? (status === "incomplete" ? "Needs an input" : "Template Error");
   const bg = opts.backgroundColor ?? "#000000";
   const fg = opts.textColor ?? "#ffffff";
 
@@ -91,7 +136,7 @@ export function makeErrorMosaic(
   const layers: MosaicTextLayer[] = [];
 
   layers.push({
-    content: { kind: "literal", text: asciiOnly(`ERROR: ${title}`) },
+    content: { kind: "literal", text: readableText(status === "incomplete" ? title : `ERROR: ${title}`) },
     style: { fontSize: titleFont, fontColor: fg } as any,
     placement: {
       hAlign: "left",
@@ -103,7 +148,7 @@ export function makeErrorMosaic(
 
   for (let i = 0; i < lines.length; i++) {
     layers.push({
-      content: { kind: "literal", text: asciiOnly(lines[i]) },
+      content: { kind: "literal", text: readableText(lines[i]) },
       style: { fontSize: bodyFont, fontColor: fg } as any,
       placement: {
         hAlign: "left",
@@ -121,7 +166,7 @@ export function makeErrorMosaic(
 
     // ✅ engine-marked failure: UI can disable Make deterministically
     engine: {
-      renderStatus: "error",
+      renderStatus: status,
       renderError: {
         message: `${title}: ${message}`.trim(),
         code: opts.errorCode,
@@ -144,4 +189,21 @@ export function makeErrorMosaic(
     // gate 27, fixed fleet-wide here at gate 28).
     audio: { mode: "off" },
   };
+}
+
+/**
+ * The card for a template that is WAITING ON AN INPUT (R8, 0.3.0) — a source
+ * not yet picked, takes not yet marked — rather than one that broke. Same
+ * card as {@link makeErrorMosaic}, stamped `renderStatus: "incomplete"`: the
+ * CLI reports it like an error (exit 3, a picture that says what is missing)
+ * and Make gates MAKE on it, but Make never blames the last edit — no undo
+ * bar, no "can't render" copy — and opens the pane or the tool that takes the
+ * input. Say what is missing and where it goes: "Drop a video, then mark your
+ * takes."
+ */
+export function makeIncompleteMosaic(
+  message: string,
+  opts: Omit<Parameters<typeof makeErrorMosaic>[1], "status">,
+): MosaicDocument {
+  return makeErrorMosaic(message, { ...opts, status: "incomplete", title: opts.title ?? "Needs an input" });
 }

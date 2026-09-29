@@ -61,9 +61,13 @@ describe("renderTemplatePackToMosaicFiles", () => {
     tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), makeM0saicTempPrefix("pack-test")));
   });
 
+  // Removing a pack's rendered tree can outlast Jest's 5 s hook default when
+  // the whole suite is running under load (0.3.0 validation, 2026-09-28: the
+  // hook timed out at 121 s wall time for the spec and passed at 25 s). The
+  // work is the same either way; give the cleanup room.
   afterEach(async () => {
     await fs.rm(tmpDir, { recursive: true, force: true });
-  });
+  }, 60_000);
 
   test("generates .mosaic files and index.json for each variant", async () => {
     const outDir = path.join(tmpDir, "out");
@@ -195,9 +199,13 @@ describe("chart-frame preset tokens via pack", () => {
     tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), makeM0saicTempPrefix("chartframe-pack-test")));
   });
 
+  // Removing a pack's rendered tree can outlast Jest's 5 s hook default when
+  // the whole suite is running under load (0.3.0 validation, 2026-09-28: the
+  // hook timed out at 121 s wall time for the spec and passed at 25 s). The
+  // work is the same either way; give the cleanup room.
   afterEach(async () => {
     await fs.rm(tmpDir, { recursive: true, force: true });
-  });
+  }, 60_000);
 
   // Stub plot-area inject
   const plotAreaStub: MosaicDocument = {

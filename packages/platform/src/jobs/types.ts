@@ -47,7 +47,9 @@ export type JobInput =
 /**
  * Render parameters mirroring the existing render IPC contract. `output`
  * supports `{{name}}` and `{{date}}` tokens — see runJob for substitution
- * rules. `toolchain` exposes the existing LGPL/GPL ffmpeg split.
+ * rules. (A `toolchain?: "lgpl" | "gpl"` field existed until 2026-09-22; it
+ * was never read by the runner and the LGPL build is gone — there is one
+ * pinned ffmpeg, resolved by the host.)
  */
 export type JobRenderArgs = {
   width: number;
@@ -57,7 +59,6 @@ export type JobRenderArgs = {
   durationMs?: number;
   outputKind?: "video" | "image";
   alpha?: boolean;
-  toolchain?: "lgpl" | "gpl";
 };
 
 /* ── Schedules ─────────────────────────────────────────────────────── */

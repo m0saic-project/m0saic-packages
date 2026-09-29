@@ -68,6 +68,9 @@ export type TemplateConventionName =
   | "rendersAtDefaults"
   | "bindingsSound"
   | "bindingsCover"
+  | "bindingsDeclared"
+  | "bindingHints"
+  | "canvasFill"
   | "svgGlyphCoverage"
   | "safeMinimumCanvas"
   | "canvasEnvelope"
@@ -96,6 +99,26 @@ export const TEMPLATE_CONVENTION_POSTURE: Readonly<Record<TemplateConventionName
   rendersAtDefaults: "throw",
   bindingsSound: "throw",
   bindingsCover: "record",
+  // Shipped 2026-09-25 as `throw` with NO migration: every template that
+  // existed is hashed in `frozen.manifest.json` and exempt by construction, so
+  // the rule only ever meets new work. Founder ruling — "all templates that
+  // exist now are FROZEN; NEW templates should have as many props bound as
+  // possible", and there is no fleet to migrate, which is the point of doing it
+  // at the start of a line rather than the end.
+  bindingsDeclared: "throw",
+  // Shipped 2026-09-27 as `throw`. Founder: "a production-grade template
+  // adheres to all the surfaces of the ecosystem … it's better to take this
+  // tax now". The canvas is the primary surface, so every bound rect says in
+  // context what its value does; the tax is one honest sentence per bound
+  // prop, paid once in the schema. Safe at throw for the same reason as the
+  // roll call: every template that shipped is exempt (`shippedAt`).
+  bindingHints: "throw",
+  // Shipped 2026-09-25 as `throw`, deliberately: "we need to be greedy about
+  // adding conventions because agents, especially non-frontier ones, won't"
+  // (founder). A `record` rule teaches nobody — the model never sees the warning.
+  // Safe at throw because every template that shipped is exempt (`shipped`) and
+  // the one legitimate case declares itself (`useNestedBackgroundColor` default-on).
+  canvasFill: "throw",
   svgGlyphCoverage: "throw",
   safeMinimumCanvas: "record",
   canvasEnvelope: "record",
@@ -108,6 +131,100 @@ export const TEMPLATE_CONVENTION_POSTURE: Readonly<Record<TemplateConventionName
   latticeSmooth: "throw",
   layoutFingerprint: "throw",
 };
+
+/**
+ * The m0saic line by which each convention was ENFORCED — the version axis the
+ * lag story needs (founder, 2026-09-25: "conventions change over time, but if we
+ * semver them we know: does X template pass conventions at Y semver").
+ *
+ * A template that fails a rule newer than the line it SHIPPED at is not broken —
+ * it met the conventions of its day, and the fix is its next vN. A template that
+ * fails a rule OLDER than its own release shipped non-compliant, which is a real
+ * defect. `release` in a repo's `frozen.manifest.json` is the other half of the
+ * comparison.
+ *
+ * Everything that predates 0.3.0 is recorded as **0.2.0**, deliberately: at the
+ * 0.2.0 freeze the whole shipped fleet passed every rule then in force, so 0.2.0
+ * is a TRUE lower bound for all of them. Recording a rule's first draft date
+ * instead would claim precision this table does not have. New rules get the line
+ * they actually land in.
+ */
+export const TEMPLATE_CONVENTION_SINCE: Readonly<Record<TemplateConventionName, string>> = {
+  defaultProps: "0.2.0",
+  colorProps: "0.2.0",
+  noLocalPaths: "0.2.0",
+  browseSurface: "0.2.0",
+  propLabels: "0.2.0",
+  defaultsValidate: "0.2.0",
+  outputFormat: "0.2.0",
+  outputHintsResolve: "0.2.0",
+  repoFrontDoor: "0.2.0",
+  rendersAtDefaults: "0.2.0",
+  bindingsSound: "0.2.0",
+  bindingsCover: "0.2.0",
+  bindingsDeclared: "0.3.0",
+  bindingHints: "0.3.0",
+  canvasFill: "0.3.0",
+  svgGlyphCoverage: "0.2.0",
+  safeMinimumCanvas: "0.2.0",
+  canvasEnvelope: "0.2.0",
+  deterministic: "0.2.0",
+  textFits: "0.2.0",
+  costBudget: "0.2.0",
+  latticeSmooth: "0.2.0",
+  layoutFingerprint: "0.2.0",
+};
+
+/** `0.x.y` compare. Returns <0, 0, >0. Non-numeric segments sort as 0. */
+export function compareConventionVersions(a: string, b: string): number {
+  const seg = (v: string) => v.split(".").map((n) => Number.parseInt(n, 10) || 0);
+  const [a0, a1, a2] = seg(a);
+  const [b0, b1, b2] = seg(b);
+  return a0 - b0 || a1 - b1 || a2 - b2;
+}
+
+/** Every line the convention table knows about, oldest first. */
+export function conventionVersions(): string[] {
+  return [...new Set(Object.values(TEMPLATE_CONVENTION_SINCE))].sort(compareConventionVersions);
+}
+
+export type ConventionsLevel = {
+  /** The newest line whose conventions this template fully meets — `null` when it
+   *  fails a rule from the oldest line the table tracks. */
+  meets: string | null;
+  /** The lines it does NOT meet, and which rules fail, oldest first. */
+  behind: Array<{ since: string; conventions: TemplateConventionName[] }>;
+};
+
+/**
+ * "Does this template pass conventions at version Y?" — answered as the newest
+ * line it fully meets, plus what it is behind on.
+ *
+ * ERROR-severity findings only. A `record`-posture warning is advice, not a
+ * failure to meet a line; treating it as one would make "meets 0.2.0" unreachable
+ * for a template with one cosmetic note.
+ */
+export function conventionsLevel(
+  findings: ReadonlyArray<{ convention: TemplateConventionName; severity: TemplateConventionSeverity }>,
+): ConventionsLevel {
+  const versions = conventionVersions();
+  const failing = [...new Set(findings.filter((f) => f.severity === "error").map((f) => f.convention))];
+  if (failing.length === 0) return { meets: versions[versions.length - 1] ?? null, behind: [] };
+
+  const bySince = new Map<string, TemplateConventionName[]>();
+  for (const c of failing) {
+    const v = TEMPLATE_CONVENTION_SINCE[c];
+    bySince.set(v, [...(bySince.get(v) ?? []), c].sort());
+  }
+  const behind = [...bySince.entries()]
+    .map(([since, conventions]) => ({ since, conventions }))
+    .sort((x, y) => compareConventionVersions(x.since, y.since));
+
+  // It meets every line strictly older than its oldest failure.
+  const oldestFailure = behind[0].since;
+  const met = versions.filter((v) => compareConventionVersions(v, oldestFailure) < 0);
+  return { meets: met[met.length - 1] ?? null, behind };
+}
 
 /** One-line description + fix per convention, for error messages and gates. */
 export const TEMPLATE_CONVENTION_FIX: Readonly<Record<TemplateConventionName, string>> = {
@@ -135,6 +252,12 @@ export const TEMPLATE_CONVENTION_FIX: Readonly<Record<TemplateConventionName, st
     `every editor.binding must resolve against propsSchema: the prop must exist and be bindable, list props need an index, structured (json / list) props need a path AND a kind — see bindProp / bindPropPath in @m0saic/template-utils.`,
   bindingsCover:
     `a prop drawn as text should be bound to the rect that shows it (bindProp(src, "<key>")) so Make's double-click edits it in place. Bind the rect that SHOWS the prop, even when its value is empty.`,
+  bindingsDeclared:
+    `every prop that CAN carry a canvas handle is either bound on the rect that shows it (bindProp / bindProps / bindPropPath / bindPropRect) or named in template.bindings.unbound with the reason it has none ({ fps: "timing" }). The accountable props are free-text and colour strings, numbers, media, one element of a basic list, one leaf of json / list / array, and a regions-picker rect; booleans, closed sets, group containers, the m0 family, code and hidden / human props are never canvas things. A declaration naming an unknown prop, or one that is actually bound, is itself a violation — a stale entry is worse than none. Templates hashed in frozen.manifest.json are exempt.`,
+  bindingHints:
+    `every bound rect must show one line in context — what changing the value does and what it looks like — because Make puts it under the inline editor, on the tile card and in the handle's tooltip, and a person who double-clicks should not have to open the settings or a manual. It comes from the binding's own hint (bindProp(src, "<key>", i, { hint: "…" }) / withBindingHint(src, "…")) or, for every binding of the prop at once, the prop's description (propsSchema.<key>.description). One plain sentence; never the value itself. A companion leaf (filled only by a media drop) needs none. Templates hashed in frozen.manifest.json are exempt.`,
+  canvasFill:
+    `fill the canvas with document.backgroundColor, never a full-canvas colour rect. A base rect is a click target that covers everything — it gets selected in Make any time the pointer is not on a smaller tile — and the document background does the same job with no rect at all. Only a STATIC, fully opaque, unshaped fill counts: a curtain wipe (overlay.enable / window), a scrim (overlay.alpha), a masked shape and a rounded card are all legitimate and never flagged. Two declared exceptions, and they mean different things: canvas.baseRect = "<why>" is the general one (the rect IS the subject — a lesson about full-rect nodes, a tutorial surface), and defaultProps.useNestedBackgroundColor = true is the narrow one (this template is COMPOSED INTO another, whose slot its own backgroundColor cannot fill). An empty baseRect reason is refused.`,
   svgGlyphCoverage:
     `every character drawn with rasterizer:"svg" must have a glyph in the font it resolves to; missing glyphs render as tofu. Use an ASCII stand-in ("->" for an arrow) or a font that has the character.`,
   safeMinimumCanvas:

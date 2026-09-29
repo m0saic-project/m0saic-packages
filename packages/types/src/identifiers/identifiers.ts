@@ -85,14 +85,25 @@ export const FRIENDLY_SLUG_PATTERN =
   /^[A-Za-z0-9_][A-Za-z0-9_.\-]{0,127}$/;
 
 /**
- * Flattened-stableKey — optional `c0_`, `c1_`, … namespace prefixes
- * (added by the flattener for nested-child stableKeys) followed by a
- * {@link STRICT_IDENTIFIER_PATTERN} suffix.
+ * Flattened-stableKey — either form the engine produces:
+ *
+ *  - the PATH form `m0StringParser`'s `makeStableKeySegment` mints for
+ *    every cell: `r`, then group (`gcolc<N>` / `growc<N>`), frame
+ *    (`fc<N>` / `pc<N>` / `nc<N>` / `uc<N>`) and overlay (`ov<depth>c<N>`)
+ *    segments — `r/gcolc0/fc1`, `r/ov1c0/gcolc56/fc38`, `r/fc0/ov1c0`
+ *    (the grammar `collectRefTargets.ts` parses);
+ *  - the NAMESPACED form: optional `c0_`, `c1_`, … prefixes (the flattener's
+ *    nested-child namespacing) followed by a {@link STRICT_IDENTIFIER_PATTERN}
+ *    suffix.
+ *
+ * Until 2026-09-27 only the second form matched, so
+ * `isFlattenedStableKey("r/ov1c0/gcolc0/fc0")` was `false` for every key the
+ * engine actually writes (prague-hiphop finding P34).
  *
  * Used exclusively for {@link MosaicRefSource.flattenedStableKey}.
  */
 export const FLATTENED_STABLE_KEY_PATTERN =
-  /^(c\d+_)*[a-zA-Z_][a-zA-Z0-9_]{0,63}$/;
+  /^(?:r(?:\/(?:g(?:col|row)c\d+|[fpnu]c\d+|ov\d+c\d+))*|(?:c\d+_)*[a-zA-Z_][a-zA-Z0-9_]{0,63})$/;
 
 /**
  * Namespaced identifier — `@scope/path/v1` style, slash-separated.

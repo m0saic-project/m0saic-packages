@@ -2,7 +2,11 @@ import type { MosaicTemplate, MosaicTemplatePropDefinition } from "@m0saic/types
 import { asTemplateId } from "@m0saic/types";
 import {
   TEMPLATE_CONVENTION_POSTURE,
+  TEMPLATE_CONVENTION_SINCE,
   TemplateConventionError,
+  compareConventionVersions,
+  conventionVersions,
+  conventionsLevel,
   drainTemplateConventionFindings,
   enforceTemplateConventions,
   listTemplateConventionFindings,
@@ -251,5 +255,61 @@ describe("schema-level conventions (2026-09-06)", () => {
       ["defaultProps", "error", true],
       ["browseSurface", "error", true],
     ]);
+  });
+});
+
+
+describe("the convention VERSION axis — does template X pass conventions at Y?", () => {
+  const err = (convention: string) => ({ convention, severity: "error" } as never);
+  const warn = (convention: string) => ({ convention, severity: "warning" } as never);
+
+  it("every convention declares the line it was enforced by", () => {
+    for (const name of Object.keys(TEMPLATE_CONVENTION_POSTURE)) {
+      expect(TEMPLATE_CONVENTION_SINCE[name as never]).toMatch(/^\d+\.\d+\.\d+$/);
+    }
+    // ...and no rule claims a line that does not exist in the table
+    expect(conventionVersions()).toEqual(["0.2.0", "0.3.0"]);
+  });
+
+  it("compares 0.x versions", () => {
+    expect(compareConventionVersions("0.2.0", "0.3.0")).toBeLessThan(0);
+    expect(compareConventionVersions("0.3.0", "0.2.0")).toBeGreaterThan(0);
+    expect(compareConventionVersions("0.3.0", "0.3.0")).toBe(0);
+    expect(compareConventionVersions("0.10.0", "0.9.0")).toBeGreaterThan(0); // not lexical
+  });
+
+  describe("conventionsLevel", () => {
+    it("a clean template meets the newest line", () => {
+      expect(conventionsLevel([])).toEqual({ meets: "0.3.0", behind: [] });
+    });
+
+    it("⭐ the case the axis exists for: passes 0.2.0, behind on 0.3.0", () => {
+      const level = conventionsLevel([err("canvasFill"), err("bindingsDeclared")]);
+      expect(level.meets).toBe("0.2.0");
+      expect(level.behind).toEqual([{ since: "0.3.0", conventions: ["bindingsDeclared", "canvasFill"] }]);
+    });
+
+    it("a rule OLDER than the newest failure still fails the older line", () => {
+      const level = conventionsLevel([err("textFits"), err("canvasFill")]);
+      expect(level.meets).toBeNull(); // 0.2.0 is the oldest line tracked, and it fails it
+      expect(level.behind.map((b) => b.since)).toEqual(["0.2.0", "0.3.0"]);
+    });
+
+    it("warnings are advice, not a failure to meet a line", () => {
+      expect(conventionsLevel([warn("bindingsCover"), warn("costBudget")])).toEqual({ meets: "0.3.0", behind: [] });
+    });
+
+    it("groups the failures by line, oldest first", () => {
+      const level = conventionsLevel([err("canvasFill"), err("deterministic"), err("bindingsDeclared"), warn("costBudget")]);
+      expect(level.behind).toEqual([
+        { since: "0.2.0", conventions: ["deterministic"] },
+        { since: "0.3.0", conventions: ["bindingsDeclared", "canvasFill"] },
+      ]);
+    });
+
+    it("dedupes a convention reported more than once", () => {
+      const level = conventionsLevel([err("canvasFill"), err("canvasFill")]);
+      expect(level.behind).toEqual([{ since: "0.3.0", conventions: ["canvasFill"] }]);
+    });
   });
 });

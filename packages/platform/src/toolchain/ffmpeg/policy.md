@@ -1,34 +1,31 @@
 # FFmpeg Policy
 
-## m0saic v1.0.0 baseline
+> **2026-09-22 — one baseline, GPL, never redistributed.** The LGPL rail described
+> below was removed. m0saic ships no ffmpeg binary at all; the single pinned
+> baseline is the GPL build (libx264/libx265, full drawtext stack), fetched from
+> its origin on the user's machine at the user's request — `m0saic setup`, the
+> Desktop first-run gate, or Tools → Toolchain — sha256-verified against
+> `baseline.json` and landed in `<m0saic-root>/toolchains/ffmpeg/1.0.0-gpl/`.
+> Directing a user to a publisher's download is not redistribution, so the
+> "legally safer non-GPL default" the older text argues for buys nothing and
+> costs the standard encoder stack. The sections below are kept as the record
+> of the original pair; read "LGPL baseline" as historical.
 
-m0saic v1.0.0 standardizes on a legally safe FFmpeg baseline for official development, testing, and product integration.
+## m0saic v1.0.0 baseline (historical: the LGPL/GPL pair)
 
-Official baseline (LGPL):
-- Source: BtbN FFmpeg-Builds
-- Platform target: win64 LGPL build
-- Snapshot: `N-124278-gcc3ca17127-20260430`
-- Profile: LGPL-oriented build
-- GPL enabled: no
-- libx264 enabled: no
-- libx265 enabled: no
-- Pinned release tag: [`autobuild-2026-04-30-13-44`](https://github.com/BtbN/FFmpeg-Builds/releases/tag/autobuild-2026-04-30-13-44)
-- Retention: pinned to BtbN's last-of-month autobuild — GitHub retains the artifacts through ~2028-04-30
+m0saic v1.0.0 standardized on a pinned FFmpeg baseline for official development, testing, and product integration.
 
-This baseline is the official FFmpeg target for m0saic v1.0.0.
-
-### GPL counterpart
-
-The same BtbN release tag also provides a GPL artifact, recognized by m0saic as the canonical upgrade target for users who need libx264 / libx265:
-
-- Snapshot: `N-124278-gcc3ca17127-20260430` (same upstream tree as LGPL — only configure flags differ)
+Official baseline (now the ONLY baseline — GPL):
+- Source: BtbN FFmpeg-Builds (Windows/Linux); ffmpeg.martin-riedl.de (macOS arm64, one commit later — see `baseline.json` `platforms`)
+- Snapshot: `N-124278-gcc3ca17127-20260430` (macOS: `N-124279-g0f6ba39122`)
 - Profile: GPL build
 - GPL enabled: yes
 - libx264 enabled: yes
 - libx265 enabled: yes
-- Pinned release tag: same as LGPL
+- Pinned release tag: [`autobuild-2026-04-30-13-44`](https://github.com/BtbN/FFmpeg-Builds/releases/tag/autobuild-2026-04-30-13-44)
+- Retention: pinned to BtbN's last-of-month autobuild — GitHub retains the artifacts through ~2028-04-30
 
-m0saic does NOT redistribute the GPL build. The desktop app's Tools page surfaces a guided install flow that links to the pinned release tag; users obtain the ZIP themselves and drop it into `<m0saic-root>/toolchains/ffmpeg/1.0.0-gpl/`.
+m0saic does NOT redistribute this build. `m0saic setup` and the desktop app download it from the pinned release at the user's request and verify it against the sha256 in `baseline.json`.
 
 ---
 

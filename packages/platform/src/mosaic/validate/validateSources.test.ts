@@ -267,9 +267,9 @@ describe("validateMosaicSources (branch coverage)", () => {
           [{ code: "TEXT_LAYERS_EMPTY", severity: "error" }],
         ],
         [
-          "layers is empty array",
+          "layers is empty array — a WARNING, the empty handle (P19)",
           { type: "text", layers: [] },
-          [{ code: "TEXT_LAYERS_EMPTY", severity: "error" }],
+          [{ code: "TEXT_LAYERS_EMPTY", severity: "warning" }],
         ],
       ])("%s", (_name, src, expected) => {
         const diags = validateMosaicSources([src as any]);
@@ -794,11 +794,11 @@ describe("validateMosaicSources (branch coverage)", () => {
       const diags = validateMosaicSources([
         { type: "media", assetId: "", mediaType: "video" }, // MEDIA_ASSETID_EMPTY
         { type: "mosaic", ref: "" }, // MOSAIC_REF_EMPTY
-        { type: "text", layers: [] }, // TEXT_LAYERS_EMPTY
+        { type: "text", layers: [] }, // TEXT_LAYERS_EMPTY (warning since P19)
       ] as any);
       expect(codes(diags)).toContainEqual({ code: "MEDIA_ASSETID_EMPTY", severity: "error" });
       expect(codes(diags)).toContainEqual({ code: "MOSAIC_REF_EMPTY", severity: "error" });
-      expect(codes(diags)).toContainEqual({ code: "TEXT_LAYERS_EMPTY", severity: "error" });
+      expect(codes(diags)).toContainEqual({ code: "TEXT_LAYERS_EMPTY", severity: "warning" });
       expect(diags).toHaveLength(3);
     });
 

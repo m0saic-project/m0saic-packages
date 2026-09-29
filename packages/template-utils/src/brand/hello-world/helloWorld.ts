@@ -714,6 +714,10 @@ export function helloWorldDefaultProps(opts: Pick<HelloWorldTemplateOptions, "su
 export function defineHelloWorldTemplate(opts: HelloWorldTemplateOptions): MosaicTemplate<HelloWorldProps> {
   const id = opts.id;
   const label = opts.label ?? HELLO_WORLD_LABEL;
+  // Resolved once: `defaultProps` and the `bindings.unbound` declaration below
+  // must agree about whether this caller's card has a caption.
+  const resolvedDefaults = helloWorldDefaultProps(opts);
+  const hasCaptionDefault = String(resolvedDefaults.caption ?? "").trim().length > 0;
   const template: MosaicTemplate<HelloWorldProps> = {
     id: asTemplateId(id),
     label,
@@ -741,7 +745,24 @@ export function defineHelloWorldTemplate(opts: HelloWorldTemplateOptions): Mosai
       note: "Wide hello card (16:9)",
     },
     propsSchema: HELLO_WORLD_PROPS_SCHEMA,
-    defaultProps: helloWorldDefaultProps(opts),
+    defaultProps: resolvedDefaults,
+    // `bindingsDeclared` (2026-09-25). Every template repo's front door is one
+    // call to this factory, so a card that did not account for its own props
+    // would fail the FIRST `npm run build` of every freshly scaffolded repo.
+    // `greeting` and `accent` are bound on the card child; these are not:
+    bindings: {
+      unbound: {
+        // The caption's rect exists only when the caption DOES — and whether it
+        // does is the CALLER's choice (`opts.subline` becomes the caption
+        // default). So the declaration is conditional: a repo that passes a
+        // subline gets a bound caption and must not also declare it unbound,
+        // which the stale-declaration check rightly refuses.
+        ...(hasCaptionDefault ? {} : { caption: "no rect until it is set" }),
+        // Opacity of the pattern field: a property of many rects, never a value
+        // drawn on the canvas.
+        fieldOpacity: "field opacity, not a drawn value",
+      },
+    },
 
   async render(props: HelloWorldProps, ctx: MosaicEngineContext): Promise<MosaicDocument> {
     // Size off the template's OWN canvas (ctx.target — the slot when nested).

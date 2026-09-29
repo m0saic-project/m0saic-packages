@@ -1,6 +1,7 @@
 import type {
   MosaicEngineContext,
   MosaicMediaRegistry,
+  MosaicOutputFormat,
 } from "@m0saic/types";
 import { DEFAULT_FPS, DEFAULT_DURATION_MS } from "@m0saic/types";
 
@@ -70,6 +71,17 @@ export function createDesignContext(args: {
   media?: MosaicMediaRegistry;
   /** Cosmetic — a preview host has no real workspace. Defaults to "". */
   workspaceDir?: string;
+  /**
+   * The output format the HOST resolved for these props — normally
+   * `resolveTemplateOutputHints(tmpl, props).format`.
+   *
+   * The `defineMosaicTemplate` wrapper stamps `ctx.output.format` onto the
+   * rendered document, so passing it makes the preview's document SELF-DESCRIBING
+   * about its kind. Omitting it (the behaviour until 2026-09-26) left the stamp
+   * empty, and every host reading the document back had to GUESS from motion
+   * evidence — which is how a video playing through a mask came out as an image.
+   */
+  format?: MosaicOutputFormat;
 }): DesignEngineContext {
   const { width, height } = args;
   const fps = args.fps ?? DEFAULT_FPS;
@@ -82,6 +94,7 @@ export function createDesignContext(args: {
       workspaceDir: args.workspaceDir ?? "",
       fps,
       durationMs,
+      ...(args.format ? { format: args.format } : {}),
     },
     target: { width, height, fps, durationMs },
     media: args.media ?? {},

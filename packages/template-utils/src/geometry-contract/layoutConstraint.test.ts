@@ -1,3 +1,4 @@
+import { bindProp as bindPropH, bindProps as bindPropsH, withBindingHint } from "./layoutConstraint";
 import type { MosaicDocument, MosaicEngineContext, MosaicSource } from "@m0saic/types";
 import { placeInsetPieces } from "../layout/placeInsetPieces";
 import { checkLayout, type LayoutConstraint } from "./layoutConstraint";
@@ -653,5 +654,27 @@ describe("stripPropBindings — a host that composes another template's render o
     const doc = { sources: [{ type: "lavfi" } as unknown as MosaicSource] };
     expect(() => stripPropBindings(doc)).not.toThrow();
     expect((doc.sources[0] as { editor?: unknown }).editor).toBeUndefined();
+  });
+});
+
+// 0.3.0: a binding can say, in context, what its value does.
+describe("binding hint", () => {
+  const src = () => ({ type: "text" }) as { type: string; editor?: { binding?: { propKey: string; index?: number; hint?: string }; bindings?: Array<{ propKey: string; hint?: string }> } };
+  it("bindProp takes an optional hint and trims it", () => {
+    const t = bindPropH(src(), "month", undefined, { hint: "  The month this calendar shows.  " });
+    expect(t.editor?.binding).toEqual({ propKey: "month", hint: "The month this calendar shows." });
+    expect(bindPropH(src(), "month", 2).editor?.binding).toEqual({ propKey: "month", index: 2 });
+  });
+  it("withBindingHint composes with any binder: the single binding, else the FIRST of bindings", () => {
+    expect(withBindingHint(bindPropH(src(), "title"), "The big words.").editor?.binding).toEqual({ propKey: "title", hint: "The big words." });
+    const multi = withBindingHint(bindPropsH(src(), [{ propKey: "a" }, { propKey: "b" }]), "Both lines.");
+    expect(multi.editor?.bindings).toEqual([{ propKey: "a", hint: "Both lines." }, { propKey: "b" }]);
+  });
+  it("bindProps threads an entry's hint", () => {
+    expect(bindPropsH(src(), [{ propKey: "a", hint: "One." }]).editor?.bindings).toEqual([{ propKey: "a", hint: "One." }]);
+  });
+  it("rejects an empty hint and an unbound source", () => {
+    expect(() => bindPropH(src(), "x", undefined, { hint: "  " })).toThrow(/hint/);
+    expect(() => withBindingHint(src(), "x")).toThrow(/bind the source first/);
   });
 });

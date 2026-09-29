@@ -1,4 +1,4 @@
-// Downloader/installer for the pinned ffmpeg toolchains. Node-only (fs,
+// Downloader/installer for the pinned ffmpeg toolchain. Node-only (fs,
 // crypto, child_process) — exported via the dedicated
 // `@m0saic/platform/toolchain/ffmpeg/install` subpath so the browser-safe
 // `toolchain/ffmpeg` manifest module stays importable from the web app.
@@ -10,25 +10,25 @@
 // Flow (mirrors the Momo model downloader's contract — terminal event,
 // never rejects):
 //   1. Resolve the platform target from baseline.json (`platforms` map).
-//      Gap entries (e.g. macOS LGPL today) return an `unavailable` error
+//      Gap entries (e.g. Intel macOS today) return an `unavailable` error
 //      event with the documented reason.
 //   2. Download every artifact into a staging dir, hashing as we stream.
-//      Vendored artifacts try the m0saic-ffmpeg-base mirror URL first and
-//      fall back to the upstream origin (BtbN) when the mirror asset isn't
-//      published. A browser-like User-Agent is always sent —
+//      The primary URL is the build's origin; `upstreamUrl` is the alternate
+//      when it is unreachable. A browser-like User-Agent is always sent —
 //      ffmpeg.martin-riedl.de rejects non-browser agents with 403.
 //   3. Verify each artifact against its PINNED sha256 (mismatch = hard
 //      error; nothing is installed).
 //   4. Extract with the system `tar` (bsdtar on macOS/Windows reads zip;
 //      GNU/bsd tar reads tar.xz), locate the ffmpeg/ffprobe binaries, and
 //      copy them into the golden slot `<m0saic-root>/toolchains/ffmpeg/
-//      <m0saicVersion>-<variant>/bin/` (chmod 755 on POSIX).
+//      <m0saicVersion>-gpl/bin/` (chmod 755 on POSIX).
 //   5. Write an `install-manifest.json` provenance sidecar into the slot
 //      and re-probe the installed binary for its version string.
 //
-// License posture (see baseline.json + m0saic-ffmpeg-base): LGPL builds are
-// vendored/redistributable; GPL builds are ALWAYS fetched from their origin
-// at the user's explicit request — m0saic never redistributes them.
+// License posture (see baseline.json): m0saic redistributes no ffmpeg. The
+// one pinned build is GPL and is ALWAYS fetched from its origin on the user's
+// machine at the user's explicit request. (The LGPL rail — a vendored,
+// redistributable second build — was removed 2026-09-22.)
 
 import * as fs from "fs";
 import * as path from "path";
@@ -62,7 +62,6 @@ const PROGRESS_THROTTLE_MS = 100;
 export type FfmpegInstallEvent =
   | {
       kind: "started";
-      variant: "lgpl" | "gpl";
       platformKey: string;
       snapshot: string;
       slotDir: string;
@@ -87,7 +86,6 @@ export type FfmpegInstallEvent =
   | { kind: "extracting"; artifactIndex: number; artifactCount: number }
   | {
       kind: "done";
-      variant: "lgpl" | "gpl";
       slotDir: string;
       ffmpegPath: string;
       ffprobePath: string | null;
@@ -98,7 +96,6 @@ export type FfmpegInstallEvent =
   | { kind: "error"; reason: string; failedUrl?: string };
 
 export interface InstallFfmpegOpts {
-  variant: "lgpl" | "gpl";
   /** Defaults to `${process.platform}-${process.arch}`. */
   platformKey?: string;
   onEvent?: (event: FfmpegInstallEvent) => void;
@@ -178,19 +175,40 @@ async function downloadToFile(
   return { sha256: hash.digest("hex") };
 }
 
+/**
+ * Which `tar` extracts the archive. The one on PATH is right everywhere
+ * except Windows shells that put GNU tar first (Git Bash, MSYS2): GNU tar
+ * cannot read the Windows zip at all and parses `C:\…` as `host:file`
+ * ("tar: Cannot connect to C: resolve failed" — seen on the 0.2.0 first
+ * run, 2026-09-20). On win32 prefer the OS's own bsdtar in System32 when it
+ * exists; it reads zip and tar.xz alike. Pure and injectable so the win32
+ * branch is unit-tested on every platform.
+ */
+export function resolveTarBinary(
+  platform: NodeJS.Platform = process.platform,
+  env: NodeJS.ProcessEnv = process.env,
+  exists: (p: string) => boolean = fs.existsSync,
+): string {
+  if (platform !== "win32") return "tar";
+  const systemRoot = env.SystemRoot ?? env.SYSTEMROOT ?? "C:\\Windows";
+  const bsdtar = path.win32.join(systemRoot, "System32", "tar.exe");
+  return exists(bsdtar) ? bsdtar : "tar";
+}
+
 /** Extract with the system tar — bsdtar (macOS/Windows) also reads zip. */
 function extractArchive(archivePath: string, destDir: string): void {
   ensureDir(destDir);
-  const result = spawnSync("tar", ["-xf", archivePath, "-C", destDir], {
+  const tar = resolveTarBinary();
+  const result = spawnSync(tar, ["-xf", archivePath, "-C", destDir], {
     stdio: ["ignore", "ignore", "pipe"],
     timeout: 120_000,
   });
   if (result.error) {
-    throw new Error(`tar failed to start: ${result.error.message}`);
+    throw new Error(`${tar} failed to start: ${result.error.message}`);
   }
   if (result.status !== 0) {
     const stderr = result.stderr?.toString().slice(0, 400) ?? "";
-    throw new Error(`tar exited ${result.status}: ${stderr}`);
+    throw new Error(`${tar} exited ${result.status}: ${stderr}`);
   }
 }
 
@@ -203,7 +221,7 @@ function extractArchive(archivePath: string, destDir: string): void {
 export async function installFfmpegToolchain(
   opts: InstallFfmpegOpts,
 ): Promise<FfmpegInstallEvent> {
-  const { variant, signal } = opts;
+  const { signal } = opts;
   const onEvent = opts.onEvent ?? (() => {});
   const fetchImpl = opts.fetchImpl ?? globalThis.fetch;
   const platformKey = opts.platformKey ?? getPlatformKey();
@@ -213,22 +231,22 @@ export async function installFfmpegToolchain(
     return e;
   };
 
-  const entry = getFfmpegPlatformEntry(variant, platformKey);
+  const entry = getFfmpegPlatformEntry(platformKey);
   if (!entry.available) {
     return emit({
       kind: "error",
       reason:
-        `No ${variant.toUpperCase()} build is pinned for ${platformKey}: ${entry.reason}` +
+        `No ffmpeg build is pinned for ${platformKey}: ${entry.reason}` +
         (entry.trackingUrl ? ` (tracking: ${entry.trackingUrl})` : ""),
     });
   }
   const target: FfmpegPlatformTarget = entry;
 
-  const slotDir = getGoldenFfmpegSlotDir(ffmpegBaseline.m0saicVersion, variant);
+  const slotDir = getGoldenFfmpegSlotDir(ffmpegBaseline.m0saicVersion);
   const slotBinDir = path.join(slotDir, "bin");
   ensureDir(getFfmpegToolchainsRoot());
   const stagingDir = fs.mkdtempSync(
-    path.join(getFfmpegToolchainsRoot(), `.staging-${variant}-`),
+    path.join(getFfmpegToolchainsRoot(), ".staging-gpl-"),
   );
 
   const cleanupStaging = () => {
@@ -241,7 +259,6 @@ export async function installFfmpegToolchain(
 
   emit({
     kind: "started",
-    variant,
     platformKey,
     snapshot: target.snapshot,
     slotDir,
@@ -368,7 +385,7 @@ export async function installFfmpegToolchain(
     }
 
     const installManifest = {
-      variant,
+      variant: "gpl",
       platformKey,
       snapshot: target.snapshot,
       profile: target.profile,
@@ -396,7 +413,6 @@ export async function installFfmpegToolchain(
 
     return emit({
       kind: "done",
-      variant,
       slotDir,
       ffmpegPath,
       ffprobePath,

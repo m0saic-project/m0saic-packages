@@ -1,5 +1,5 @@
-import type { MosaicAnalyticsImmediateEvent } from "@m0saic/types";
-import { isAnalyticsEmissionEnabled, isUpstreamAllowed } from "@m0saic/types";
+import type { MosaicAnalyticsImmediateEvent, MosaicInstallContext } from "@m0saic/types";
+import { MOSAIC_INSTALL_SOURCE_RE, isAnalyticsEmissionEnabled, isUpstreamAllowed } from "@m0saic/types";
 import { buildHostFingerprint } from "./hostFingerprint";
 import { enqueueOutbox } from "./outbox";
 import { versionMajorMinor } from "./renderRecord";
@@ -22,10 +22,30 @@ import {
  * ALWAYS advanced (even when gated) so a later opt-in doesn't
  * retro-fire stale update events.
  */
+/**
+ * Keep only the launch context the wire admits (2026-09-27): closed enums
+ * for `surface` / `invocation`, and a `source` that is a bounded lower-case
+ * slug — the user's own `--from` word, never inferred. Anything else is
+ * dropped here so a typo can never 422 the install event.
+ */
+export function sanitizeInstallContext(ctx: MosaicInstallContext | undefined): MosaicInstallContext {
+  if (!ctx) return {};
+  const out: MosaicInstallContext = {};
+  if (ctx.surface === "cli" || ctx.surface === "desktop") out.surface = ctx.surface;
+  if (ctx.invocation === "npx" || ctx.invocation === "global") out.invocation = ctx.invocation;
+  if (typeof ctx.source === "string") {
+    const slug = ctx.source.trim().toLowerCase();
+    if (MOSAIC_INSTALL_SOURCE_RE.test(slug)) out.source = slug;
+  }
+  return out;
+}
+
 export function checkAndEnqueueLifecycle(opts: {
   currentVersion: string;
   nowMs?: number;
   env?: NodeJS.ProcessEnv;
+  /** Stamped on `install_completed` only — which product, how launched, the user's `--from`. */
+  install?: MosaicInstallContext;
 }): { enqueued: "install_completed" | "update_completed" | null } {
   const nowMs = opts.nowMs ?? Date.now();
   // Ghost promises ZERO telemetry fs — resolve the mode BEFORE any
@@ -62,7 +82,7 @@ export function checkAndEnqueueLifecycle(opts: {
     host,
   };
   const event: MosaicAnalyticsImmediateEvent = fresh
-    ? { kind: "install_completed", ...base }
+    ? { kind: "install_completed", ...base, ...sanitizeInstallContext(opts.install) }
     : {
         kind: "update_completed",
         ...base,

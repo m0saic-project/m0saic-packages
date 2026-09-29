@@ -1,6 +1,6 @@
 {
   "name": "@m0saic/dsl-react",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Render m0 DSL layouts as positioned React regions — the Layout→React bridge.",
   "keywords": [
     "m0saic",

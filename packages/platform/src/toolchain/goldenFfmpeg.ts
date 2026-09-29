@@ -66,10 +66,9 @@ export function resolveGoldenFfmpeg(opts?: {
   exists?: (p: string) => boolean;
 }): GoldenFfmpegResolution {
   const baseline = resolveFfmpegBaseline(opts?.platformKey);
-  const variant = baseline.profile;
   const m0saicVersion = ffmpegBaseline.m0saicVersion;
-  const ffmpegPath = getGoldenFfmpegBinaryPath(m0saicVersion, variant);
-  const ffprobePath = getGoldenFfprobeBinaryPath(m0saicVersion, variant);
+  const ffmpegPath = getGoldenFfmpegBinaryPath(m0saicVersion);
+  const ffprobePath = getGoldenFfprobeBinaryPath(m0saicVersion);
 
   const exists = opts?.exists ?? fs.existsSync;
   if (!exists(ffmpegPath)) {
@@ -80,9 +79,9 @@ export function resolveGoldenFfmpeg(opts?: {
       ffmpegPath,
       message:
         `Golden ffmpeg slot not installed: ${ffmpegPath}\n` +
-        `Expected the pinned ${variant.toUpperCase()} toolchain ` +
+        `Expected the pinned GPL toolchain ` +
         `(${baseline.snapshot}, ${baseline.source}).\n` +
-        `Install it with: m0saic setup (variant "${variant}"). ` +
+        `Install it with: m0saic setup. ` +
         `Golden tests never fall back to PATH ffmpeg.`,
     };
   }
@@ -98,7 +97,7 @@ export function resolveGoldenFfmpeg(opts?: {
       runtime,
       message:
         `Golden ffmpeg exists but failed to run: ${ffmpegPath}\n` +
-        `Reinstall the pinned toolchain with: m0saic setup (variant "${variant}").`,
+        `Reinstall the pinned toolchain with: m0saic setup.`,
     };
   }
 
@@ -113,7 +112,7 @@ export function resolveGoldenFfmpeg(opts?: {
         `Golden ffmpeg at ${ffmpegPath} is not the pinned baseline build.\n` +
         `  expected snapshot: ${baseline.snapshot} (${baseline.source})\n` +
         `  probed version:    ${runtime.version}\n` +
-        `Reinstall the pinned toolchain with: m0saic setup (variant "${variant}").`,
+        `Reinstall the pinned toolchain with: m0saic setup.`,
     };
   }
 

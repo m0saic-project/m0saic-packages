@@ -57,6 +57,16 @@ describe("fitSvgLines", () => {
     expect(fit.text).toBe(lines.join("\n"));
   });
 
+  it("honours minPx like fitSvgText (P5): a tighter floor shrinks further, a higher one stops sooner", () => {
+    const tight = fitSvgLines(["a very very very long single line of copy"], 120, 60, { maxPx: 40, minPx: 6 });
+    expect(tight.fontSize).toBeLessThan(12);
+    expect(tight.fontSize).toBeGreaterThanOrEqual(6);
+    const high = fitSvgLines(["a very very very long single line of copy"], 120, 60, { maxPx: 40, minPx: 18 });
+    expect(high.fontSize).toBe(18);
+    const asBefore = fitSvgLines(["a very very very long single line of copy"], 120, 60, { maxPx: 40 });
+    expect(asBefore.fontSize).toBe(12);
+  });
+
   it("sizes down for long widest lines", () => {
     const short = fitSvgLines(["ab", "cd"], 400, 400, { maxPx: 200 });
     const long = fitSvgLines(["a very very very long single line"], 400, 400, {

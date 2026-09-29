@@ -8,13 +8,21 @@
  * rounded cards, pill chips, one brand accent.
  *
  * RECORDING SEAM: the action beats carry founder-recorded Make captures
- * (converted to small mp4s). `TUTORIAL_CLIPS` maps beat → { path, durationMs };
+ * (converted to small mp4s). `TUTORIAL_CLIPS` maps beat → { file, durationMs };
  * a clip becomes the beat's visual inside the window frame and the beat runs
  * the clip's length. Beats without clips render their animated mocks. No fs
  * probing — templates stay deterministic.
+ *
+ * The clips SHIP with the package (W4, 2026-09-27): they live under the
+ * package-root `assets/templates/<encoded id>/tutorial/`, the one tree every
+ * surface already carries — the web build mirrors it to `/template-assets/`,
+ * Desktop unpacks it from the asar and rebases the served URL to the file.
+ * Until then the paths pointed into the sandbox on the author's laptop, so
+ * the packaged app's tutorial played without them (first-user test).
  */
 
 import type {
+  MosaicAsset,
   MosaicAssetManifest,
   MosaicColor,
   MosaicDocument,
@@ -40,15 +48,36 @@ import {
 const TUTORIAL_FPS = 30;
 
 /** Founder-recorded action clips per beat (small mp4 screen captures).
- *  Empty until the recordings land; beats fall back to animated mocks. */
-type TutorialClip = { path: string; durationMs: number };
-const SR = "/Users/qusimone/src/m0saic/packages/sandbox/production/media-blur-regions-v1/fixtures/screen_recordings";
+ *  Beats without an entry fall back to their animated mocks. */
+type TutorialClip = { file: string; durationMs: number };
 const TUTORIAL_CLIPS: Partial<Record<string, TutorialClip>> = {
-  draw: { path: `${SR}/invoice_sr.mp4`, durationMs: 10483 },
-  brush: { path: `${SR}/signed-letter_sr.mp4`, durationMs: 7967 },
-  inbox: { path: `${SR}/inbox_sr.mp4`, durationMs: 17533 },
-  chat: { path: `${SR}/chat_sr.mp4`, durationMs: 13133 },
+  draw: { file: "invoice_sr.mp4", durationMs: 10483 },
+  brush: { file: "signed-letter_sr.mp4", durationMs: 7967 },
+  inbox: { file: "inbox_sr.mp4", durationMs: 17533 },
+  chat: { file: "chat_sr.mp4", durationMs: 13133 },
 };
+/** Where the clips ship, relative to the package root — the same tree the
+ *  registered previews live in (`assets/templates/<encoded id>/`). */
+const TUTORIAL_CLIP_DIR = "assets/templates/@m0saic__media__blur-regions__v1/tutorial";
+
+/**
+ * The clip as an asset for THIS runtime — the pattern the Screencap Grid and
+ * Subtitle Burn covers ship with. Node (the CLI's `--tutorial`, electron
+ * main) reads the packaged file: this module sits five folders below the
+ * package root in both `src/` and `dist/`, and an asar path is rewritten to
+ * its unpacked twin inline (no node:path import — the browser bundle has
+ * none). The browser plays the same file through the served
+ * `/template-assets/` tree, which Desktop's host rebases to the file on disk.
+ */
+function tutorialClipAsset(clip: TutorialClip): MosaicAsset {
+  const isNode = typeof process !== "undefined" && !!process.versions?.node;
+  if (!isNode) return { kind: "url", url: `/template-assets/${TUTORIAL_CLIP_DIR}/${clip.file}`, mediaType: "video" };
+  const here = `${__dirname}`;
+  const unpacked = here.includes("/app.asar/")
+    ? here.split("/app.asar/").join("/app.asar.unpacked/")
+    : here.split("\\app.asar\\").join("\\app.asar.unpacked\\");
+  return { kind: "file", path: `${unpacked}/../../../../../${TUTORIAL_CLIP_DIR}/${clip.file}`, mediaType: "video" };
+}
 
 // ---------------------------------------------------------------------------
 // SaaS palette — deliberate single dark look (brand orange accent).
@@ -449,7 +478,7 @@ function beatVisual(spec: BeatSpec, type: OnboardingTypeRamp): { comp: Onboardin
   };
   return {
     comp: windowCard(onboardingLeaf(media), { chrome: false }),
-    assets: { [assetId]: { kind: "file", path: clip.path, mediaType: "video" } } as MosaicAssetManifest,
+    assets: { [assetId]: tutorialClipAsset(clip) } as MosaicAssetManifest,
     clipMs: clip.durationMs,
   };
 }

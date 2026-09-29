@@ -12,6 +12,7 @@ type Props = {
   medias?: unknown;
   group?: unknown;
   list?: unknown;
+  segments?: unknown;
   choice?: unknown;
   filter?: unknown;
   setup?: unknown;
@@ -178,6 +179,20 @@ describe("validateTemplateProps", () => {
     expect(bad.some((d) => d.code === "PROP_NOT_IN_ONEOF")).toBe(true);
 
     expect(validateTemplateProps(template, { choice: "x" }).length).toBe(0);
+  });
+
+  describe("type: \"array\" — list's tabular sibling", () => {
+    test("accepts a real array", () => {
+      const template: MosaicTemplate<Props> = { ...baseTemplate, propsSchema: { segments: def("array", true) } };
+      expect(validateTemplateProps(template, { segments: [{ label: "a", value: 1 }] })).toEqual([]);
+    });
+
+    test("rejects a non-array — same check as list, not json's permissiveness", () => {
+      const template: MosaicTemplate<Props> = { ...baseTemplate, propsSchema: { segments: def("array", true) } };
+      const diags = validateTemplateProps(template, { segments: '[{"label":"a"}]' });
+      expect(diags).toMatchObject([{ code: "INVALID_PROP_TYPE", severity: "error" }]);
+      expect(diags[0].message).toMatch(/expected type "array" but got "string"/);
+    });
   });
 
   describe("type: \"json\"", () => {

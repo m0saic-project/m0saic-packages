@@ -69,9 +69,9 @@ describe("ffmpeg toolchain path helpers", () => {
     );
   });
 
-  it("getGoldenFfmpegSlotDir composes <root>/toolchains/ffmpeg/<version>-<variant>", () => {
-    expect(getGoldenFfmpegSlotDir("1.0.0", "lgpl")).toBe(
-      path.join(fixture, "toolchains", "ffmpeg", "1.0.0-lgpl"),
+  it("getGoldenFfmpegSlotDir composes <root>/toolchains/ffmpeg/<version>-gpl (the one slot)", () => {
+    expect(getGoldenFfmpegSlotDir("1.0.0")).toBe(
+      path.join(fixture, "toolchains", "ffmpeg", "1.0.0-gpl"),
     );
     expect(getGoldenFfmpegSlotDir("1.1.0", "gpl")).toBe(
       path.join(fixture, "toolchains", "ffmpeg", "1.1.0-gpl"),

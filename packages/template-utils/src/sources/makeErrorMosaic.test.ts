@@ -1,5 +1,5 @@
 import type { MosaicDocument, MosaicTextSource } from "@m0saic/types";
-import { makeErrorMosaic } from "./makeErrorMosaic";
+import { makeErrorMosaic, makeIncompleteMosaic, readableText } from "./makeErrorMosaic";
 
 describe("makeErrorMosaic", () => {
   describe("basic functionality", () => {
@@ -323,35 +323,44 @@ describe("makeErrorMosaic", () => {
     });
   });
 
-  describe("ASCII-only conversion", () => {
-    test("converts non-ASCII characters to ?", () => {
-      const doc = makeErrorMosaic("Test with émojis 🎉 and unicode 中文", {
-        width: 1920,
-        height: 1080,
-      });
-
+  describe("readable text (P11 — the retired ASCII law)", () => {
+    const body = (msg: string): string => {
+      const doc = makeErrorMosaic(msg, { width: 1920, height: 1080 });
       const source = (doc.sources ?? [])[0] as MosaicTextSource;
-      const bodyLayer = source.layers?.[1];
-      // Should contain ? for non-ASCII characters
-    const bodyText =
-      bodyLayer?.content.kind === "literal" ? bodyLayer?.content.text : "";
-    expect(bodyText).toMatch(/\?/);
-    expect(bodyText).not.toMatch(/🎉/);
-    expect(bodyText).not.toMatch(/中文/);
+      const layer = source.layers?.[1];
+      return layer?.content.kind === "literal" ? layer.content.text : "";
+    };
+
+    test("keeps m0saic's own punctuation — em dash, curly quote, ellipsis, accents", () => {
+      const text = body("Take Cutter — the clip’s length… café");
+      expect(text).toContain("—");
+      expect(text).toContain("’");
+      expect(text).toContain("…");
+      expect(text).toContain("café");
+      expect(text).not.toContain("?");
+    });
+
+    test("spells the symbols the face lacks instead of hiding them", () => {
+      const text = body("a → b ✓ done ✗ no ⚠ careful");
+      expect(text).toContain("a -> b OK done x no ! careful");
+    });
+
+    test("still masks what nothing here can draw — emoji and CJK — as ?", () => {
+      const text = body("Test with émojis 🎉 and unicode 中文");
+      expect(text).toMatch(/\?/);
+      expect(text).not.toMatch(/🎉/);
+      expect(text).not.toMatch(/中文/);
+      expect(text).toContain("émojis");
     });
 
     test("preserves ASCII characters", () => {
-      const doc = makeErrorMosaic("Test message with ASCII: !@#$%^&*()", {
-        width: 1920,
-        height: 1080,
-      });
+      const text = body("Test message with ASCII: !@#$%^&*()");
+      expect(text).toContain("Test message");
+      expect(text).toContain("ASCII");
+    });
 
-      const source = (doc.sources ?? [])[0] as MosaicTextSource;
-      const bodyLayer = source.layers?.[1];
-    const bodyText =
-      bodyLayer?.content.kind === "literal" ? bodyLayer?.content.text : "";
-    expect(bodyText).toContain("Test message");
-    expect(bodyText).toContain("ASCII");
+    test("readableText is exported for the hosts that print the same copy", () => {
+      expect(readableText("— →")).toBe("— ->");
     });
   });
 
@@ -478,5 +487,20 @@ describe("makeErrorMosaic — proportional layout at small canvases", () => {
     expect(title.style.fontSize).toBe(40);
     expect(first.style.fontSize).toBe(22);
     expect(yFrac(first.placement.yExpr)).toBeCloseTo(0.18, 6);
+  });
+});
+
+// R8 (2026-09-27): waiting on an input is not an error.
+describe("makeIncompleteMosaic", () => {
+  it("stamps renderStatus incomplete, titles itself, and carries the message", () => {
+    const doc = makeIncompleteMosaic("Drop a video, then mark your takes.", { width: 640, height: 360 });
+    const src = doc.sources[0] as { engine?: { renderStatus?: string; renderError?: { message?: string } } };
+    expect(src.engine?.renderStatus).toBe("incomplete");
+    expect(src.engine?.renderError?.message).toContain("Needs an input");
+    expect(src.engine?.renderError?.message).toContain("mark your takes");
+  });
+  it("makeErrorMosaic still stamps error by default", () => {
+    const doc = makeErrorMosaic("boom", { width: 640, height: 360 });
+    expect((doc.sources[0] as { engine?: { renderStatus?: string } }).engine?.renderStatus).toBe("error");
   });
 });

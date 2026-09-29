@@ -939,12 +939,26 @@ function validateTextSource(
     validateEffects(src.effects, index, diagnostics);
     // ---- SHAPE VALIDATION (new invariants) ----
 
-    // layers required + non-empty
-    if (!Array.isArray(src.layers) || src.layers.length === 0) {
+    // layers required
+    if (!Array.isArray(src.layers)) {
         diagnostics.push({
             code: asDiagnosticCode("TEXT_LAYERS_EMPTY"),
-            message: `Source[${index}] (text) must have non-empty layers[].`,
+            message: `Source[${index}] (text) must have a layers[] array.`,
             severity: "error",
+        });
+        return;
+    }
+    // An EMPTY layers[] draws nothing and is allowed (P19, 2026-09-27): the
+    // binding contract asks a template to bind a rect even when its prop is
+    // empty, so the rect is a handle to ADD — an optional subtitle left blank
+    // used to kill the whole render ("Source[7] (text) must have non-empty
+    // layers[]"). The engine paints such a source transparent. Still worth a
+    // word, since a template that MEANT to draw something gets a blank tile.
+    if (src.layers.length === 0) {
+        diagnostics.push({
+            code: asDiagnosticCode("TEXT_LAYERS_EMPTY"),
+            message: `Source[${index}] (text) has no layers — it draws nothing (an empty handle for a bound prop).`,
+            severity: "warning",
         });
         return;
     }

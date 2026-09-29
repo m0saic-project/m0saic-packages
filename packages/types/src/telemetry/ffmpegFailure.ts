@@ -248,7 +248,7 @@ export function classifyFfmpegFailure(
         "the requested encoder or decoder isn't available in this ffmpeg build.",
       hints: [
         "Run `ffmpeg -encoders` / `ffmpeg -decoders` to confirm which codecs are present.",
-        "On Windows the bundled m0saic ffmpeg may be LGPL (no libx264). Use `Tools → Upgrade ffmpeg` to switch to the GPL build for libx264 / libx265.",
+        "An ffmpeg built without --enable-gpl has no libx264 / libx265. Install m0saic's pinned build (Tools → Toolchain, or `m0saic setup`).",
       ],
       matchedSignal: "stderr matched codec pattern",
     };

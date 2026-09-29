@@ -3,7 +3,7 @@ import * as os from "os";
 import * as path from "path";
 import * as crypto from "crypto";
 import { execFileSync } from "child_process";
-import { installFfmpegToolchain, type FfmpegInstallEvent } from "./install";
+import { installFfmpegToolchain, resolveTarBinary, type FfmpegInstallEvent } from "./install";
 import { ffmpegBaseline } from "./index";
 
 // Tiny real archives, built at load time with the system tar (bsdtar on
@@ -12,7 +12,7 @@ import { ffmpegBaseline } from "./index";
 // platform-correct names (ffmpeg.exe on Windows, bare ffmpeg elsewhere).
 // Pre-baked base64 fixtures used to hard-code the POSIX names, which made
 // every happy-path install test fail on Windows — findBinary scans for
-// binName(tool). combo.zip holds ffmpeg-test-lgpl/bin/{ffmpeg,ffprobe}
+// binName(tool). combo.zip holds ffmpeg-test-gpl/bin/{ffmpeg,ffprobe}
 // stub shell scripts; bare.zip holds a single root-level `ffmpeg` file
 // (the martin-riedl shape).
 function fixtureBinName(tool: "ffmpeg" | "ffprobe"): string {
@@ -32,7 +32,9 @@ function buildZipFixture(
       roots.add(e.name.split("/")[0]);
     }
     const zipPath = path.join(dir, "fixture.zip");
-    execFileSync("tar", ["-a", "-cf", zipPath, "-C", dir, ...roots]);
+    // Same resolver as extractArchive: under Git Bash on Windows a bare
+    // `tar` is GNU tar, which cannot write zip and misparses `C:\…`.
+    execFileSync(resolveTarBinary(), ["-a", "-cf", zipPath, "-C", dir, ...roots]);
     const buf = fs.readFileSync(zipPath);
     return {
       buf,
@@ -45,11 +47,11 @@ function buildZipFixture(
 
 const combo = buildZipFixture([
   {
-    name: `ffmpeg-test-lgpl/bin/${fixtureBinName("ffmpeg")}`,
+    name: `ffmpeg-test-gpl/bin/${fixtureBinName("ffmpeg")}`,
     content: "#!/bin/sh\necho ffmpeg test stub\n",
   },
   {
-    name: `ffmpeg-test-lgpl/bin/${fixtureBinName("ffprobe")}`,
+    name: `ffmpeg-test-gpl/bin/${fixtureBinName("ffprobe")}`,
     content: "#!/bin/sh\necho ffprobe test stub\n",
   },
 ]);
@@ -82,10 +84,10 @@ const testTarget = (over?: Partial<Record<string, unknown>>) => ({
   available: true as const,
   snapshot: "N-TEST",
   date: "2026-01-01",
-  profile: "lgpl" as const,
+  profile: "gpl" as const,
   source: "unit-test",
-  vendored: true,
-  redistributable: true,
+  vendored: false,
+  redistributable: false,
   infoUrl: "https://example.test/info",
   licenseNote: "test",
   artifacts: [
@@ -109,12 +111,7 @@ describe("installFfmpegToolchain", () => {
     process.env.M0SAIC_ROOT = m0saicRoot;
     // Point the manifest at the test target without touching baseline.json.
     (ffmpegBaseline.platforms as Record<string, unknown>)[PLATFORM_KEY] = {
-      lgpl: testTarget(),
-      gpl: {
-        available: false,
-        reason: "unit-test gap",
-        trackingUrl: "https://example.test/tracking",
-      },
+      gpl: testTarget(),
     };
   });
 
@@ -138,19 +135,18 @@ describe("installFfmpegToolchain", () => {
   test("downloads, verifies, extracts, and installs into the golden slot", async () => {
     const events: FfmpegInstallEvent[] = [];
     const result = await installFfmpegToolchain({
-      variant: "lgpl",
       platformKey: PLATFORM_KEY,
       fetchImpl: fakeFetch({ "https://mirror.test/combo.zip": COMBO_ZIP }),
       onEvent: (e) => events.push(e),
     });
 
     expect(result.kind).toBe("done");
-    expect(fs.existsSync(slotBin("lgpl", "ffmpeg"))).toBe(true);
-    expect(fs.existsSync(slotBin("lgpl", "ffprobe"))).toBe(true);
+    expect(fs.existsSync(slotBin("gpl", "ffmpeg"))).toBe(true);
+    expect(fs.existsSync(slotBin("gpl", "ffprobe"))).toBe(true);
     // Provenance sidecar records what was actually served.
     const manifest = JSON.parse(
       fs.readFileSync(
-        path.join(path.dirname(slotBin("lgpl", "ffmpeg")), "..", "install-manifest.json"),
+        path.join(path.dirname(slotBin("gpl", "ffmpeg")), "..", "install-manifest.json"),
         "utf8",
       ),
     );
@@ -168,7 +164,6 @@ describe("installFfmpegToolchain", () => {
 
   test("falls back to upstreamUrl when the mirror 404s", async () => {
     const result = await installFfmpegToolchain({
-      variant: "lgpl",
       platformKey: PLATFORM_KEY,
       fetchImpl: fakeFetch({ "https://origin.test/combo.zip": COMBO_ZIP }),
     });
@@ -179,7 +174,7 @@ describe("installFfmpegToolchain", () => {
           m0saicRoot,
           "toolchains",
           "ffmpeg",
-          `${ffmpegBaseline.m0saicVersion}-lgpl`,
+          `${ffmpegBaseline.m0saicVersion}-gpl`,
           "install-manifest.json",
         ),
         "utf8",
@@ -189,7 +184,7 @@ describe("installFfmpegToolchain", () => {
   });
 
   test("sha256 mismatch installs nothing and reports the URL", async () => {
-    (ffmpegBaseline.platforms as Record<string, any>)[PLATFORM_KEY].lgpl =
+    (ffmpegBaseline.platforms as Record<string, any>)[PLATFORM_KEY].gpl =
       testTarget({
         artifacts: [
           {
@@ -201,7 +196,6 @@ describe("installFfmpegToolchain", () => {
         ],
       });
     const result = await installFfmpegToolchain({
-      variant: "lgpl",
       platformKey: PLATFORM_KEY,
       fetchImpl: fakeFetch({ "https://mirror.test/combo.zip": COMBO_ZIP }),
     });
@@ -210,11 +204,11 @@ describe("installFfmpegToolchain", () => {
       expect(result.reason).toMatch(/sha256 mismatch/);
       expect(result.failedUrl).toBe("https://mirror.test/combo.zip");
     }
-    expect(fs.existsSync(slotBin("lgpl", "ffmpeg"))).toBe(false);
+    expect(fs.existsSync(slotBin("gpl", "ffmpeg"))).toBe(false);
   });
 
   test("multi-artifact target (martin-riedl shape: one bare zip per tool)", async () => {
-    (ffmpegBaseline.platforms as Record<string, any>)[PLATFORM_KEY].lgpl =
+    (ffmpegBaseline.platforms as Record<string, any>)[PLATFORM_KEY].gpl =
       testTarget({
         artifacts: [
           {
@@ -226,7 +220,6 @@ describe("installFfmpegToolchain", () => {
         ],
       });
     const result = await installFfmpegToolchain({
-      variant: "lgpl",
       platformKey: PLATFORM_KEY,
       fetchImpl: fakeFetch({ "https://mirror.test/bare.zip": BARE_ZIP }),
     });
@@ -234,12 +227,16 @@ describe("installFfmpegToolchain", () => {
     if (result.kind === "done") {
       expect(result.ffprobePath).toBeNull();
     }
-    expect(fs.existsSync(slotBin("lgpl", "ffmpeg"))).toBe(true);
+    expect(fs.existsSync(slotBin("gpl", "ffmpeg"))).toBe(true);
   });
 
   test("gap entries produce an unavailable error with the documented reason", async () => {
+    (ffmpegBaseline.platforms as Record<string, any>)[PLATFORM_KEY].gpl = {
+      available: false,
+      reason: "unit-test gap",
+      trackingUrl: "https://example.test/tracking",
+    };
     const result = await installFfmpegToolchain({
-      variant: "gpl",
       platformKey: PLATFORM_KEY,
       fetchImpl: fakeFetch({}),
     });
@@ -252,7 +249,6 @@ describe("installFfmpegToolchain", () => {
 
   test("unknown platform key resolves to a synthetic gap", async () => {
     const result = await installFfmpegToolchain({
-      variant: "lgpl",
       platformKey: "beos-ppc",
       fetchImpl: fakeFetch({}),
     });
@@ -280,12 +276,47 @@ describe("installFfmpegToolchain", () => {
     }) as typeof fetch;
 
     const result = await installFfmpegToolchain({
-      variant: "lgpl",
       platformKey: PLATFORM_KEY,
       signal: controller.signal,
       fetchImpl: slowFetch,
     });
     expect(result.kind).toBe("cancelled");
-    expect(fs.existsSync(slotBin("lgpl", "ffmpeg"))).toBe(false);
+    expect(fs.existsSync(slotBin("gpl", "ffmpeg"))).toBe(false);
+  });
+});
+
+// The extractor's tar choice. Locks the 2026-09-20 first-run finding: under
+// Git Bash / MSYS2, `tar` on PATH is GNU tar, which cannot read the Windows
+// zip and parses `C:\…` as a remote host. Windows' own bsdtar in System32
+// must win on win32; every other platform keeps the PATH tar.
+describe("resolveTarBinary", () => {
+  test("win32 prefers System32\\tar.exe when it exists", () => {
+    const seen: string[] = [];
+    const exists = (p: string) => {
+      seen.push(p);
+      return true;
+    };
+    expect(resolveTarBinary("win32", { SystemRoot: "C:\\Windows" }, exists)).toBe(
+      "C:\\Windows\\System32\\tar.exe",
+    );
+    expect(seen).toEqual(["C:\\Windows\\System32\\tar.exe"]);
+  });
+
+  test("win32 honours a relocated SystemRoot (either casing)", () => {
+    expect(resolveTarBinary("win32", { SYSTEMROOT: "D:\\Win" }, () => true)).toBe(
+      "D:\\Win\\System32\\tar.exe",
+    );
+    expect(resolveTarBinary("win32", {}, () => true)).toBe("C:\\Windows\\System32\\tar.exe");
+  });
+
+  test("win32 falls back to PATH tar when System32 has none", () => {
+    expect(resolveTarBinary("win32", { SystemRoot: "C:\\Windows" }, () => false)).toBe("tar");
+  });
+
+  test("other platforms use PATH tar without probing the filesystem", () => {
+    const exists = jest.fn(() => true);
+    expect(resolveTarBinary("darwin", {}, exists)).toBe("tar");
+    expect(resolveTarBinary("linux", {}, exists)).toBe("tar");
+    expect(exists).not.toHaveBeenCalled();
   });
 });

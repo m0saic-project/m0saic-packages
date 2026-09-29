@@ -77,6 +77,11 @@ function validateSingleProp(
       break;
 
     case "list":
+    // `array` is `list`'s tabular sibling (objectRows / jsonModal editors) —
+    // same value shape, same check. Verified 2026-09-25 against the shipped
+    // registry: all 19 `type: "array"` defaults are real arrays, so making
+    // this explicit fails nothing that used to pass through `default`.
+    case "array":
       typeMatches = Array.isArray(value);
       break;
 

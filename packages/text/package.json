@@ -1,6 +1,6 @@
 {
   "name": "@m0saic/text",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": false,
   "description": "Node-only text → SVG glyph-path engine (opentype.js) with a bundled deterministic font. Shared by the renderer core and template-utils.",
   "license": "Apache-2.0",

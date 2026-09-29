@@ -199,7 +199,14 @@ export function fitSvgLines(
   lines: string[],
   boxW: number,
   boxH: number,
-  opts: { maxPx: number; widthFrac?: number; heightFrac?: number },
+  opts: {
+    maxPx: number;
+    /** Lower bound for the search (px, default {@link DEFAULT_MIN_FIT_PX}) —
+     *  the same knob `fitSvgText` takes (P5, 2026-09-27). */
+    minPx?: number;
+    widthFrac?: number;
+    heightFrac?: number;
+  },
 ): { text: string; fontSize: number } {
   const usableW = boxW * (opts.widthFrac ?? 0.72);
   const usableH = boxH * (opts.heightFrac ?? 0.72);
@@ -210,9 +217,10 @@ export function fitSvgLines(
     return m.width <= usableW && m.height <= usableH;
   };
 
-  let lo = 12;
-  let hi = Math.max(12, Math.round(opts.maxPx));
-  let best = 12;
+  const floorPx = Math.max(1, Math.round(opts.minPx ?? DEFAULT_MIN_FIT_PX));
+  let lo = floorPx;
+  let hi = Math.max(floorPx, Math.round(opts.maxPx));
+  let best = floorPx;
   while (lo <= hi) {
     const mid = Math.floor((lo + hi) / 2);
     if (fits(mid)) {

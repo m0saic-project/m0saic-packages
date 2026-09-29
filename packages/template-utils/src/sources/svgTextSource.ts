@@ -25,6 +25,10 @@ export type SvgTextLayerSpec = {
   text: string;
   fontSize: number;
   color: MosaicColor;
+  /** Horizontal alignment inside the cell (default `"center"`) — P9/P18, 2026-09-27. */
+  hAlign?: "left" | "center" | "right";
+  /** A face the engine's font registry knows; omitted = the bundled default. */
+  fontFamily?: string;
   vAlign?: "top" | "middle" | "bottom";
   padding?: { bottom?: number; top?: number };
 };
@@ -37,9 +41,13 @@ export function svgTextSource(layers: SvgTextLayerSpec[]): MosaicSource {
     renderMode: { kind: "image" },
     layers: layers.map((layer) => ({
       content: { kind: "literal", text: layer.text },
-      style: { fontSize: layer.fontSize, fontColor: layer.color },
+      style: {
+        fontSize: layer.fontSize,
+        fontColor: layer.color,
+        ...(layer.fontFamily ? { fontFamily: layer.fontFamily } : {}),
+      },
       placement: {
-        hAlign: "center" as const,
+        hAlign: layer.hAlign ?? ("center" as const),
         vAlign: layer.vAlign ?? ("middle" as const),
         ...(layer.padding ? { padding: layer.padding } : {}),
       },
@@ -60,6 +68,8 @@ export function svgLabel(
     color?: MosaicColor;
     maxPx?: number;
     maxLines?: number;
+    hAlign?: "left" | "center" | "right";
+    fontFamily?: string;
     vAlign?: "top" | "middle" | "bottom";
     padding?: { bottom?: number; top?: number };
   },
@@ -73,6 +83,8 @@ export function svgLabel(
       text: fit.text,
       fontSize: fit.fontSize,
       color: opts?.color ?? ("#ffffff" as MosaicColor),
+      hAlign: opts?.hAlign,
+      fontFamily: opts?.fontFamily,
       vAlign: opts?.vAlign,
       padding: opts?.padding,
     },

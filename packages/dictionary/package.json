@@ -1,6 +1,6 @@
 {
   "name": "@m0saic/dictionary",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": false,
   "license": "MIT",
   "main": "dist/index.js",
@@ -39,9 +39,9 @@
     "@m0saic/dsl": "^2.0.0",
     "@m0saic/dsl-file-formats": "^2.0.0",
     "@m0saic/dsl-stdlib": "^3.0.0",
-    "@m0saic/types": "^0.2.0"
+    "@m0saic/types": "^0.3.0"
   },
   "devDependencies": {
-    "@m0saic/platform": "^0.2.0"
+    "@m0saic/platform": "^0.3.0"
   }
 }

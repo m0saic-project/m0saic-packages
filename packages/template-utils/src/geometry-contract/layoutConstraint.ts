@@ -116,17 +116,58 @@ export function tag<T extends { editor?: { label?: string } }>(src: T, label: st
  *  - Bind the rect that shows the prop, not derived text (ticks, formatted
  *    totals). Bind even when the value is empty so the rect is a handle to ADD.
  *  - The per-render `stableKey` is OUTPUT — see `resolvePropBindings`. */
-export function bindProp<T extends { editor?: { binding?: { propKey: string; index?: number } } }>(
+export function bindProp<T extends { editor?: { binding?: { propKey: string; index?: number; hint?: string } } }>(
   src: T,
   propKey: string,
   index?: number,
+  opts?: { hint?: string },
 ): T {
   if (!propKey) throw new Error("bindProp: propKey must be a non-empty dotted path");
   if (index !== undefined && (!Number.isInteger(index) || index < 0)) {
     throw new Error(`bindProp: index must be a non-negative integer (got ${String(index)})`);
   }
-  src.editor = { ...src.editor, binding: index === undefined ? { propKey } : { propKey, index } };
+  const hint = checkHint("bindProp", opts?.hint);
+  src.editor = {
+    ...src.editor,
+    binding: { propKey, ...(index !== undefined ? { index } : {}), ...(hint ? { hint } : {}) },
+  };
   return src;
+}
+
+/** A binding `hint` is one plain-text line, or nothing. */
+function checkHint(fn: string, hint: unknown): string | undefined {
+  if (hint === undefined) return undefined;
+  if (typeof hint !== "string" || !hint.trim()) throw new Error(`${fn}: hint must be a non-empty string`);
+  return hint.trim();
+}
+
+/** Say, in context, what a bound value does (0.3.0). Sets `hint` on the
+ *  source's binding — the single `binding`, else the FIRST of `bindings` —
+ *  so it composes with every binder: `withBindingHint(bindProp(cell,
+ *  "month"), "The month this calendar shows; the grid re-flows to its
+ *  weeks.")`. Make shows it under the inline editor, on the tile card and in
+ *  the handle's tooltip; without one, the prop's `description` shows. One
+ *  plain sentence; never markdown, never the value itself. */
+export function withBindingHint<
+  T extends {
+    editor?: {
+      binding?: { propKey: string; hint?: string };
+      bindings?: Array<{ propKey: string; hint?: string }>;
+    };
+  },
+>(src: T, hint: string): T {
+  const clean = checkHint("withBindingHint", hint);
+  if (!clean) throw new Error("withBindingHint: hint must be a non-empty string");
+  const ed = src.editor;
+  if (ed?.bindings?.length) {
+    ed.bindings = ed.bindings.map((b, i) => (i === 0 ? { ...b, hint: clean } : b));
+    return src;
+  }
+  if (ed?.binding) {
+    src.editor = { ...ed, binding: { ...ed.binding, hint: clean } };
+    return src;
+  }
+  throw new Error("withBindingHint: bind the source first (bindProp / bindProps / bindPropPath / bindPropRect)");
 }
 
 /** Bind a source's rect to ONE LINE (character span) of a string prop — a
@@ -198,6 +239,8 @@ export type PropBindingEntry = {
   kind?: "string" | "number" | "color" | "rect" | "media";
   /** Which text layer of the source shows this leaf. */
   layer?: number;
+  /** The in-context line Make shows for this leaf (0.3.0) — see {@link withBindingHint}. */
+  hint?: string;
   /** What an EMPTY commit on this leaf means. Absent = the default (numbers /
    *  colors reject an empty commit, strings write `""`). `"remove-element"`
    *  splices the element at the leading numeric path segment (the whole row)
@@ -274,7 +317,7 @@ function checkOnClear(
 export function bindProps<
   T extends {
     editor?: {
-      bindings?: Array<{ propKey: string; index?: number; path?: Array<string | number>; kind?: "string" | "number" | "color" | "rect" | "media"; layer?: number; onClear?: PropBindingClearAction; seedDraft?: string; companion?: boolean }>;
+      bindings?: Array<{ propKey: string; index?: number; path?: Array<string | number>; kind?: "string" | "number" | "color" | "rect" | "media"; layer?: number; onClear?: PropBindingClearAction; seedDraft?: string; companion?: boolean; hint?: string }>;
     };
   },
 >(src: T, entries: ReadonlyArray<PropBindingEntry>): T {
@@ -292,12 +335,14 @@ export function bindProps<
     checkOnClear("bindProps", e.onClear, e.index !== undefined ? [e.index, ...(e.path ?? [])] : e.path ?? []);
     checkSeedDraft("bindProps", e.seedDraft, e.kind);
     checkCompanion("bindProps", e.companion, e.seedDraft, e.kind);
+    const hint = checkHint("bindProps", e.hint);
     return {
       propKey: e.propKey,
       ...(e.index !== undefined ? { index: e.index } : {}),
       ...(e.path ? { path: [...e.path] } : {}),
       ...(e.kind ? { kind: e.kind } : {}),
       ...(e.layer !== undefined ? { layer: e.layer } : {}),
+      ...(hint ? { hint } : {}),
       ...(e.onClear ? { onClear: e.onClear } : {}),
       ...(e.seedDraft !== undefined ? { seedDraft: e.seedDraft } : {}),
       ...(e.companion ? { companion: true } : {}),

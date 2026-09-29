@@ -1,7 +1,7 @@
 {
-  "release": "0.2.0",
-  "commit": "d72fdcea",
-  "note": "The template ids the m0saic@0.2.0 CLI prints app.m0saic.io/make?t=<id> links for on Mosaic Web; additive-only (never remove one from src/web.ts) until the next CLI release re-mints this snapshot.",
+  "release": "0.3.0",
+  "commit": "5d235695",
+  "note": "The template ids the m0saic@0.3.0 CLI prints app.m0saic.io/make?t=<id> links for on Mosaic Web; additive-only (never remove one from src/web.ts) until the next CLI release re-mints this snapshot.",
   "ids": [
     "@m0saic/agents/commit-feed/v1",
     "@m0saic/agents/trace-timeline/v1",

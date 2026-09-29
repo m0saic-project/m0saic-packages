@@ -136,6 +136,9 @@ export type PropBindingRef = {
    *  a numeric first `path` segment); `"unset-leaf"` needs a keyed leaf (a
    *  basic prop, or a path ending in a key). */
   onClear?: BindingClearAction;
+  /** The in-context line editors show for this rect (0.3.0; falls back to
+   *  the prop's `description`). Passed through verbatim; hosts sanitize. */
+  hint?: string;
   /** Initial DRAFT when the leaf is empty / absent (an add handle) — the
    *  clicked date, a slot number. Pre-selected, written only on commit;
    *  ignored on a leaf that has a value. */

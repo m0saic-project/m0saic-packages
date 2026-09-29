@@ -21,18 +21,20 @@ export function getFfmpegToolchainsRoot(): string {
   return path.join(getToolchainsRoot(), "ffmpeg");
 }
 
-export type FfmpegSlotVariant = "lgpl" | "gpl";
+/** The one pinned build. Was `"lgpl" | "gpl"` until 2026-09-22; the slot dir
+ *  keeps its `-gpl` suffix so existing installs stay valid. */
+export type FfmpegSlotVariant = "gpl";
 
 export function getGoldenFfmpegSlotDir(
   m0saicVersion: string,
-  variant: FfmpegSlotVariant,
+  variant: FfmpegSlotVariant = "gpl",
 ): string {
   return path.join(getFfmpegToolchainsRoot(), `${m0saicVersion}-${variant}`);
 }
 
 export function getGoldenFfmpegBinaryPath(
   m0saicVersion: string,
-  variant: FfmpegSlotVariant,
+  variant: FfmpegSlotVariant = "gpl",
 ): string {
   const exe = process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg";
   return path.join(
@@ -44,7 +46,7 @@ export function getGoldenFfmpegBinaryPath(
 
 export function getGoldenFfprobeBinaryPath(
   m0saicVersion: string,
-  variant: FfmpegSlotVariant,
+  variant: FfmpegSlotVariant = "gpl",
 ): string {
   const exe = process.platform === "win32" ? "ffprobe.exe" : "ffprobe";
   return path.join(

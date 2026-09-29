@@ -78,7 +78,7 @@ describe("resolveGoldenFfmpeg", () => {
     expect(res.ffprobePath).toContain(`-${baseline.profile}`);
   });
 
-  test("platformKey drives the variant slot: GPL-first on every platform (official baseline)", () => {
+  test("the one slot is -gpl on every platform (official baseline; no LGPL rail since 2026-09-22)", () => {
     const win = resolveGoldenFfmpeg({
       platformKey: "win32-x64",
       exists: () => false,

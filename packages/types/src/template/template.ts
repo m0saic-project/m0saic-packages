@@ -57,6 +57,10 @@ import { type MosaicTemplatePreview } from "../template-repo";
  * - "group"     — object with a known shape, rendered as a fieldset/panel
  * - "list"      — array of renderable items (usually groups), rendered as
  *                 a repeatable or indexed UI section
+ * - "array"     — the same value shape as "list" (a real JS array), for the
+ *                 tabular editors: `control.flavor: "objectRows"` (a column
+ *                 per leaf) or `"jsonModal"`. Bindable per LEAF, exactly like
+ *                 "list" / "json" (`path` + `kind`).
  *
  * M0-family types (DSL inputs — editor surfaces them as Layout pickers):
  * - "m0"        — bare m0 DSL string (just layout geometry).
@@ -95,6 +99,20 @@ export type MosaicTemplatePropType =
   | "media[]"
   | "group"
   | "list"
+  /**
+   * A real JS array, edited as a TABLE rather than a repeatable fieldset —
+   * `meta.control.flavor: "objectRows"` (one column per leaf, with a palette
+   * for colour columns) or `"jsonModal"`. Same value shape as `"list"`, and
+   * `classifyBindableProp` has always accepted it (`STRUCTURED_TYPES`), so a
+   * leaf binds with `path` + `kind` like any structured prop.
+   *
+   * Declared in the union on 2026-09-25: 19 props across 17 shipped templates
+   * (alpine donut v1-v3, progress-card, commit-feed v2, …) were already using
+   * it through a `type: "array" as any` cast because the union lacked it while
+   * the binding predicate accepted it. New templates declare it plainly; the
+   * casts in FROZEN templates stay until their next version.
+   */
+  | "array"
   | "m0"
   | "m0c"
   | "m0p"
@@ -1654,6 +1672,70 @@ export interface MosaicTemplate<
     allow?: Array<{ count: number; reason: string }>;
     /** The hinted canvas is a physical size (print) that cannot be 5-smooth. */
     canvas?: "physical";
+  };
+
+  /**
+   * Canvas-fill provenance — the declared exception to `canvasFill`.
+   *
+   * That convention THROWS on a static, opaque, full-canvas colour source,
+   * because a base rect is a click target covering everything and
+   * `document.backgroundColor` fills a canvas with no rect at all. A template
+   * whose SUBJECT is that rect — one teaching how `1{…}` restores a node's full
+   * rect, a tutorial surface painting its own page — says so here, with the
+   * reason a reviewer reads:
+   *
+   * ```ts
+   * canvas: { baseRect: "the lesson IS the full-rect base under two overlays" }
+   * ```
+   *
+   * This is the general escape. {@link bindings} has nothing to do with it, and
+   * `useNestedBackgroundColor` is the NARROW one: that flag says "I am composed
+   * into another template, whose slot my own backgroundColor cannot fill", which
+   * is a different claim and must not be used to mean "I meant this rect".
+   *
+   * Distinct from `lattice.canvas`, which declares a PHYSICAL (print) canvas for
+   * the split-count rule.
+   */
+  canvas?: {
+    /** Why this template ships a full-canvas colour source. Empty is refused. */
+    baseRect?: string;
+  };
+
+  /**
+   * Prop-binding provenance — "bind what you display", declared rather than
+   * guessed (founder ruling 2026-09-25).
+   *
+   * Every prop that CAN carry a canvas handle must either be bound with
+   * `bindProp` / `bindProps` / `bindPropPath` / `bindPropRect` on the rect that
+   * shows it, or be named here with the reason it has none. The
+   * `bindingsDeclared` convention THROWS for a template that does neither, so a
+   * new template cannot ship with a prop nobody can reach on the canvas.
+   *
+   * The props that must be accounted for are the ones
+   * `classifyBindableProp` can give a handle: free-text and colour `string`,
+   * `number`, `media`, one element of a basic list, one leaf of
+   * `json` / `list` / `array`, and a regions-picker `rect`. Booleans, closed
+   * sets (`oneOf` / `options`), `group` containers, the `m0` family, `code`,
+   * and anything `hidden` / `consumer: "human"` are never canvas things and
+   * need no entry.
+   *
+   * ```ts
+   * bindings: { unbound: { fps: "timing", gap: "geometry", seed: "determinism" } }
+   * ```
+   *
+   * A reason is for the reviewer, so one honest word beats a sentence. The
+   * convention also rejects a STALE declaration — an entry naming a prop that
+   * does not exist, or one that is in fact bound — because a lie here is worse
+   * than no entry.
+   *
+   * Templates already hashed in a repo's `frozen.manifest.json` are exempt:
+   * they shipped before the convention, they are never edited in place, and a
+   * retroactive requirement they cannot satisfy is noise, not a gate.
+   */
+  bindings?: {
+    /** `propKey` → why this prop has no canvas handle. Keys are dotted exactly
+     *  as `propsSchema` nests them (`titles.title`). */
+    unbound?: Record<string, string>;
   };
 
   /**
