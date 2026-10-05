@@ -9,7 +9,8 @@
     "assets": {
       "templatesDir": "assets/templates"
     },
-    "helloWorld": "@m0saic/hello-world/v1"
+    "helloWorld": "@m0saic/hello-world/v1",
+    "conventions": "0.3.1"
   },
   "entryModule": "./dist/index.js",
   "templates": [
@@ -28,6 +29,25 @@
     },
     {
       "slug": "page-skeleton",
+      "templateKey": "@m0saic/web/page-skeleton/v2",
+      "title": "Page Skeleton",
+      "description": "Turns anonymous browser geometry into an editable skeleton-loading still or looping shimmer/pulse video.",
+      "tags": [
+        "web",
+        "skeleton",
+        "loading",
+        "capture",
+        "wireframe",
+        "animated",
+        "designers",
+        "developers",
+        "landing-page",
+        "mockup"
+      ],
+      "pack": "web"
+    },
+    {
+      "slug": "page-skeleton-v1",
       "templateKey": "@m0saic/web/page-skeleton/v1",
       "title": "Page Skeleton",
       "description": "Paste anonymous geometry captured from any webpage and render an editable skeleton-loading still or looping shimmer/pulse video.",
@@ -44,6 +64,21 @@
         "mockup"
       ],
       "pack": "web"
+    },
+    {
+      "slug": "wireframe-v3",
+      "templateKey": "@m0saic/wireframe/base/v3",
+      "title": "Wireframe",
+      "description": "Wireframe of any m0 layout string: every cell drawn as an outlined rectangle with its number, pixel size and aspect ratio on a white canvas. Switch the background to transparent to composite over anything or trace a reference screenshot, or pick the thumb, heatmap or paper presets for clean tiles.",
+      "tags": [
+        "wireframe",
+        "docs-only",
+        "designers",
+        "developers",
+        "layout",
+        "blueprint"
+      ],
+      "pack": "wireframe"
     },
     {
       "slug": "wireframe-v2",
@@ -117,6 +152,23 @@
       "pack": "brand"
     },
     {
+      "slug": "brand-logo",
+      "templateKey": "@m0saic/brand/logo/v4",
+      "title": "M0saic Brand Marks",
+      "description": "Renders any m0saic brand mark — the M (as rects or bitmap), the m0 logotype, or the m0saic pattern — with an animated reveal, each at its official dictionary resolution. Default 'm-33' is the fast rect M; 'composite' (bitmap + rects blend) is the deliberate heavy render. Supersedes the earlier brand-logo templates.",
+      "tags": [
+        "brand",
+        "logo",
+        "marks",
+        "animated",
+        "designers",
+        "marketers",
+        "intro",
+        "sting"
+      ],
+      "pack": "brand"
+    },
+    {
       "slug": "brand-logo-v3",
       "templateKey": "@m0saic/brand/logo/v3",
       "title": "M0saic Brand Marks",
@@ -151,6 +203,24 @@
     },
     {
       "slug": "business-card",
+      "templateKey": "@m0saic/brand/business-card/v2",
+      "title": "Business Card",
+      "description": "The m0saic business card, print-ready: US 3.5 x 2 in at 300 DPI on MOO's bleed box (1098 x 648 px; Vistaprint / FedEx presets too), the brand field + M lockup and your contact on the front, a live-rendered shipped template with a QR to Mosaic Web on the back. One render, two PNGs (front + back). Every line on the front is editable on the canvas.",
+      "tags": [
+        "brand",
+        "print",
+        "card",
+        "business-card",
+        "still",
+        "qr",
+        "founders",
+        "marketers",
+        "developers"
+      ],
+      "pack": "brand"
+    },
+    {
+      "slug": "business-card-v1",
       "templateKey": "@m0saic/brand/business-card/v1",
       "title": "Business Card",
       "description": "The m0saic business card, print-ready: US 3.5 x 2 in at 300 DPI on MOO's bleed box (1098 x 648 px; Vistaprint / FedEx presets too) — brand field + M lockup and your contact on the front, a live-rendered shipped template with a QR to Mosaic Web on the back. One render, two PNGs.",
@@ -169,6 +239,20 @@
     },
     {
       "slug": "qr-code",
+      "templateKey": "@m0saic/media/qr/code/v2",
+      "title": "QR Code",
+      "description": "Scannable QR from any text (URL, plain string, or structured payload). Defaults to the branded look — circle modules on a light card with the m0saic M carved in the centre; swap the centre asset and URL to make it yours. Square/rounded/circle module styles, light/dark/transparent card, optional spawn animation (Output mp4). The one standalone QR template.",
+      "tags": [
+        "brand",
+        "qr",
+        "marketers",
+        "designers",
+        "link"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "qr-code-v1",
       "templateKey": "@m0saic/media/qr/code/v1",
       "title": "QR Code",
       "description": "Scannable QR from any text (URL, plain string, or structured payload). Defaults to the branded look — circle modules on a light card with the m0saic M carved in the centre; swap the centre asset and URL to make it yours. Square/rounded/circle module styles, light/dark/transparent card, optional spawn animation (Output mp4). The one standalone QR template.",
@@ -194,6 +278,21 @@
     },
     {
       "slug": "barcode",
+      "templateKey": "@m0saic/media/barcode/v2",
+      "title": "Barcode",
+      "description": "Scannable 1D barcode (Code 128, EAN-13, UPC-A). Orange bars on light, dark, or transparent backgrounds, with an optional human-readable caption underneath. Double-click the barcode to change what it encodes.",
+      "tags": [
+        "media",
+        "barcode",
+        "designers",
+        "marketers",
+        "print",
+        "label"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "barcode-v1",
       "templateKey": "@m0saic/media/barcode/v1",
       "title": "Barcode",
       "description": "Scannable 1D barcode (Code 128, EAN-13, UPC-A). Orange bars on light, dark, or transparent backgrounds. Optional human-readable digit caption underneath.",
@@ -245,6 +344,24 @@
     },
     {
       "slug": "qr-stamp-custom",
+      "templateKey": "@m0saic/media/qr/stamp/v2",
+      "title": "QR Stamp",
+      "description": "Drop a QR onto any image or video. Same engine as the auto post-render watermark, exposed for direct use.",
+      "tags": [
+        "brand",
+        "qr",
+        "stamp",
+        "custom",
+        "marketers",
+        "creators",
+        "animated",
+        "link",
+        "video"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "qr-stamp-custom-v1",
       "templateKey": "@m0saic/media/qr/stamp/v1",
       "title": "QR Stamp",
       "description": "Drop a QR onto any image or video. Same engine as the auto post-render attribution watermark, exposed for direct use — adaptive light/dark card, entrance fade, corner/size/margin knobs.",
@@ -345,6 +462,22 @@
     },
     {
       "slug": "benchmark-report",
+      "templateKey": "@m0saic/benchmark/report/v2",
+      "title": "Benchmark — Report",
+      "description": "Renders the standard shareable benchmark results video from a session's benchmark.json: machine-specs header, score / total-time / scenarios KPIs (stat-card), and a per-scenario render-time bar chart (bar-graph). Pair with the benchmark runner.",
+      "tags": [
+        "developer",
+        "benchmark",
+        "report",
+        "dashboard",
+        "performance",
+        "developers",
+        "animated"
+      ],
+      "pack": "benchmark"
+    },
+    {
+      "slug": "benchmark-report-v1",
       "templateKey": "@m0saic/benchmark/report/v1",
       "title": "Benchmark — Report",
       "description": "Packages a benchmark session's benchmark.json (written by @m0saic/benchmark/run/v1) into the standard shareable results video: machine-specs header, three headline KPIs, and a per-scenario render-time bar chart composed from the charts pack.",
@@ -465,6 +598,26 @@
     },
     {
       "slug": "ffmpeg-pulse-runner",
+      "templateKey": "@m0saic/hero/ffmpeg-pulse/runner/v2",
+      "title": "Weekly Pulse · Runner",
+      "description": "FFmpeg Weekly Pulse — the runner. Sequences all eight beats (title → kpi-overview → activity-trend → contributions → top-contributors → changes-breakdown → notable-commits → fin) into one cross-faded MosaicDocumentPipeline. Aspect-adaptive; per-beat durations as props.",
+      "tags": [
+        "data-viz",
+        "hero",
+        "ffmpeg-pulse",
+        "runner",
+        "pipeline",
+        "animated",
+        "developers",
+        "marketers",
+        "github",
+        "changelog",
+        "showcase"
+      ],
+      "pack": "hero"
+    },
+    {
+      "slug": "ffmpeg-pulse-runner-v1",
       "templateKey": "@m0saic/hero/ffmpeg-pulse/runner/v1",
       "title": "Weekly Pulse · Runner",
       "description": "FFmpeg Weekly Pulse — the runner. Sequences all eight beats into one cross-faded MosaicDocumentPipeline. Aspect-adaptive; per-beat durations as props.",
@@ -497,6 +650,23 @@
     },
     {
       "slug": "bar-graph",
+      "templateKey": "@m0saic/charts/bar-graph/v3",
+      "title": "Bar Graph",
+      "description": "Canonical bar graph data-viz primitive (tight-rect geometry): vertical/horizontal, labels, presets, intro animation.",
+      "tags": [
+        "data-viz",
+        "bar-graph",
+        "animated",
+        "analysts",
+        "marketers",
+        "report",
+        "charts",
+        "chart"
+      ],
+      "pack": "charts"
+    },
+    {
+      "slug": "bar-graph-v2",
       "templateKey": "@m0saic/charts/bar-graph/v2",
       "title": "Bar Graph",
       "description": "Canonical bar graph: vertical/horizontal, grid + L-axes, value + category labels, presets, grow-in animation. Tight-rect geometry — each bar a rect that hugs its drawn height (flat single doc, no nested composition).",
@@ -513,6 +683,23 @@
     },
     {
       "slug": "stat-card",
+      "templateKey": "@m0saic/charts/stat-card/v2",
+      "title": "KPI Stat Card",
+      "description": "Canonical KPI stat card: label, dominant value, delta (arrow + signed change), and sublabel. Building block of the repo-tracker hero.",
+      "tags": [
+        "data-viz",
+        "stat-card",
+        "kpi",
+        "animated",
+        "analysts",
+        "marketers",
+        "metric",
+        "charts"
+      ],
+      "pack": "charts"
+    },
+    {
+      "slug": "stat-card-v1",
       "templateKey": "@m0saic/charts/stat-card/v1",
       "title": "KPI Stat Card",
       "description": "Canonical KPI stat card: label, dominant value, delta (arrow + signed change), and sublabel. Building block of the repo-tracker hero.",
@@ -529,6 +716,23 @@
     },
     {
       "slug": "donut",
+      "templateKey": "@m0saic/charts/donut/v5",
+      "title": "Donut Chart",
+      "description": "Canonical donut chart: proportional ring + center total. v4 makes the premium sliver sweep RATIO via a self-framed coarse-quantize (a P-divisible S×S frame lets placeRects GCD-collapse on any canvas), so it composes at any size while keeping the smooth sweep + tight rasters. Building block of the repo-tracker hero.",
+      "tags": [
+        "data-viz",
+        "donut",
+        "distribution",
+        "animated",
+        "analysts",
+        "marketers",
+        "share",
+        "charts"
+      ],
+      "pack": "charts"
+    },
+    {
+      "slug": "donut-v4",
       "templateKey": "@m0saic/charts/donut/v4",
       "title": "Donut Chart",
       "description": "Canonical donut chart: proportional ring + dominant center total. v4 makes the premium sliver sweep ratio via a self-framed coarse-quantize, so it composes at any canvas while keeping the smooth sweep + tight rasters.",
@@ -571,6 +775,22 @@
     },
     {
       "slug": "line-chart",
+      "templateKey": "@m0saic/charts/line-chart/v2",
+      "title": "Line Chart",
+      "description": "Canonical line-chart data-viz primitive: multi-series, full axis/line/point control, transparent/solid/image backgrounds.",
+      "tags": [
+        "data-viz",
+        "line-chart",
+        "animated",
+        "analysts",
+        "marketers",
+        "trend",
+        "charts"
+      ],
+      "pack": "charts"
+    },
+    {
+      "slug": "line-chart-v1",
       "templateKey": "@m0saic/charts/line-chart/v1",
       "title": "Line Chart",
       "description": "Canonical line-chart data-viz primitive: multi-series, full axis/line/point control, and transparent/solid/image backgrounds. The base every dashboard/report composes.",
@@ -679,6 +899,24 @@
     },
     {
       "slug": "bar-graph",
+      "templateKey": "@m0saic/alpine/bar-graph/v2",
+      "title": "Alpine Bar Chart",
+      "description": "Alpine horizontal bar chart — friendly mobile-marketing card: rounded bars, category rail, inline values, value ticks.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "bar-graph",
+        "animated",
+        "analysts",
+        "developers",
+        "dashboard",
+        "report",
+        "chart"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "bar-graph-v1",
       "templateKey": "@m0saic/alpine/bar-graph/v1",
       "title": "Alpine Bar Chart",
       "description": "Alpine horizontal bar chart — friendly mobile-marketing card: white rounded surface, category rail, rounded bars, inline values, value-tick band. Standalone Alpine brand flavor (not a re-skin of charts/bar-graph).",
@@ -696,6 +934,24 @@
     },
     {
       "slug": "donut",
+      "templateKey": "@m0saic/alpine/donut/v4",
+      "title": "Alpine Donut Chart",
+      "description": "Alpine donut chart — friendly mobile-marketing card: proportional ring, center value + label, side legend. v3's premium mode does the full clockwise radial SWEEP (self-framed coarse-quantize) — smooth draw-on that still composes at any canvas; light mode stays the composable per-segment path.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "donut",
+        "distribution",
+        "animated",
+        "analysts",
+        "marketers",
+        "dashboard",
+        "share"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "donut-v3",
       "templateKey": "@m0saic/alpine/donut/v3",
       "title": "Alpine Donut Chart",
       "description": "Alpine donut chart — friendly mobile-marketing card: proportional ring, center value + label, side legend. v3's premium mode does the full clockwise radial SWEEP (self-framed coarse-quantize — a smooth draw-on that still composes at any canvas); light mode stays the composable per-segment path.",
@@ -739,6 +995,24 @@
     },
     {
       "slug": "line-chart",
+      "templateKey": "@m0saic/alpine/line-chart/v3",
+      "title": "Alpine Line Chart",
+      "description": "Alpine line/area chart — friendly mobile-marketing card: soft area fill, rounded line, point markers, value rail, left→right draw-on. Standalone Alpine brand flavor. v2 rebuilds the geometry as a ratio layout (plot marks are masks filling a ratio plot cell in plot-local coords) so it composes at any canvas without the absolute-placement precision blowup.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "line-chart",
+        "animated",
+        "analysts",
+        "developers",
+        "trend",
+        "dashboard",
+        "chart"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "line-chart-v2",
       "templateKey": "@m0saic/alpine/line-chart/v2",
       "title": "Alpine Line Chart",
       "description": "Alpine line/area chart — friendly mobile-marketing card: soft area fill, rounded line, point markers, value rail, left→right draw-on. Standalone Alpine brand flavor. v2 rebuilds the geometry as a ratio layout (plot marks are masks filling a ratio plot cell) so it composes at any canvas without the absolute-placement precision blowup.",
@@ -769,6 +1043,24 @@
     },
     {
       "slug": "kpi-card",
+      "templateKey": "@m0saic/alpine/kpi-card/v3",
+      "title": "Alpine KPI Card",
+      "description": "Alpine KPI / stat card — friendly mobile-marketing card: muted label, count-up value, soft delta pill (arrow + change), sublabel, optional sparkline. Every line is editable on the canvas, and the card composes at any size.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "kpi",
+        "stat-card",
+        "animated",
+        "analysts",
+        "marketers",
+        "metric",
+        "dashboard"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "kpi-card-v2",
       "templateKey": "@m0saic/alpine/kpi-card/v2",
       "title": "Alpine KPI Card",
       "description": "Alpine KPI / stat card — friendly mobile-marketing card: muted label, count-up value, soft delta pill (arrow + change), sublabel, optional sparkline. Standalone Alpine brand flavor. v2 rebuilds the sparkline as a ratio band so the whole card composes at any canvas without the absolute-placement precision blowup.",
@@ -799,6 +1091,26 @@
     },
     {
       "slug": "stat-card",
+      "templateKey": "@m0saic/alpine/stat-card/v2",
+      "title": "Alpine Stat Card",
+      "description": "Alpine KPI stat card — friendly mobile-marketing card: accent icon + muted label, dominant count-up value, SVG-triangle delta (green up / red down) + sublabel. Light by default; \"dark\" preset for the night look (the FFmpeg Weekly Pulse hero passes preset:\"dark\" + its own accent/card).",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "stat-card",
+        "kpi",
+        "animated",
+        "analysts",
+        "marketers",
+        "metric",
+        "number",
+        "hero",
+        "dark"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "stat-card-v1",
       "templateKey": "@m0saic/alpine/stat-card/v1",
       "title": "Hero KPI Stat Card",
       "description": "Hero-styled KPI stat card (Alpine pack): rounded dark card, green accent icon + label, dominant count-up value, SVG-triangle delta (green up / red down) + sublabel. The KPI tile for the FFmpeg Weekly Pulse beats.",
@@ -817,6 +1129,25 @@
     },
     {
       "slug": "contributor-table",
+      "templateKey": "@m0saic/alpine/contributor-table/v2",
+      "title": "Alpine Contributor Table",
+      "description": "Alpine contributor table — friendly mobile-marketing card: a ranked multi-column table (rank · avatar · name + arbitrary right-aligned value columns), icon + title header, top-N accent wash, count-up values. Alpine-light by default; the FFmpeg Weekly Pulse uses preset:\"dark\".",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "contributor-table",
+        "ranking",
+        "table",
+        "animated",
+        "developers",
+        "analysts",
+        "team",
+        "open-source"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "contributor-table-v1",
       "templateKey": "@m0saic/alpine/contributor-table/v1",
       "title": "Alpine Contributor Table",
       "description": "Alpine contributor table — friendly mobile-marketing card: a ranked multi-column table (rank · avatar · name + arbitrary value columns), icon + title header, top-N accent wash, count-up values. Alpine-light by default; the FFmpeg hero uses preset:\"dark\".",
@@ -835,6 +1166,25 @@
     },
     {
       "slug": "commit-feed",
+      "templateKey": "@m0saic/alpine/commit-feed/v3",
+      "title": "Alpine Commit Feed",
+      "description": "Alpine commit feed — friendly mobile-marketing card: a scannable list of notable commits (kind icon + title + PR, area chip + author + reviewers + date) with a signal status bar (green win / amber warn / neutral). Alpine-light by default; the FFmpeg Weekly Pulse uses preset:\"dark\". v2 rebuilds the geometry as a RATIO layout (nested row/col splits with proportional weights) so it composes at any canvas without the absolute-placement precision blowup.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "commit-feed",
+        "feed",
+        "list",
+        "animated",
+        "developers",
+        "analysts",
+        "git",
+        "changelog"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "commit-feed-v2",
       "templateKey": "@m0saic/alpine/commit-feed/v2",
       "title": "Alpine Commit Feed",
       "description": "Alpine commit feed — friendly mobile-marketing card: a scannable list of notable commits (kind icon + title + PR, area chip + author + reviewers + date) with a signal status bar. Alpine-light by default; the FFmpeg hero uses preset:\"dark\". v2 rebuilds the geometry as a ratio layout (nested proportional splits) so it composes at any canvas without the absolute-placement precision blowup.",
@@ -867,6 +1217,24 @@
     },
     {
       "slug": "progress-card",
+      "templateKey": "@m0saic/alpine/progress-card/v2",
+      "title": "Alpine Progress Card",
+      "description": "Alpine progress card — friendly mobile-marketing card: a list of goal rows, each a label + value over a rounded track with a colored fill grown to its fraction. Standalone Alpine brand flavor.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "progress",
+        "goals",
+        "animated",
+        "analysts",
+        "marketers",
+        "goal",
+        "milestone"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "progress-card-v1",
       "templateKey": "@m0saic/alpine/progress-card/v1",
       "title": "Alpine Progress Card",
       "description": "Alpine progress card — friendly mobile-marketing card: a list of goal rows, each a label + value over a rounded track with a colored fill grown to its fraction. Standalone Alpine brand flavor.",
@@ -884,6 +1252,23 @@
     },
     {
       "slug": "leaderboard",
+      "templateKey": "@m0saic/alpine/leaderboard/v2",
+      "title": "Alpine Leaderboard",
+      "description": "Alpine leaderboard — friendly mobile-marketing card: a ranked list with gold/silver/bronze rank badges, names, count-up values, and a soft podium tint. Standalone Alpine brand flavor.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "leaderboard",
+        "ranking",
+        "animated",
+        "analysts",
+        "creators",
+        "top-10"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "leaderboard-v1",
       "templateKey": "@m0saic/alpine/leaderboard/v1",
       "title": "Alpine Leaderboard",
       "description": "Alpine leaderboard — friendly mobile-marketing card: a ranked list with gold/silver/bronze rank badges, names, count-up values, and a soft podium tint. Standalone Alpine brand flavor.",
@@ -900,6 +1285,24 @@
     },
     {
       "slug": "heatmap",
+      "templateKey": "@m0saic/alpine/heatmap/v3",
+      "title": "Alpine Heatmap",
+      "description": "Alpine heatmap — friendly mobile-marketing card: a rows×cols grid of rounded cells colored on a single-hue intensity scale, with row/column labels and a Less→More legend. v2 rebuilds the geometry as a RATIO layout (clean grid() cells; gaps applied as lattice-retargeted source insets, exact at every canvas), so it composes anywhere without the coprime-pixel precision blowup. Generalizes the GitHub contribution calendar.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "heatmap",
+        "matrix",
+        "animated",
+        "analysts",
+        "developers",
+        "activity",
+        "calendar"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "heatmap-v2",
       "templateKey": "@m0saic/alpine/heatmap/v2",
       "title": "Alpine Heatmap",
       "description": "Alpine heatmap — friendly mobile-marketing card: a rows×cols grid of rounded cells on a single-hue intensity scale, with row/column labels and a Less→More legend. Generalizes the GitHub contribution calendar. Standalone Alpine brand flavor. v2 rebuilds the geometry as a ratio layout (gutterless grid + gaps as source insets) so it composes at any canvas without the absolute-placement precision blowup.",
@@ -930,6 +1333,23 @@
     },
     {
       "slug": "timeline",
+      "templateKey": "@m0saic/alpine/timeline/v3",
+      "title": "Alpine Timeline",
+      "description": "Alpine timeline — friendly mobile-marketing card: a milestone timeline with a spine + dots that draw down/across, each event a date + title + description. Standalone Alpine brand flavor. v2 rebuilds the geometry as a RATIO layout (nested proportional splits with insetNode-centered dots) so it composes at any canvas without the absolute-placement precision blowup.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "timeline",
+        "milestones",
+        "animated",
+        "analysts",
+        "marketers",
+        "roadmap"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "timeline-v2",
       "templateKey": "@m0saic/alpine/timeline/v2",
       "title": "Alpine Timeline",
       "description": "Alpine timeline — friendly mobile-marketing card: a milestone timeline with a spine + dots, each event a date + title + description. Standalone Alpine brand flavor. v2 rebuilds the geometry as a ratio layout (nested proportional splits) so it composes at any canvas without the absolute-placement precision blowup.",
@@ -959,6 +1379,24 @@
     },
     {
       "slug": "treemap",
+      "templateKey": "@m0saic/alpine/treemap/v3",
+      "title": "Alpine Treemap",
+      "description": "Alpine treemap — friendly mobile-marketing card: value-sized rounded tiles (squarified) filling the card, each labelled with its name + share, tiles fading in biggest→smallest. Standalone Alpine brand flavor. v2 rebuilds the geometry as a ratio layout (squarified nested splits + gap-as-inset) so it composes at any canvas without the absolute-placement precision blowup.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "treemap",
+        "proportion",
+        "animated",
+        "analysts",
+        "developers",
+        "breakdown",
+        "composition"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "treemap-v2",
       "templateKey": "@m0saic/alpine/treemap/v2",
       "title": "Alpine Treemap",
       "description": "Alpine treemap — friendly mobile-marketing card: value-sized rounded tiles (squarified) filling the card, each labelled with its name + share, tiles fading in biggest→smallest. Standalone Alpine brand flavor. v2 rebuilds the geometry as a ratio layout (squarified nested splits + gap-as-inset) so it composes at any canvas without the absolute-placement precision blowup.",
@@ -989,6 +1427,19 @@
     },
     {
       "slug": "grid",
+      "templateKey": "@m0saic/primitives/grid/v3",
+      "title": "Primitive — Grid",
+      "description": "Composable gridline overlay primitive (horizontal/vertical/both) — thin fixed-px strips at proportional offsets; nests cleanly at any canvas.",
+      "tags": [
+        "primitive",
+        "grid",
+        "developers",
+        "layout"
+      ],
+      "pack": "primitives"
+    },
+    {
+      "slug": "grid-v2",
       "templateKey": "@m0saic/primitives/grid/v2",
       "title": "Primitive — Grid",
       "description": "Composable gridline overlay primitive (horizontal/vertical/both) — thin fixed-px strips at proportional offsets; nests cleanly at any canvas.",
@@ -1013,6 +1464,26 @@
     },
     {
       "slug": "image-collage",
+      "templateKey": "@m0saic/collage/image-collage/v2",
+      "title": "Image Collage",
+      "description": "Packs any set of photos into a designed contact sheet: a searched layout with hero, portrait and panorama cells sized to each image's aspect, even pixel gutters, and a soft crop budget so nothing is trimmed too hard. Big sets page into one PNG per sheet. With no images it shows a demo set.",
+      "tags": [
+        "media",
+        "collage",
+        "image",
+        "layout-solver",
+        "contact-sheet",
+        "creators",
+        "designers",
+        "photos",
+        "grid",
+        "social",
+        "images"
+      ],
+      "pack": "collage"
+    },
+    {
+      "slug": "image-collage-v1",
       "templateKey": "@m0saic/collage/image-collage/v1",
       "title": "Image Collage",
       "description": "Packs any set of photos into a designed contact sheet: searched layout, hero / portrait / panorama cells sized to each image, even pixel gutters, soft crop budget; big sets page into one PNG per sheet.",
@@ -1044,6 +1515,23 @@
     },
     {
       "slug": "quote-card",
+      "templateKey": "@m0saic/social/quote-card/v2",
+      "title": "Quote Card",
+      "description": "Pull-quote social card — auto-wrapped quote, accent bar, attribution with an optional circular avatar; hand-tuned light/dark presets; lossless PNG still, aspect-safe from square to stories. Every line is editable on the canvas.",
+      "tags": [
+        "social",
+        "quote",
+        "card",
+        "pull-quote",
+        "promo",
+        "creators",
+        "marketers",
+        "testimonial"
+      ],
+      "pack": "social"
+    },
+    {
+      "slug": "quote-card-v1",
       "templateKey": "@m0saic/social/quote-card/v1",
       "title": "Quote Card",
       "description": "Pull-quote social card — auto-wrapped quote, accent bar, attribution with an optional circular avatar; hand-tuned light/dark presets; lossless PNG still, aspect-safe from square to stories.",
@@ -1061,6 +1549,23 @@
     },
     {
       "slug": "code-snippet-morph",
+      "templateKey": "@m0saic/code/snippet-morph/v2",
+      "title": "Code Snippet Morph",
+      "description": "Morphs ordered TypeScript/JavaScript code states into a deterministic editor-frame video with moving, added, and removed lines.",
+      "tags": [
+        "developer",
+        "code",
+        "snippet",
+        "animated",
+        "developers",
+        "diff",
+        "tutorial",
+        "animation"
+      ],
+      "pack": "code"
+    },
+    {
+      "slug": "code-snippet-morph-v1",
       "templateKey": "@m0saic/code/snippet-morph/v1",
       "title": "Code Snippet Morph",
       "description": "Turn ordered TypeScript or JavaScript states into a deterministic editor-frame video with syntax highlighting and line-aware morphs — CodeSlides polish as a real deliverable, without screen recording.",
@@ -1089,6 +1594,23 @@
     },
     {
       "slug": "screencap-grid",
+      "templateKey": "@m0saic/media/screencap_grid/v3",
+      "title": "Screencap Grid",
+      "description": "Displays formatted ffprobe info in a top pane with a rows x cols grid of the same media below. Renders a static PNG contact sheet or an animated MP4 grid via the Output knob. v2 lays the pane and tiles out as exact pixel rects via inset-recovery placement, so tile gaps are pixel-exact at every canvas.",
+      "tags": [
+        "media",
+        "screencap",
+        "creators",
+        "developers",
+        "contact-sheet",
+        "thumbnails",
+        "video",
+        "grid"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "screencap-grid-v2",
       "templateKey": "@m0saic/media/screencap_grid/v2",
       "title": "Screencap Grid",
       "description": "Displays formatted ffprobe info in a top pane with a rows x cols grid of the same media below. Renders a static PNG contact sheet or an animated MP4 grid via the Output knob. v2 lays the pane and tiles out as exact pixel rects via inset-recovery placement (placeInsetPieces), so tile gaps are pixel-exact at every canvas.",
@@ -1118,6 +1640,23 @@
     },
     {
       "slug": "subtitle-burn",
+      "templateKey": "@m0saic/media/subtitle-burn/v2",
+      "title": "Subtitle Burn",
+      "description": "Reads subtitle cues from an MKV/MP4's embedded subtitle stream (text-based codecs) and burns them onto the video as m0saic text overlays. Opt-in cue emission via MosaicDataSource + doc.sidecars.cues.",
+      "tags": [
+        "media",
+        "subtitles",
+        "captions",
+        "creators",
+        "educators",
+        "animated",
+        "accessibility",
+        "video"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "subtitle-burn-v1",
       "templateKey": "@m0saic/media/subtitle-burn/v1",
       "title": "Subtitle Burn",
       "description": "Reads subtitle cues from an MKV/MP4's embedded subtitle stream and burns them onto the video as m0saic text overlays.",
@@ -1135,6 +1674,25 @@
     },
     {
       "slug": "screencap-grid-aspect-safe",
+      "templateKey": "@m0saic/media/screencap_grid_aspect_safe/v2",
+      "title": "Screencap Grid — Aspect Safe",
+      "description": "Per source video, renders a coordinated landscape + portrait grid pair (same cell count, cells steered to the wanted shape — landscape/square/portrait presets or an exact ratio, default landscape 16:9). Multi-input renders 2 outputs per file. Renders static PNG contact sheets or animated MP4 grids via the Output knob.",
+      "tags": [
+        "media",
+        "screencap",
+        "aspect-safe",
+        "multi-orientation",
+        "creators",
+        "developers",
+        "contact-sheet",
+        "thumbnails",
+        "video",
+        "grid"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "screencap-grid-aspect-safe-v1",
       "templateKey": "@m0saic/media/screencap_grid_aspect_safe/v1",
       "title": "Screencap Grid — Aspect Safe",
       "description": "Per source video, picks a coordinated landscape + portrait grid pair (same cell count, cells steered to the wanted shape — landscape/square/portrait presets or an exact ratio, default landscape 16:9) via aspectSafeGrid and emits both as a 2-step multi-output pipeline. Renders static PNG contact sheets or animated MP4 grids via the Output knob; tile gaps are pixel-exact via inset-recovery placement.",
@@ -1154,6 +1712,24 @@
     },
     {
       "slug": "scroll-wall",
+      "templateKey": "@m0saic/media/scroll_wall/v2",
+      "title": "Scroll Wall",
+      "description": "An endless scrolling wall of clips: 1-4 rows of video/image tiles slide sideways forever (optionally alternating direction) and loop seamlessly at whole cycles. Every tile is a real DSL cell at full native resolution; the pan is per-tile overlay motion, not a camera crop. Empty clips render a demo wall of colored tiles.",
+      "tags": [
+        "media",
+        "wall",
+        "scroll",
+        "loop",
+        "montage",
+        "animated",
+        "creators",
+        "marketers",
+        "video"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "scroll-wall-v1",
       "templateKey": "@m0saic/media/scroll_wall/v1",
       "title": "Scroll Wall",
       "description": "An endless scrolling wall of clips: 1-4 rows of video/image tiles slide sideways forever (optionally alternating direction) and loop seamlessly at whole cycles. Every tile is a real DSL cell at full native resolution; the pan is per-tile overlay motion, not a camera crop.",
@@ -1172,6 +1748,22 @@
     },
     {
       "slug": "frame-stripper",
+      "templateKey": "@m0saic/media/video_to_png_sequence/v2",
+      "title": "Frame Stripper",
+      "description": "Drop one or more videos, get every frame as a separate numbered PNG. Multi-input renders prefix each frame with the source basename so files don't collide. One ffmpeg invocation per frame — use maxFrames to cap long inputs.",
+      "tags": [
+        "media",
+        "frames",
+        "png-sequence",
+        "extract",
+        "developers",
+        "creators",
+        "video"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "frame-stripper-v1",
       "templateKey": "@m0saic/media/video_to_png_sequence/v1",
       "title": "Frame Stripper",
       "description": "Drop a video, get every frame as a numbered PNG sequence (frame_0001.png, frame_0002.png, ...).",
@@ -1188,6 +1780,25 @@
     },
     {
       "slug": "media-watermark",
+      "templateKey": "@m0saic/media/watermark/v2",
+      "title": "Watermark",
+      "description": "Stamp your logo or wordmark onto any image or video — 9 positions or an exact m0 rect, ratio-true sizing, opacity control. Point it at a folder for one watermarked output per input. (Free tier adds the m0saic QR at bottom-right — pick a different corner to avoid overlap.)",
+      "tags": [
+        "media",
+        "watermark",
+        "brand",
+        "batch",
+        "creators",
+        "marketers",
+        "animated",
+        "logo",
+        "overlay",
+        "video"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "media-watermark-v1",
       "templateKey": "@m0saic/media/watermark/v1",
       "title": "Watermark",
       "description": "Stamp your logo or wordmark onto any image or video — 9 positions or an exact m0 rect, ratio-true sizing, opacity control. Point it at a folder for one watermarked output per input.",
@@ -1207,6 +1818,26 @@
     },
     {
       "slug": "metadata-stamp",
+      "templateKey": "@m0saic/media/metadata-stamp/v2",
+      "title": "Metadata Stamp",
+      "description": "Stamp each video's creation date (read from its metadata) onto the video as a small chip — 9 positions, deterministic date formats. Point it at a folder for one stamped output per input; files without metadata use your fallback text or pass through clean. (Defaults to bottom-left: the free tier's m0saic QR occupies bottom-right.)",
+      "tags": [
+        "media",
+        "stamp",
+        "date",
+        "metadata",
+        "batch",
+        "utility",
+        "creators",
+        "animated",
+        "timestamp",
+        "overlay",
+        "video"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "metadata-stamp-v1",
       "templateKey": "@m0saic/media/metadata-stamp/v1",
       "title": "Metadata Stamp",
       "description": "Stamp each video's creation date (read from its metadata) onto the video as a small chip — 9 positions, deterministic date formats. Point it at a folder for one stamped output per input; files without metadata use your fallback text or pass through clean.",
@@ -1227,6 +1858,26 @@
     },
     {
       "slug": "highlights",
+      "templateKey": "@m0saic/media/highlights/v2",
+      "title": "Highlight Clips",
+      "description": "Pick a video, mark one or more time ranges, and get each range as its own clip — mp4 or webm, audio intact, one render for the whole batch.",
+      "tags": [
+        "media",
+        "clips",
+        "highlights",
+        "promo",
+        "multi-output",
+        "creators",
+        "marketers",
+        "animated",
+        "trailer",
+        "teaser",
+        "video"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "highlights-v1",
       "templateKey": "@m0saic/media/highlights/v1",
       "title": "Highlight Clips",
       "description": "Pick a video, mark one or more time ranges, and get each range as its own clip — mp4 or webm, audio intact, one render for the whole batch.",
@@ -1247,6 +1898,25 @@
     },
     {
       "slug": "blur-regions",
+      "templateKey": "@m0saic/media/blur-regions/v2",
+      "title": "Easy Blur",
+      "description": "Pick a video or image, draw boxes over what should stay hidden — faces, plates, names — and get the same media back with those regions blurred or pixelated. Audio untouched.",
+      "tags": [
+        "media",
+        "blur",
+        "privacy",
+        "redact",
+        "pixelate",
+        "creators",
+        "animated",
+        "face-blur",
+        "anonymize",
+        "video"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "blur-regions-v1",
       "templateKey": "@m0saic/media/blur-regions/v1",
       "title": "Easy Blur",
       "description": "Pick a video or image, draw boxes over what should stay hidden — faces, plates, names — and get the same media back with those regions blurred or pixelated. Audio untouched.",
@@ -1266,6 +1936,24 @@
     },
     {
       "slug": "trickplay",
+      "templateKey": "@m0saic/media/trickplay/v2",
+      "title": "Trickplay Sheets",
+      "description": "Generate the seek-preview thumbnails video players use while scrubbing: sprite sheets at a fixed interval with a WebVTT storyboard and a Jellyfin/DASH-compatible JSON manifest. Batch a folder for one sheet set per video.",
+      "tags": [
+        "media",
+        "trickplay",
+        "storyboard",
+        "batch",
+        "developers",
+        "creators",
+        "video-player",
+        "sprite",
+        "streaming"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "trickplay-v1",
       "templateKey": "@m0saic/media/trickplay/v1",
       "title": "Trickplay Sheets",
       "description": "The seek-preview thumbnails players show while scrubbing: sprite sheets at a fixed interval, plus a WebVTT storyboard and a Jellyfin/DASH-compatible JSON manifest. Point it at a folder for one sheet set per video.",
@@ -1284,6 +1972,24 @@
     },
     {
       "slug": "logo-animate",
+      "templateKey": "@m0saic/media/logo-animate/v2",
+      "title": "Logo Animate",
+      "description": "Drop in an SVG logo — get an animated logo video. The SVG becomes real m0 geometry (one cell per shape, silhouette masks), animated per-tile: assemble-in, seamless loop, progress fill, breathing glow, or shimmer.",
+      "tags": [
+        "media",
+        "logo",
+        "animated",
+        "svg-to-mosaic",
+        "brand",
+        "designers",
+        "marketers",
+        "svg",
+        "intro"
+      ],
+      "pack": "media"
+    },
+    {
+      "slug": "logo-animate-v1",
       "templateKey": "@m0saic/media/logo-animate/v1",
       "title": "Logo Animate",
       "description": "Drop in an SVG logo — get an animated logo video. The SVG becomes real m0 geometry (one cell per shape, silhouette masks), animated per-tile: assemble-in, seamless loop, progress fill, breathing glow, or shimmer.",
@@ -1338,6 +2044,21 @@
     },
     {
       "slug": "dsl-tutorial",
+      "templateKey": "@m0saic/dsl-tutorial/v2",
+      "title": "DSL Tutorial",
+      "description": "Animated, IDE/debugger-style tutorial that walks the m0 DSL parse + geometry step by step — animated canvas, an inspector showing the live rect (X/Y/W/H/Z) over the hidden engine state (split arity, quantization remainder, passthrough carry), and a live DSL string. Light/dark, speed-controlled.",
+      "tags": [
+        "dsl-tutorial",
+        "tutorial",
+        "wireframe",
+        "docs",
+        "animated",
+        "developers",
+        "onboarding"
+      ]
+    },
+    {
+      "slug": "dsl-tutorial-v1",
       "templateKey": "@m0saic/dsl-tutorial/v1",
       "title": "DSL Tutorial",
       "description": "Animated, IDE/debugger-style tutorial that walks the m0 DSL parse + geometry step by step: animated canvas with camera-follow, an inspector showing the live rect (X/Y/W/H/Z) over the hidden engine state (split arity, quantization remainder, passthrough carry), and a live syntax-highlighted DSL string with narration. Light/dark, any aspect, speed-controlled.",
@@ -1492,6 +2213,24 @@
       "pack": "github"
     },
     {
+      "slug": "agents-commit-feed",
+      "templateKey": "@m0saic/agents/commit-feed/v2",
+      "title": "Agent Commit Feed",
+      "description": "Who wrote this week's commits — a commit feed colour-coded by author (human vs coding agent), with the agent-authored share, a proportion bar and a legend. The alpine commit feed nested under its own card; composes at any canvas.",
+      "tags": [
+        "github",
+        "commits",
+        "agents",
+        "ai",
+        "developers",
+        "devrel",
+        "engineering-leaders",
+        "alpine",
+        "animated"
+      ],
+      "pack": "agents"
+    },
+    {
       "slug": "agents-commit-feed-v1",
       "templateKey": "@m0saic/agents/commit-feed/v1",
       "title": "Agent Commit Feed",
@@ -1504,6 +2243,26 @@
         "developers",
         "devrel",
         "engineering-leaders",
+        "alpine",
+        "animated"
+      ],
+      "pack": "agents"
+    },
+    {
+      "slug": "agents-trace-timeline",
+      "templateKey": "@m0saic/agents/trace-timeline/v2",
+      "title": "Agent Trace Timeline",
+      "description": "What the agent did on a run — a waterfall of tool calls: the tool and its target per lane, a latency bar on a shared time axis, tokens per hop, and status colours for errors, retries and cache hits. Alpine card, composes at any canvas.",
+      "tags": [
+        "agents",
+        "trace",
+        "timeline",
+        "waterfall",
+        "observability",
+        "latency",
+        "tokens",
+        "developers",
+        "sre",
         "alpine",
         "animated"
       ],
@@ -1528,6 +2287,25 @@
         "animated"
       ],
       "pack": "agents"
+    },
+    {
+      "slug": "github-year-card",
+      "templateKey": "@m0saic/github/year-card/v2",
+      "title": "GitHub Year Card",
+      "description": "A developer's year on GitHub on one card: the 7×53 contribution calendar with month and weekday labels and a Less→More legend, four KPI tiles (commits, pull requests, stars, top language) and the handle + year in the header. Gutterless grid with lattice-exact gaps; composes at any canvas.",
+      "tags": [
+        "github",
+        "contributions",
+        "calendar",
+        "heatmap",
+        "year",
+        "developers",
+        "vanity",
+        "share",
+        "alpine",
+        "animated"
+      ],
+      "pack": "github"
     },
     {
       "slug": "github-year-card-v1",
@@ -1567,6 +2345,22 @@
       "pack": "github"
     },
     {
+      "slug": "theming",
+      "templateKey": "@m0saic/theming/v2",
+      "title": "Theming — Token Producer",
+      "description": "Design-token producer: publishes one ThemeTokens set (dark | light | high-contrast) onto ctx.upstreamVariables for downstream templates to read. Rendered standalone (preview:true) it draws an aspect-adaptive Theme-Tokens sheet — mosaic-M header, the labelled data palette, and the semantic swatches; as an intermediate pipeline step (preview:false) it emits pure data at zero cost and re-skins a chain by swapping one prop.",
+      "tags": [
+        "utility",
+        "theming",
+        "tokens",
+        "producer",
+        "design-system",
+        "designers",
+        "developers",
+        "palette"
+      ]
+    },
+    {
       "slug": "theming-v1",
       "templateKey": "@m0saic/theming/v1",
       "title": "Theming — Token Producer",
@@ -1583,6 +2377,27 @@
     },
     {
       "slug": "narrated-chapters",
+      "templateKey": "@m0saic/story/narrated-chapters/v2",
+      "title": "Narrated Chapters",
+      "description": "Chaptered, narration-timed story video from a story.json manifest — title/section cards, per-chapter scenes, and one deliverable per aspect (landscape/portrait) from a single invocation. Omit props for the built-in demo story.",
+      "tags": [
+        "media",
+        "story",
+        "chapters",
+        "narrated",
+        "pipeline",
+        "agentic",
+        "animated",
+        "creators",
+        "educators",
+        "social",
+        "voice-over",
+        "explainer"
+      ],
+      "pack": "story"
+    },
+    {
+      "slug": "narrated-chapters-v1",
       "templateKey": "@m0saic/story/narrated-chapters/v1",
       "title": "Narrated Chapters",
       "description": "Chaptered, narration-timed story video from a story.json manifest — title/section cards, per-chapter scenes, and one deliverable per aspect (landscape/portrait) from a single invocation. Omit props for the built-in demo story.",
@@ -1602,6 +2417,23 @@
     },
     {
       "slug": "scrapbook",
+      "templateKey": "@m0saic/story/scrapbook/v2",
+      "title": "Scrapbook",
+      "description": "A short personal film: a few pictures, a line each, pinned askew on paper and drifting past to music. Lays itself out with stand-in pages until your own photos arrive.",
+      "tags": [
+        "story",
+        "personal",
+        "photos",
+        "animated",
+        "creators",
+        "social",
+        "memories",
+        "photo-album"
+      ],
+      "pack": "story"
+    },
+    {
+      "slug": "scrapbook-v1",
       "templateKey": "@m0saic/story/scrapbook/v1",
       "title": "Scrapbook",
       "description": "A short personal film: a few pictures, a line each, pinned askew on paper and drifting past to music. Lays itself out with stand-in pages until your own photos arrive.",

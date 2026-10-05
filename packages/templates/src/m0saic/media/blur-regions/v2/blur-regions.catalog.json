@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/blur-regions/v2",
+  "label": "Easy Blur",
+  "description": "Pick a video or image, draw boxes over what should stay hidden — faces, plates, names — and get the same media back with those regions blurred or pixelated. Audio untouched.",
+  "tags": [
+    "media",
+    "blur",
+    "privacy",
+    "redact",
+    "pixelate",
+    "creators",
+    "animated",
+    "face-blur",
+    "anonymize",
+    "video"
+  ],
+  "props": {
+    "sourceId": {
+      "label": "Source",
+      "description": "The video or image to blur regions of.",
+      "order": 1
+    },
+    "regions": {
+      "label": "Blur regions",
+      "description": "Areas to hide — draw them on the preview. For pixel-precise placement, the JSON escape hatch takes { \"canvas\": { \"w\", \"h\" }, \"regions\": [{ \"x\", \"y\", \"w\", \"h\" }, …] }, integer px (omit canvas to give px in the media's own canvas; overshoot is clamped). No regions = the media passes through untouched.",
+      "order": 2,
+      "primary": true
+    },
+    "mode": {
+      "label": "Style",
+      "description": "Effect style: \"blur\" (gaussian, default) or \"pixelate\" (censor blocks).",
+      "order": 3
+    },
+    "strength": {
+      "label": "Strength",
+      "description": "Effect strength. Blur: gaussian sigma in px (1-200). Pixelate: block size in px (2-128). Default 24.",
+      "order": 4
+    },
+    "geometry": {
+      "label": "Geometry",
+      "description": "How regions become document structure. \"inset\" (default): real m0 cells on a compact lattice, insets recover exact bounds. \"exact\": real m0 cells at exact px (longer DSL). \"mask\": one masked full-canvas overlay — no region geometry in the m0, cheapest render for many regions, softest region edges.",
+      "order": 5
+    }
+  }
+}

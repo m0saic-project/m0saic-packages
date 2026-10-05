@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/theming/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same token producer and sheet, described in a catalog sidecar (0.3.1).",
+    "replacement": "@m0saic/theming/v2",
+    "since": "2026-09-30"
+  }
+}

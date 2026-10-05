@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/story/scrapbook/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same scrapbook, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/story/scrapbook/v2",
+    "since": "2026-09-30"
+  }
+}

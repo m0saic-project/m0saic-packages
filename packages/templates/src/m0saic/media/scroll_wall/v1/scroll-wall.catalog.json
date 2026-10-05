@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/scroll_wall/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same scroll wall, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/media/scroll_wall/v2",
+    "since": "2026-09-30"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/progress-card/v2",
+  "label": "Alpine Progress Card",
+  "description": "Alpine progress card — friendly mobile-marketing card: a list of goal rows, each a label + value over a rounded track with a colored fill grown to its fraction. Standalone Alpine brand flavor.",
+  "tags": [
+    "data-viz",
+    "alpine",
+    "progress",
+    "goals",
+    "animated",
+    "analysts",
+    "marketers",
+    "goal",
+    "milestone"
+  ],
+  "primitive": true,
+  "props": {
+    "items": {
+      "label": "Items",
+      "description": "Progress rows. Each: label, value (bare = 0–100 %), optional max (value/max → %), optional Display (overrides the % with any text e.g. \"$680K\", \"680 / 1000 GB\"), optional color.",
+      "order": 1
+    },
+    "title": {
+      "label": "Title",
+      "description": "Card title.",
+      "placeholder": "e.g., QUARTERLY GOALS",
+      "order": 2
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Card subtitle.",
+      "order": 3
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme variant.",
+      "order": 4
+    },
+    "showValue": {
+      "label": "Show value",
+      "description": "Show the per-row value label.",
+      "order": 5
+    },
+    "barColor": {
+      "label": "Bar Color",
+      "description": "Bar color for ALL rows (per-item color still wins). Defaults to the Alpine palette per row.",
+      "placeholder": "palette (per item)",
+      "order": 6
+    },
+    "trackColor": {
+      "label": "Track Color",
+      "description": "Track (unfilled) color. Defaults to a soft theme grid tone.",
+      "placeholder": "theme grid tone",
+      "order": 7
+    },
+    "bars.cornerRadius": {
+      "label": "Bar rounding",
+      "description": "Bar/track rounding (0..1)."
+    },
+    "bars": {
+      "label": "Bars",
+      "description": "Bar geometry.",
+      "order": 8,
+      "collapsedByDefault": true
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.easing": {
+      "label": "Easing",
+      "description": "Intro easing curve."
+    },
+    "anim.countUp": {
+      "label": "Count up",
+      "description": "Count the value up on intro."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Fill-in intro (count-up + geq-free bar grow).",
+      "order": 9,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the preset palette by default; set a producer slug + namespace to pull shared design tokens. Explicit color props still win.",
+      "order": 10,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only: draw the layout contract (tracks equal-size, text fits its slot) instead of the card.",
+      "order": 11
+    }
+  }
+}

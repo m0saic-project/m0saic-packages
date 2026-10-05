@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/subtitle-burn/v2",
+  "label": "Subtitle Burn",
+  "description": "Reads subtitle cues from an MKV/MP4's embedded subtitle stream (text-based codecs) and burns them onto the video as m0saic text overlays. Opt-in cue emission via MosaicDataSource + doc.sidecars.cues.",
+  "tags": [
+    "media",
+    "subtitles",
+    "captions",
+    "creators",
+    "educators",
+    "animated",
+    "accessibility",
+    "video"
+  ],
+  "props": {
+    "sourceId": {
+      "label": "Source",
+      "description": "Source id in ctx.media. Defaults to first video with subtitles."
+    },
+    "languageCode": {
+      "label": "Language",
+      "description": "Preferred subtitle language (e.g. \"eng\", \"spa\"). 2-letter and locale-suffix forms accepted.",
+      "placeholder": "first subtitle track"
+    },
+    "fallbackToDefault": {
+      "label": "Fallback to default",
+      "description": "When languageCode misses, fall back to default-flagged or first track. Default true."
+    },
+    "trackIndex": {
+      "label": "Track",
+      "description": "Explicit subtitle track index (overrides languageCode when set).",
+      "placeholder": "auto"
+    },
+    "emitCues": {
+      "label": "Emit cues",
+      "description": "Publish extracted cues as a MosaicDataSource (pipeline-readable) AND doc.sidecars.cues (written to {basename}.cues.json)."
+    },
+    "clipStartMs": {
+      "label": "Clip start",
+      "description": "Source-relative ms where the rendered segment starts. Paired with clipEndMs.",
+      "placeholder": "full video"
+    },
+    "clipEndMs": {
+      "label": "Clip end",
+      "description": "Source-relative ms where the rendered segment ends. Must be > clipStartMs.",
+      "placeholder": "full video"
+    },
+    "clipLoopMode": {
+      "label": "Clip loop mode",
+      "description": "How the clipped source fills ctx.target.durationMs when shorter."
+    },
+    "placement": {
+      "label": "Placement",
+      "description": "Vertical placement of burned subtitles."
+    },
+    "fontSize": {
+      "label": "Font Size",
+      "description": "Subtitle font size in pixels.",
+      "placeholder": "auto (by height)"
+    },
+    "fontColor": {
+      "label": "Font Color",
+      "description": "Subtitle font color (hex or named)."
+    },
+    "borderColor": {
+      "label": "Border Color",
+      "description": "Subtitle outline color (hex or named)."
+    },
+    "borderWidth": {
+      "label": "Border Width",
+      "description": "Outline width as a fraction of min(w,h)."
+    }
+  }
+}

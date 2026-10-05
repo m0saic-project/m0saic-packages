@@ -1,6 +1,6 @@
 {
   "name": "@m0saic/platform",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -201,11 +201,11 @@
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "test": "npm run test:jest && npm run test:node",
     "test:jest": "jest",
-    "test:node": "node --test __tests__/templateRepoReload.test.js"
+    "test:node": "node --test __tests__/templateRepoReload.test.js __tests__/templateRepoCatalog.test.js"
   },
   "dependencies": {
     "@m0saic/dsl": "^2.0.0",
     "@m0saic/dsl-stdlib": "^3.0.0",
-    "@m0saic/types": "^0.3.0"
+    "@m0saic/types": "^0.3.1"
   }
 }

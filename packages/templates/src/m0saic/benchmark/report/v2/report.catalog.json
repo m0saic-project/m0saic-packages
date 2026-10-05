@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/benchmark/report/v2",
+  "label": "Benchmark — Report",
+  "description": "Renders the standard shareable benchmark results video from a session's benchmark.json: machine-specs header, score / total-time / scenarios KPIs (stat-card), and a per-scenario render-time bar chart (bar-graph). Pair with the benchmark runner.",
+  "tags": [
+    "developer",
+    "benchmark",
+    "report",
+    "dashboard",
+    "performance",
+    "developers",
+    "animated"
+  ],
+  "props": {
+    "dir": {
+      "label": "Session folder",
+      "description": "Benchmark session folder to report on (the dir written by the benchmark runner). May also point directly at a benchmark.json.",
+      "order": 1
+    },
+    "introFrac": {
+      "label": "Animation length (× duration)",
+      "description": "Animation length as a fraction of the video duration. One slider drives both the KPI count-up and the bar growth (they're linked); the rest of the video holds.",
+      "order": 2
+    }
+  }
+}

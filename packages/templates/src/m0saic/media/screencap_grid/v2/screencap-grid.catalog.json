@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/screencap_grid/v2",
+  "deprecated": {
+    "reason": "Superseded by v3 — the same screencap grid, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/media/screencap_grid/v3",
+    "since": "2026-09-30"
+  }
+}

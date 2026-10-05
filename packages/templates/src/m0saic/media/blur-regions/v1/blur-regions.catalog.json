@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/blur-regions/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same easy blur, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/media/blur-regions/v2",
+    "since": "2026-09-30"
+  }
+}

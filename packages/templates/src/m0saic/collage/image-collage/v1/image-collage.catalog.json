@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/collage/image-collage/v1",
+  "deprecated": {
+    "reason": "0.3.1: every photo is a handle for its file and the sheet's shape",
+    "replacement": "@m0saic/collage/image-collage/v2",
+    "since": "2026-09-30"
+  }
+}

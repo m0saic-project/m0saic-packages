@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/charts/bar-graph/v2",
+  "deprecated": {
+    "reason": "Superseded by v3 — the same bar graph, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/charts/bar-graph/v3",
+    "since": "2026-09-30"
+  }
+}

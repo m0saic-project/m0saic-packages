@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/github/year-card/v2",
+  "label": "GitHub Year Card",
+  "description": "A developer's year on GitHub on one card: the 7×53 contribution calendar with month and weekday labels and a Less→More legend, four KPI tiles (commits, pull requests, stars, top language) and the handle + year in the header. Gutterless grid with lattice-exact gaps; composes at any canvas.",
+  "tags": [
+    "github",
+    "contributions",
+    "calendar",
+    "heatmap",
+    "year",
+    "developers",
+    "vanity",
+    "share",
+    "alpine",
+    "animated"
+  ],
+  "props": {
+    "handle": {
+      "label": "Handle",
+      "description": "GitHub handle for the header.",
+      "placeholder": "none",
+      "order": 1,
+      "primary": true
+    },
+    "year": {
+      "label": "Year",
+      "description": "Calendar year (places the weeks and month labels).",
+      "order": 2
+    },
+    "contributions": {
+      "label": "Contributions",
+      "description": "Daily contribution counts from January 1st — an array of 365/366 numbers, or one comma-separated string. Missing days count as 0.",
+      "order": 3,
+      "primary": true
+    },
+    "commits": {
+      "label": "Commits",
+      "description": "Commits this year (KPI tile).",
+      "placeholder": "none",
+      "order": 4
+    },
+    "pullRequests": {
+      "label": "Pull requests",
+      "description": "Pull requests this year (KPI tile).",
+      "placeholder": "none",
+      "order": 5
+    },
+    "stars": {
+      "label": "Stars",
+      "description": "Stars earned this year (KPI tile).",
+      "placeholder": "none",
+      "order": 6
+    },
+    "topLanguage": {
+      "label": "Top language",
+      "description": "Most-used language (KPI tile).",
+      "placeholder": "none",
+      "order": 7
+    },
+    "showKpis": {
+      "label": "Show KPIs",
+      "description": "Show the four KPI tiles above the calendar.",
+      "order": 8
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme: \"light\" (default) or \"dark\" — the calendar greens follow.",
+      "order": 9
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.renderMode": {
+      "label": "Render mode",
+      "description": "light (default) = the year unfolds week by week under one curtain — free; premium = every cell fades in on the diagonal, ~10× the render time."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Reveal: the calendar unfolds week by week (light) or fades in on the diagonal (premium). reduceMotion renders the final frame.",
+      "order": 10,
+      "collapsedByDefault": true
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt-in producer theme tokens.",
+      "order": 11,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only: overlay the layout contract.",
+      "order": 12
+    }
+  }
+}

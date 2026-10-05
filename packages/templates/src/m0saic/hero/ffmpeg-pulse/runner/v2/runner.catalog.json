@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/hero/ffmpeg-pulse/runner/v2",
+  "label": "Weekly Pulse · Runner",
+  "description": "FFmpeg Weekly Pulse — the runner. Sequences all eight beats (title → kpi-overview → activity-trend → contributions → top-contributors → changes-breakdown → notable-commits → fin) into one cross-faded MosaicDocumentPipeline. Aspect-adaptive; per-beat durations as props.",
+  "tags": [
+    "data-viz",
+    "hero",
+    "ffmpeg-pulse",
+    "runner",
+    "pipeline",
+    "animated",
+    "developers",
+    "marketers",
+    "github",
+    "changelog",
+    "showcase"
+  ],
+  "props": {
+    "pulse": {
+      "label": "Pulse data",
+      "description": "Weekly Pulse data sheet — passed to every beat.",
+      "order": 1
+    },
+    "timings": {
+      "label": "Beat timings",
+      "description": "Per-beat durations in ms (title/kpiOverview/activityTrend/contributions/topContributors/changesBreakdown/notableCommits/fin).",
+      "collapsedByDefault": true
+    },
+    "crossfadeMs": {
+      "label": "Cross-fade",
+      "description": "Cross-fade duration between beats (ms). 0 = hard cut."
+    },
+    "renderMode": {
+      "label": "Render mode",
+      "description": "Render weight for ALL beats. \"premium\" (default): alpha-fade reveals across the nested charts/cards — the softer look; the engine's enable-gating makes the per-pixel geq nearly free. \"light\": geq-free enable-gate pops — cheapest, most composable. Propagates to every beat.",
+      "order": 5
+    },
+    "requireUpstream": {
+      "label": "Require upstream data",
+      "description": "When true, render a visible error frame (instead of the built-in mock) if no upstream `weeklyPulse` block is present. Set this on data-connected pipelines (fetcher → adapter → runner) so a failed producer looks failed, not fake. Default false — standalone/preview renders use the mock.",
+      "order": 2
+    }
+  }
+}

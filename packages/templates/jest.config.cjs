@@ -14,6 +14,7 @@ module.exports = {
   },
   testMatch: ["<rootDir>/src/**/*.test.ts"],
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
+  setupFilesAfterEnv: ["<rootDir>/src/catalog.ts"],
   moduleNameMapper: {
       "^@m0saic/momo-types$": "<rootDir>/../momo-types/src",
       "^@m0saic/momo-types/dist/(?:cjs/|esm/|types/)?(.*)$": "<rootDir>/../momo-types/src/$1",

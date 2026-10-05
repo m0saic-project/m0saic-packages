@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/treemap/v2",
+  "deprecated": {
+    "reason": "Superseded by v3 — the same alpine treemap, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/alpine/treemap/v3",
+    "since": "2026-09-30"
+  }
+}

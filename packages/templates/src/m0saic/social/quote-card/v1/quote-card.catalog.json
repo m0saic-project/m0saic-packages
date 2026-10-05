@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/social/quote-card/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same card, with the role line, the avatar and the attribution addable straight from the Make canvas.",
+    "replacement": "@m0saic/social/quote-card/v2",
+    "since": "2026-09-29"
+  }
+}

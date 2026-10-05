@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/screencap_grid_aspect_safe/v2",
+  "label": "Screencap Grid — Aspect Safe",
+  "description": "Per source video, renders a coordinated landscape + portrait grid pair (same cell count, cells steered to the wanted shape — landscape/square/portrait presets or an exact ratio, default landscape 16:9). Multi-input renders 2 outputs per file. Renders static PNG contact sheets or animated MP4 grids via the Output knob.",
+  "tags": [
+    "media",
+    "screencap",
+    "aspect-safe",
+    "multi-orientation",
+    "creators",
+    "developers",
+    "contact-sheet",
+    "thumbnails",
+    "video",
+    "grid"
+  ],
+  "props": {
+    "sourceIds": {
+      "label": "Source(s)",
+      "description": "Source video(s) for the grid — pick a folder, one or more files, or drag-and-drop. 2 outputs per file (landscape + portrait).",
+      "order": 1
+    },
+    "outputFormat": {
+      "label": "Output",
+      "description": "Deliverable format. \"png\" renders static contact sheets; \"mp4\" renders animated grids where each tile plays from its timestamp.",
+      "order": 1
+    },
+    "cellShape": {
+      "label": "Cell Shape",
+      "description": "What shape should the cells be? landscape = 16:9 (the natural shape for video frames), square, portrait = 9:16. Both orientations' grids are chosen so their cells realize this shape at the same cell count.",
+      "order": 1
+    },
+    "gridChoice": {
+      "label": "Grid Choice",
+      "description": "Index into the ranked list of coordinated landscape/portrait grid pairs. 0 = best-ranked (both orientations' cells closest to the wanted cell shape). Out-of-range clamps to the last available pair.",
+      "order": 3
+    },
+    "search.cellAspect": {
+      "label": "Cell Aspect (exact)",
+      "description": "Exact target cell aspect ratio (width/height) — overrides Cell Shape when set. E.g. 1.5 for 3:2 cells, 0.8 for 4:5.",
+      "placeholder": "from Cell shape"
+    },
+    "search.minCells": {
+      "label": "Min Cells",
+      "description": "Lower bound for the cell-count sweep."
+    },
+    "search.maxCells": {
+      "label": "Max Cells",
+      "description": "Upper bound for the cell-count sweep."
+    },
+    "search": {
+      "label": "Grid Search",
+      "description": "Pair-search tuning: exact cell aspect + the cell-count window the ranked list sweeps.",
+      "order": 4,
+      "collapsedByDefault": true
+    },
+    "canvas.landscapeW": {
+      "label": "Landscape W",
+      "description": "Landscape canvas width — desktop output."
+    },
+    "canvas.landscapeH": {
+      "label": "Landscape H",
+      "description": "Landscape canvas height — desktop output."
+    },
+    "canvas.portraitW": {
+      "label": "Portrait W",
+      "description": "Portrait canvas width — mobile output."
+    },
+    "canvas.portraitH": {
+      "label": "Portrait H",
+      "description": "Portrait canvas height — mobile output."
+    },
+    "canvas": {
+      "label": "Canvas",
+      "description": "Output canvas dimensions per orientation.",
+      "order": 5,
+      "collapsedByDefault": true
+    },
+    "infoPane.show": {
+      "label": "Show",
+      "description": "Show the info pane above the grid."
+    },
+    "infoPane.align": {
+      "label": "Align",
+      "description": "Alignment of the pane text (filename + metadata)."
+    },
+    "infoPane": {
+      "label": "Info Pane",
+      "description": "Info pane with filename + ffprobe metadata above the grid.",
+      "order": 6,
+      "collapsedByDefault": true
+    },
+    "timestamps.show": {
+      "label": "Show",
+      "description": "Overlay a timestamp in each tile."
+    },
+    "timestamps.corner": {
+      "label": "Corner",
+      "description": "Which corner the chip sits in."
+    },
+    "timestamps.color": {
+      "label": "Color",
+      "description": "Timestamp text color."
+    },
+    "timestamps.bgColor": {
+      "label": "Background",
+      "description": "Chip background behind the glyphs (\"none\" = transparent)."
+    },
+    "timestamps": {
+      "label": "Timestamps",
+      "description": "Per-tile timestamp chip.",
+      "order": 7,
+      "collapsedByDefault": true
+    },
+    "tiles.gapPx": {
+      "label": "Gap (px)",
+      "description": "Gap between tiles, in pixels (exact at every canvas)."
+    },
+    "tiles.fit": {
+      "label": "Fit",
+      "description": "cover crops to fill; contain letterboxes the whole frame."
+    },
+    "tiles": {
+      "label": "Tiles",
+      "description": "Tile gap + fill behavior.",
+      "order": 8,
+      "collapsedByDefault": true
+    },
+    "debugGeometry": {
+      "label": "Debug geometry",
+      "description": "Dev-only geometry contract: assert every tile's computed rect survived to the pixels at each orientation canvas; on violation that step renders a GEOMETRY_CONTRACT error mosaic. Deterministic default false; production never sets it.",
+      "order": 1,
+      "collapsedByDefault": true
+    }
+  }
+}

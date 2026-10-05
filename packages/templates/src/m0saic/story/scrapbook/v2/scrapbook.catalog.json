@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/story/scrapbook/v2",
+  "label": "Scrapbook",
+  "description": "A short personal film: a few pictures, a line each, pinned askew on paper and drifting past to music. Lays itself out with stand-in pages until your own photos arrive.",
+  "tags": [
+    "story",
+    "personal",
+    "photos",
+    "animated",
+    "creators",
+    "social",
+    "memories",
+    "photo-album"
+  ],
+  "props": {
+    "title": {
+      "label": "Title",
+      "description": "Opening line — a name, usually.",
+      "order": 1,
+      "primary": true
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Under the title: a date range, a place, a dedication.",
+      "order": 2
+    },
+    "photos": {
+      "label": "Photos",
+      "description": "The pictures, in order. Leave empty to lay the film out with generated stand-in pages and drop real ones in later.",
+      "order": 3,
+      "primary": true
+    },
+    "notes": {
+      "label": "Notes",
+      "description": "One line per picture, in the same order. A blank entry leaves that page wordless.",
+      "order": 4,
+      "primary": true
+    },
+    "closing": {
+      "label": "Closing line",
+      "description": "The last thing on screen.",
+      "order": 5
+    },
+    "music": {
+      "label": "Music",
+      "description": "Optional music bed under the whole film.",
+      "placeholder": "no music",
+      "order": 6
+    },
+    "perPageMs": {
+      "label": "Per page",
+      "description": "How long each page holds (ms)."
+    },
+    "introMs": {
+      "label": "Opening",
+      "description": "The opening card (ms)."
+    },
+    "outroMs": {
+      "label": "Closing",
+      "description": "The closing card (ms)."
+    },
+    "xfadeMs": {
+      "label": "Page turn",
+      "description": "Cross-fade between pages (ms) — the page turn."
+    },
+    "drift": {
+      "label": "Drift",
+      "description": "How far each picture drifts while it holds. 0 = perfectly still."
+    },
+    "tilt": {
+      "label": "Tilt",
+      "description": "How far off square a picture is pinned, in degrees."
+    },
+    "paperColor": {
+      "label": "Paper",
+      "description": "The paper the scrapbook is made of."
+    },
+    "inkColor": {
+      "label": "Ink",
+      "description": "The pen."
+    },
+    "accentColor": {
+      "label": "Accent",
+      "description": "The one colour that is not paper or ink."
+    }
+  }
+}

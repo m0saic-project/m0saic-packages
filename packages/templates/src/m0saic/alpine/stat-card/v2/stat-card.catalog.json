@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/stat-card/v2",
+  "label": "Alpine Stat Card",
+  "description": "Alpine KPI stat card — friendly mobile-marketing card: accent icon + muted label, dominant count-up value, SVG-triangle delta (green up / red down) + sublabel. Light by default; \"dark\" preset for the night look (the FFmpeg Weekly Pulse hero passes preset:\"dark\" + its own accent/card).",
+  "tags": [
+    "data-viz",
+    "alpine",
+    "stat-card",
+    "kpi",
+    "animated",
+    "analysts",
+    "marketers",
+    "metric",
+    "number",
+    "hero",
+    "dark"
+  ],
+  "primitive": true,
+  "props": {
+    "label": {
+      "label": "Label",
+      "description": "Metric label (e.g. \"Commits\").",
+      "order": 1
+    },
+    "value": {
+      "label": "Value",
+      "description": "Headline value, pre-formatted (e.g. \"1,243\", \"96.7%\").",
+      "order": 2
+    },
+    "delta": {
+      "label": "Delta",
+      "description": "Signed change, pre-formatted (e.g. \"+12.4%\"). Omit for no delta.",
+      "order": 3
+    },
+    "sublabel": {
+      "label": "Sublabel",
+      "description": "Muted caption next to the delta (e.g. \"vs last week\").",
+      "order": 4
+    },
+    "direction": {
+      "label": "Direction",
+      "description": "Delta direction — arrow + color (green up / red down / muted flat).",
+      "order": 5
+    },
+    "icon": {
+      "label": "Icon",
+      "description": "Named glyph for the accent chip (shared alpine catalog). A derived HUMAN view of the raw iconPath agent prop: picking a name WRITES the SVG path into iconPath (the stored, code-friendly value); a bespoke agent-written path shows as no selection.",
+      "order": 6
+    },
+    "renderMode": {
+      "label": "Render Mode",
+      "description": "Reveal quality/cost. \"premium\" (default): soft alpha crossfade — best look, a per-pixel geq. \"light\": geq-free (header static, delta band slides). The FFmpeg pulse hero opts into light.",
+      "order": 7
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme variant.",
+      "order": 8
+    },
+    "accent": {
+      "label": "Accent",
+      "description": "Accent color (icon chip + up-delta). Defaults to the alpine primary.",
+      "placeholder": "theme primary",
+      "order": 9
+    },
+    "backgroundColor": {
+      "label": "Card color",
+      "description": "Card surface color. \"black@0\" → transparent (composed under a chrome).",
+      "placeholder": "theme card",
+      "order": 10
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.easing": {
+      "label": "Easing",
+      "description": "Intro easing curve."
+    },
+    "anim.countUp": {
+      "label": "Count up",
+      "description": "Count the value up on intro."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Intro reveal: reduceMotion, intro length, easing, count-up.",
+      "order": 11,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the local palette by default; set a producer slug + namespace to pull shared design tokens. Explicit accent/card color still win.",
+      "order": 12,
+      "collapsedByDefault": true
+    },
+    "iconPath": {
+      "label": "Icon path (SVG d)",
+      "description": "Glyph SVG path d (24×24 viewBox), drawn as a mask on the accent chip — the raw value behind the friendly `icon` knob, and the override that wins. Omit both for the bare colored square.",
+      "placeholder": "from Icon (catalog glyph)",
+      "order": 13
+    },
+    "debugGeometry": {
+      "label": "Debug geometry",
+      "description": "Dev-only geometry contract view: renders the contract wireframe instead of the card — every element GREEN when its computed rect survived to the pixels at this canvas, realized RED + intended amber ghost when not. Deterministic default false; production never sets it.",
+      "order": 14,
+      "collapsedByDefault": true
+    }
+  }
+}

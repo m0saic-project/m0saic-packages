@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/heatmap/v3",
+  "label": "Alpine Heatmap",
+  "description": "Alpine heatmap — friendly mobile-marketing card: a rows×cols grid of rounded cells colored on a single-hue intensity scale, with row/column labels and a Less→More legend. v2 rebuilds the geometry as a RATIO layout (clean grid() cells; gaps applied as lattice-retargeted source insets, exact at every canvas), so it composes anywhere without the coprime-pixel precision blowup. Generalizes the GitHub contribution calendar.",
+  "tags": [
+    "data-viz",
+    "alpine",
+    "heatmap",
+    "matrix",
+    "animated",
+    "analysts",
+    "developers",
+    "activity",
+    "calendar"
+  ],
+  "primitive": true,
+  "props": {
+    "rows": {
+      "label": "Rows",
+      "description": "Matrix rows. Each: an optional label + its cell values (left→right; number[] or a comma list).",
+      "order": 1
+    },
+    "colLabels": {
+      "label": "Column Labels",
+      "description": "Column headers along the top (index-aligned to columns).",
+      "placeholder": "W1",
+      "order": 2
+    },
+    "title": {
+      "label": "Title",
+      "description": "Card title.",
+      "placeholder": "e.g., CONTRIBUTIONS",
+      "order": 3
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Card subtitle.",
+      "order": 4
+    },
+    "color": {
+      "label": "Scale color",
+      "description": "Full-intensity hue of the scale. Defaults to the theme primary.",
+      "placeholder": "theme primary",
+      "order": 5
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme variant.",
+      "order": 6
+    },
+    "levels": {
+      "label": "Levels",
+      "description": "Intensity buckets incl. empty (GitHub uses 5).",
+      "order": 7
+    },
+    "showValues": {
+      "label": "Show values",
+      "description": "Print each cell's value inside it.",
+      "order": 8
+    },
+    "showLegend": {
+      "label": "Show legend",
+      "description": "Show the Less→More legend.",
+      "order": 9
+    },
+    "scale.min": {
+      "label": "Min",
+      "description": "Scale minimum (default 0)."
+    },
+    "scale.max": {
+      "label": "Max",
+      "description": "Scale maximum (default = the largest value).",
+      "placeholder": "largest cell value"
+    },
+    "scale.emptyColor": {
+      "label": "Empty color",
+      "description": "Color of the lowest (zero) bucket.",
+      "placeholder": "theme lowest-bucket tone"
+    },
+    "scale.cellRadius": {
+      "label": "Cell radius",
+      "description": "Cell corner radius (0..0.5)."
+    },
+    "scale": {
+      "label": "Scale",
+      "description": "Scale bounds + cell fine-tuning (auto-fits when unset).",
+      "order": 10,
+      "collapsedByDefault": true
+    },
+    "anim.renderMode": {
+      "label": "Render mode",
+      "description": "\"premium\" (default): diagonal alpha-fade cascade — the softest look, but one per-pixel geq PER CELL, paid every frame of a nesting parent's whole timeline (the pack's heaviest geq load). \"light\": the same cascade via free enable-gate pops — no geq, composable, cheap when nested."
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.easing": {
+      "label": "Easing",
+      "description": "Intro easing curve."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Reveal mode + diagonal cascade intro.",
+      "order": 11,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the alpine preset by default; set a producer slug + namespace to pull shared design tokens. Explicit color props still win.",
+      "order": 12,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only layout contract view: renders the contract wireframe instead of the board — cells GREEN with the measured rule when all equal-size, offenders RED when not. Deterministic false default; production never sets it.",
+      "order": 13
+    }
+  }
+}

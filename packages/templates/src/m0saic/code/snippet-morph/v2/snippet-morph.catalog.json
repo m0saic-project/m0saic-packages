@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/code/snippet-morph/v2",
+  "label": "Code Snippet Morph",
+  "description": "Morphs ordered TypeScript/JavaScript code states into a deterministic editor-frame video with moving, added, and removed lines.",
+  "tags": [
+    "developer",
+    "code",
+    "snippet",
+    "animated",
+    "developers",
+    "diff",
+    "tutorial",
+    "animation"
+  ],
+  "props": {
+    "states": {
+      "label": "Code states",
+      "description": "Ordered TypeScript/JavaScript source states.",
+      "placeholder": "const answer = 42;",
+      "order": 1
+    },
+    "language": {
+      "label": "Language",
+      "description": "Syntax lexer.",
+      "order": 2
+    },
+    "typography.fontSize": {
+      "label": "Font size",
+      "description": "Preferred font size; auto-fits down to 8px."
+    },
+    "typography.lineHeight": {
+      "label": "Line height",
+      "description": "Code line-height multiplier."
+    },
+    "typography.tabWidth": {
+      "label": "Tab width",
+      "description": "Spaces used to expand each tab."
+    },
+    "typography": {
+      "label": "Typography",
+      "description": "JetBrains Mono sizing and source normalization.",
+      "order": 3,
+      "collapsedByDefault": true
+    },
+    "timing.morphMs": {
+      "label": "Morph",
+      "description": "Morph window per state."
+    },
+    "timing.holdMs": {
+      "label": "Hold",
+      "description": "Rest window per state."
+    },
+    "timing.leadMs": {
+      "label": "Lead",
+      "description": "Lead-in before the first reveal."
+    },
+    "timing.trailMs": {
+      "label": "Trail",
+      "description": "Trail after the final hold."
+    },
+    "timing": {
+      "label": "Timing",
+      "description": "Per-state morph, hold, lead, and trail timing.",
+      "order": 4,
+      "collapsedByDefault": true
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Built-in editor colorway."
+    },
+    "theme.keyword": {
+      "label": "Keywords",
+      "description": "Override keyword tokens; clear to use the preset.",
+      "placeholder": "preset palette"
+    },
+    "theme.string": {
+      "label": "Strings",
+      "description": "Override string tokens; clear to use the preset.",
+      "placeholder": "preset palette"
+    },
+    "theme.comment": {
+      "label": "Comments",
+      "description": "Override comment tokens; clear to use the preset.",
+      "placeholder": "preset palette"
+    },
+    "theme.number": {
+      "label": "Numbers",
+      "description": "Override numeric tokens; clear to use the preset.",
+      "placeholder": "preset palette"
+    },
+    "theme.fnCall": {
+      "label": "Function calls",
+      "description": "Override function-call tokens; clear to use the preset.",
+      "placeholder": "preset palette"
+    },
+    "theme.ident": {
+      "label": "Identifiers",
+      "description": "Override identifier tokens; clear to use the preset.",
+      "placeholder": "preset palette"
+    },
+    "theme.operator": {
+      "label": "Operators",
+      "description": "Override operator tokens; clear to use the preset.",
+      "placeholder": "preset palette"
+    },
+    "theme.punct": {
+      "label": "Punctuation",
+      "description": "Override punctuation tokens; clear to use the preset.",
+      "placeholder": "preset palette"
+    },
+    "theme.plain": {
+      "label": "Plain text",
+      "description": "Override plain tokens; clear to use the preset.",
+      "placeholder": "preset palette"
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Editor preset plus optional syntax-token overrides.",
+      "order": 5,
+      "collapsedByDefault": true
+    },
+    "chrome.show": {
+      "label": "Show",
+      "description": "Show editor chrome."
+    },
+    "chrome.title": {
+      "label": "Title",
+      "description": "Filename shown in the editor title bar."
+    },
+    "chrome.trafficLights": {
+      "label": "Traffic lights",
+      "description": "Show the three editor window controls."
+    },
+    "chrome.lineNumbers": {
+      "label": "Line numbers",
+      "description": "Show a line-number gutter."
+    },
+    "chrome.codeAlign": {
+      "label": "Code alignment",
+      "description": "Horizontal alignment inside the code area."
+    },
+    "chrome.fullBleed": {
+      "label": "Full bleed",
+      "description": "Fill the canvas edge to edge (default). Off restores the framed card with a margin around it."
+    },
+    "chrome": {
+      "label": "Chrome",
+      "description": "Editor card, title bar, controls, gutter, and code alignment.",
+      "order": 6,
+      "collapsedByDefault": true
+    },
+    "animation.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Use hard cuts with every code state at rest."
+    },
+    "animation.addEntrance": {
+      "label": "Added code entrance",
+      "description": "How newly added code enters during each morph."
+    },
+    "animation": {
+      "label": "Animation",
+      "description": "Motion accessibility and addition entrance.",
+      "order": 7,
+      "collapsedByDefault": true
+    },
+    "animate": {
+      "label": "Animate",
+      "description": "Animate code changes.",
+      "order": 8,
+      "primary": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Assert the card/code-area/gutter/title layout contract.",
+      "order": 9,
+      "collapsedByDefault": true
+    }
+  }
+}

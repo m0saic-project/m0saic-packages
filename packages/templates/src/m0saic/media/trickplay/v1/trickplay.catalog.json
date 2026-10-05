@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/trickplay/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same trickplay sheets, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/media/trickplay/v2",
+    "since": "2026-09-30"
+  }
+}

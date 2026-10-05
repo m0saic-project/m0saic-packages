@@ -30,3 +30,8 @@ export {
 export type { ResolvedPreview } from "./resolveTemplatePreview";
 
 export { validateTemplateRoles } from "./validateTemplateRoles";
+
+// The catalog sidecars (0.3.1): `<name>.catalog.json` beside each template,
+// gathered by a repo's build into its root `template-catalog.json`.
+export { collectTemplateCatalog, serializeTemplateCatalog, writeTemplateCatalog } from "./templateCatalogSidecars";
+export type { CollectedTemplateCatalog } from "./templateCatalogSidecars";

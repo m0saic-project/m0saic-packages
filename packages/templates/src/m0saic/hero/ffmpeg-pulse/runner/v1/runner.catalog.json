@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/hero/ffmpeg-pulse/runner/v1",
+  "deprecated": {
+    "reason": "0.3.1: catalog sidecar; the cross-fade is declared timing",
+    "replacement": "@m0saic/hero/ffmpeg-pulse/runner/v2",
+    "since": "2026-09-30"
+  }
+}

@@ -23,6 +23,10 @@
 //     what makes copy-template-assets stamp it a DESKTOP card instead:
 //       media/subtitle-burn                        (burns ctx.media subtitles)
 
+// FIRST: declare the pack's catalog (0.3.1), so every template below registers
+// with its entry applied (label, tags, visibility, deprecation — see ./catalog).
+import "./catalog";
+
 // ── Fully node-clean families (whole barrel) ─────────────────────────────
 import "./m0saic/wireframe"; // includes base/v2 — the DEFAULT Make template
 import "./m0saic/hello-world"; // hello-world/v1 — the `m0saic hello-world` card (lavfi + masked tiles + svg text; no node)
@@ -64,15 +68,20 @@ import "./m0saic/brand/community-m/v1/community-m.web";
 import "./m0saic/brand/logo/v1";
 import "./m0saic/brand/logo/v2";
 import "./m0saic/brand/logo/v3";
+import "./m0saic/brand/logo/v4";
 import "./m0saic/brand/business-card/v1";
+import "./m0saic/brand/business-card/v2";
 
 // ── media/qr — clean slugs (family barrel is tainted by stamp-video) ─────
 import "./m0saic/media/barcode/v1";
+import "./m0saic/media/barcode/v2";
 import "./m0saic/media/qr/code/v1";
+import "./m0saic/media/qr/code/v2";
 import "./m0saic/media/qr/basic/v1";
 import "./m0saic/media/qr/animate/v1";
 import "./m0saic/media/qr/animate/v2";
 import "./m0saic/media/qr/stamp/v1/qr-stamp-custom";
+import "./m0saic/media/qr/stamp/v2/qr-stamp-custom";
 import "./m0saic/media/qr/rounded/v1";
 
 // ── media — clean slugs (family barrel is tainted by logo-animate/watermark) ──

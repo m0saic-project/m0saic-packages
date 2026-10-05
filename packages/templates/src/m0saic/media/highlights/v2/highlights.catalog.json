@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/highlights/v2",
+  "label": "Highlight Clips",
+  "description": "Pick a video, mark one or more time ranges, and get each range as its own clip — mp4 or webm, audio intact, one render for the whole batch.",
+  "tags": [
+    "media",
+    "clips",
+    "highlights",
+    "promo",
+    "multi-output",
+    "creators",
+    "marketers",
+    "animated",
+    "trailer",
+    "teaser",
+    "video"
+  ],
+  "props": {
+    "sourceId": {
+      "label": "Source",
+      "description": "The video to pull highlight clips from.",
+      "order": 1
+    },
+    "ranges": {
+      "label": "Highlight ranges",
+      "description": "Highlight ranges within the source video, milliseconds. Each { startMs, endMs, label? } entry becomes its own output clip; label (optional) feeds the output filename.",
+      "order": 2
+    },
+    "outputFormat": {
+      "label": "Format",
+      "description": "Container for every emitted clip: \"mp4\" (default) or \"webm\".",
+      "order": 3
+    },
+    "maxWidth": {
+      "label": "Max width (px)",
+      "description": "Optional output width cap in pixels — clips wider than this downscale (aspect-preserved, even-rounded). Never upscales.",
+      "placeholder": "source width",
+      "order": 4
+    },
+    "muteAudio": {
+      "label": "Mute audio",
+      "description": "Strip the audio track from the clips. Off by default — audio passes through.",
+      "order": 5
+    }
+  }
+}

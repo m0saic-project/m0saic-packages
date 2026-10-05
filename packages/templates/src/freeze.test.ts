@@ -6,6 +6,7 @@ import {
   canonicalJson,
   checkFreeze,
   checkRegistryPins,
+  checkTemplateCatalog,
   collectFrozenFiles,
   definitionFieldsSha256,
   definitionSha256,
@@ -15,11 +16,16 @@ import {
   liveRegistrationOf,
   manifestHashVersion,
   mintFreezeManifest,
+  mintShippedMap,
   pinnedWebIds,
   registeringSourcePath,
   relativeImportSpecifiers,
   renderSourceText,
+  shippedLineCounts,
+  shippedLineFor,
   stripComments,
+  templateFolderOf,
+  templateFolderOfId,
   unfrozenPinFiles,
   webRegistryPins,
   RENDER_PIN_FIELDS,
@@ -593,5 +599,152 @@ describe("registry pins — the web registry and the pin-file invariant", () => 
     expect(describeHashVersionMismatch(FREEZE_HASH_VERSION + 1)).toMatch(/rebuild/i);
     expect(describeHashVersionMismatch(FREEZE_HASH_VERSION + 1)).not.toMatch(/--update-freeze/);
     expect(describeHashVersionMismatch(1)).toMatch(/--update-freeze/);
+  });
+});
+
+describe("shipped lines — a line per template folder (0.3.1)", () => {
+  it("templateFolderOf: up to the first vN under src/m0saic; nothing for _shared or pack-root helpers", () => {
+    expect(templateFolderOf("src/m0saic/social/quote-card/v1/layout.ts")).toBe("src/m0saic/social/quote-card/v1");
+    expect(templateFolderOf("src/m0saic/dsl-tutorial/v1/_shared/brand.ts")).toBe("src/m0saic/dsl-tutorial/v1");
+    expect(templateFolderOf("src/m0saic/hero/ffmpeg-pulse/runner/v1/runner.ts")).toBe("src/m0saic/hero/ffmpeg-pulse/runner/v1");
+    expect(templateFolderOf("src/m0saic/alpine/_shared/alpine-theme.ts")).toBeUndefined();
+    expect(templateFolderOf("src/m0saic/charts/utils/scale.ts")).toBeUndefined();
+    expect(templateFolderOf("src/web.ts")).toBeUndefined();
+  });
+
+  it("templateFolderOfId: the house layout, namespace dropped", () => {
+    expect(templateFolderOfId("@m0saic/social/quote-card/v2")).toBe("src/m0saic/social/quote-card/v2");
+    expect(templateFolderOfId("@m0saic/hello-world/v1")).toBe("src/m0saic/hello-world/v1");
+    expect(templateFolderOfId("@m0saic/nope")).toBeUndefined();
+  });
+
+  const files = {
+    "src/m0saic/a/v1/a.ts": "1".repeat(64),
+    "src/m0saic/a/v1/layout.ts": "2".repeat(64),
+    "src/m0saic/a/v2/a.ts": "3".repeat(64),
+    "src/m0saic/_shared/x.ts": "4".repeat(64),
+  };
+  const prev = (over: Record<string, unknown> = {}) => ({
+    release: "0.2.0", tag: "t", commit: "c", note: "n", hashVersion: FREEZE_HASH_VERSION,
+    files: { "src/m0saic/a/v1/a.ts": "1".repeat(64), "src/m0saic/a/v1/layout.ts": "2".repeat(64) },
+    ...over,
+  });
+
+  it("first mint ever: every folder ships at the new release", () => {
+    expect(mintShippedMap(files, null, "0.3.1")).toEqual({ "src/m0saic/a/v1": "0.3.1", "src/m0saic/a/v2": "0.3.1" });
+  });
+
+  it("a manifest from before the map seeds unchanged folders at ITS release; a new folder gets the new one", () => {
+    expect(mintShippedMap(files, prev(), "0.3.1")).toEqual({ "src/m0saic/a/v1": "0.2.0", "src/m0saic/a/v2": "0.3.1" });
+  });
+
+  it("carries a previous map forward, and re-ships a folder whose files moved", () => {
+    const withMap = prev({ shipped: { "src/m0saic/a/v1": "0.2.0" } });
+    expect(mintShippedMap(files, withMap, "0.3.2")["src/m0saic/a/v1"]).toBe("0.2.0");
+    const edited = { ...files, "src/m0saic/a/v1/layout.ts": "9".repeat(64) };
+    expect(mintShippedMap(edited, withMap, "0.3.2")["src/m0saic/a/v1"]).toBe("0.3.2");
+    const grown = { ...files, "src/m0saic/a/v1/extra.ts": "8".repeat(64) };
+    expect(mintShippedMap(grown, withMap, "0.3.2")["src/m0saic/a/v1"]).toBe("0.3.2");
+  });
+
+  it("across a hasher-version change, presence alone carries a folder forward", () => {
+    const old = prev({ hashVersion: FREEZE_HASH_VERSION - 1, files: { "src/m0saic/a/v1/a.ts": "x", "src/m0saic/a/v1/layout.ts": "y" } });
+    expect(mintShippedMap(files, old, "0.3.1")["src/m0saic/a/v1"]).toBe("0.2.0");
+  });
+
+  it("shippedLineFor: map absent → release; map present → the id's folder, else the registering file's, else null", () => {
+    expect(shippedLineFor(null, "@m0saic/a/v1")).toBeNull();
+    expect(shippedLineFor({ release: "0.2.0" }, "@m0saic/a/v1")).toBe("0.2.0");
+    const m = { release: "0.3.1", shipped: { "src/m0saic/a/v1": "0.2.0", "src/m0saic/a/v2": "0.3.1" } };
+    expect(shippedLineFor(m, "@m0saic/a/v1")).toBe("0.2.0");
+    expect(shippedLineFor(m, "@m0saic/a/v2")).toBe("0.3.1");
+    expect(shippedLineFor(m, "@m0saic/odd/v1", "src/m0saic/a/v1/odd.ts")).toBe("0.2.0");
+    expect(shippedLineFor(m, "@m0saic/b/v1")).toBeNull();
+    expect(shippedLineCounts(m.shipped)).toEqual({ "0.2.0": 1, "0.3.1": 1 });
+  });
+
+  it("the mint writes shipped (carried from previous) and the deprecated ids it was handed", () => {
+    const d = fs.mkdtempSync(path.join(os.tmpdir(), "freeze-shipped-"));
+    try {
+      for (const rel of ["src/m0saic/a/v1/a.ts", "src/m0saic/a/v2/a.ts"]) {
+        fs.mkdirSync(path.dirname(path.join(d, rel)), { recursive: true });
+        fs.writeFileSync(path.join(d, rel), `export const x = "${rel}";\n`);
+      }
+      const first = mintFreezeManifest(d, { release: "0.2.0", tag: "t", commit: "c", note: "n" });
+      const second = mintFreezeManifest(
+        d,
+        { release: "0.3.1", tag: "t", commit: "c", note: "n" },
+        { live: [{ id: "@m0saic/a/v1", file: "src/m0saic/a/v1/a.ts", definitionSha256: "a".repeat(64) }] },
+        { previous: { ...first, shipped: { "src/m0saic/a/v1": "0.2.0" } }, deprecated: ["@m0saic/a/v1", "@m0saic/a/v1"] },
+      );
+      expect(second.shipped).toEqual({ "src/m0saic/a/v1": "0.2.0", "src/m0saic/a/v2": "0.3.1" });
+      expect(second.deprecated).toEqual(["@m0saic/a/v1"]);
+    } finally { fs.rmSync(d, { recursive: true, force: true }); }
+  });
+});
+
+describe("shipped lines — a pin registered outside every version folder (0.3.1)", () => {
+  it("records it under the folder its id names, carrying the previous line while the pin is unchanged", () => {
+    const d = fs.mkdtempSync(path.join(os.tmpdir(), "freeze-helper-pin-"));
+    try {
+      // v1/index.ts imports the helper, so the closure hashes it (pins must name hashed files).
+      fs.mkdirSync(path.join(d, "src/m0saic/wf/utils"), { recursive: true });
+      fs.mkdirSync(path.join(d, "src/m0saic/wf/base/v1"), { recursive: true });
+      fs.writeFileSync(path.join(d, "src/m0saic/wf/utils/cell.ts"), "export const cell = 1;\n");
+      fs.writeFileSync(path.join(d, "src/m0saic/wf/base/v1/index.ts"), 'import { cell } from "../../utils/cell";\nexport const x = cell;\n');
+      const pin = { id: "@m0saic/wf/cell/v1", file: "src/m0saic/wf/utils/cell.ts", definitionSha256: "c".repeat(64) };
+      const first = mintFreezeManifest(d, { release: "0.2.0", tag: "t", commit: "c", note: "n" }, { live: [pin] });
+      expect(first.shipped!["src/m0saic/wf/cell/v1"]).toBe("0.2.0");
+      const second = mintFreezeManifest(d, { release: "0.3.1", tag: "t", commit: "c", note: "n" }, { live: [pin] }, { previous: first });
+      expect(second.shipped!["src/m0saic/wf/cell/v1"]).toBe("0.2.0");
+      expect(shippedLineFor(second, pin.id, pin.file)).toBe("0.2.0");
+      const moved = mintFreezeManifest(d, { release: "0.3.1", tag: "t", commit: "c", note: "n" }, { live: [{ ...pin, definitionSha256: "d".repeat(64) }] }, { previous: first });
+      expect(moved.shipped!["src/m0saic/wf/cell/v1"]).toBe("0.3.1");
+    } finally { fs.rmSync(d, { recursive: true, force: true }); }
+  });
+});
+
+describe("checkTemplateCatalog — Stage 0d (0.3.1)", () => {
+  const DEP = { reason: "v2 binds every prop", replacement: "@m0saic/a/v2", since: "2026-09-29" };
+  const base = {
+    catalog: { "@m0saic/a/v1": { deprecated: DEP }, "@m0saic/a/v2": {} } as Record<string, { deprecated?: typeof DEP }>,
+    problems: [] as string[],
+    registeredIds: new Set(["@m0saic/a/v1", "@m0saic/a/v2", "@m0saic/old/v1", "@m0saic/new/v1"]),
+    deprecatedIds: new Set(["@m0saic/a/v1"]),
+    declaredInFile: { "@m0saic/old/v1": ["label", "tags"], "@m0saic/new/v1": [] } as Record<string, string[]>,
+    pinnedIds: new Set(["@m0saic/a/v1", "@m0saic/old/v1"]),
+  };
+
+  it("a clean catalog passes — a shipped template may keep its in-file fields (it lags catalogSidecar)", () => {
+    expect(checkTemplateCatalog(base)).toEqual({ ok: true, errors: [], warnings: [] });
+  });
+
+  it("parser problems, unregistered ids and unregistered replacements are errors", () => {
+    const r = checkTemplateCatalog({
+      ...base,
+      problems: ['@m0saic/a/v1: "defaultProps" is not a catalog field'],
+      catalog: { ...base.catalog, "@m0saic/gone/v1": {}, "@m0saic/new/v1": { deprecated: { ...DEP, replacement: "@m0saic/missing/v9" } } },
+    });
+    expect(r.ok).toBe(false);
+    expect(r.errors.join("\n")).toMatch(/not a catalog field/);
+    expect(r.errors.join("\n")).toMatch(/@m0saic\/gone\/v1: described in the catalog but not registered/);
+    expect(r.errors.join("\n")).toMatch(/replacement @m0saic\/missing\/v9 is not registered/);
+  });
+
+  it("a replacement that is itself deprecated is a warning (a chain), not an error", () => {
+    const r = checkTemplateCatalog({ ...base, catalog: { ...base.catalog, "@m0saic/old/v1": { deprecated: { ...DEP, replacement: "@m0saic/a/v1" } } } });
+    expect(r.ok).toBe(true);
+    expect(r.warnings.join()).toMatch(/itself deprecated/);
+  });
+
+  it("new work that declares catalog fields in its file is refused (catalogSidecar)", () => {
+    const r = checkTemplateCatalog({ ...base, declaredInFile: { ...base.declaredInFile, "@m0saic/new/v1": ["description"] } });
+    expect(r.errors.join()).toMatch(/@m0saic\/new\/v1: declares description in its code/);
+  });
+
+  it("a deprecation the last release shipped cannot come back", () => {
+    expect(checkTemplateCatalog({ ...base, minted: ["@m0saic/a/v1"] }).ok).toBe(true);
+    const r = checkTemplateCatalog({ ...base, deprecatedIds: new Set(), minted: ["@m0saic/a/v1"] });
+    expect(r.errors.join()).toMatch(/permanent/);
   });
 });

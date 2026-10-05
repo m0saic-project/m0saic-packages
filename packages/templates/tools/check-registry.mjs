@@ -30,6 +30,7 @@ import path from "node:path";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import { checkPinnedWebIds, checkShippedWebIds, readGeneratedWebIds, readShippedWebIds, GENERATED_WEB_IDS_FILE, SHIPPED_WEB_IDS_FILE } from "./shipped-web-ids.mjs";
+import { checkConventionsHeld, readConventionsHeld, CONVENTIONS_HELD_FILE } from "./conventions-held.mjs";
 
 const require = createRequire(import.meta.url);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -50,6 +51,11 @@ const JSON_OUT = process.argv.includes("--json");
 // the current flattened layouts instead of comparing against them. Commit
 // the result: the diff IS the review of a layout change.
 const UPDATE_FP = process.argv.includes("--update-fingerprints");
+// `--mint-missing-fingerprints`: write a fingerprint ONLY for a template that has
+// none yet (a new vN+1) and compare every other one as usual — a changed
+// layout still fails. The safe way to land a new template's fingerprint: it
+// cannot bless a moved one the way --update-fingerprints would.
+const MINT_MISSING_FP = !UPDATE_FP && process.argv.includes("--mint-missing-fingerprints");
 // `--update-freeze`: re-mint frozen.manifest.json from the current tree. This
 // is the DELIBERATE act performed at a release, never the fix for a failing
 // gate — a frozen template that needs to change gets a new vN+1 folder.
@@ -112,8 +118,31 @@ const finish = (code) => {
     const note = previous && previous.release === release && typeof previous.note === "string" && previous.note
       ? previous.note
       : "Frozen at release. Comments only; any behavioural change needs a new vN+1 folder. See .ai/CLAUDE.md \u00a710.";
+    // The catalog is judged before a release blesses it (the Stage 0d rules), and
+    // the ids deprecated at mint are recorded — a shipped deprecation is permanent.
+    const cat = require("../dist/catalog.js");
+    const platform = require("@m0saic/platform");
+    const tuMint = require("@m0saic/template-utils");
+    const mintIds = tuMint.listRegisteredTemplateIds().map(String);
+    const declaredInFileMint = {};
+    for (const id of mintIds) declaredInFileMint[id] = declaredInCode(platform, asRegistered(tuMint, id));
+    const deprecatedMint = mintIds.filter((id) => tuMint.getTemplate(id)?.deprecated);
+    const catCheck = freeze.checkTemplateCatalog({
+      catalog: cat.TEMPLATE_CATALOG.templates,
+      problems: cat.TEMPLATE_CATALOG_PROBLEMS,
+      registeredIds: new Set(mintIds),
+      deprecatedIds: new Set(deprecatedMint),
+      declaredInFile: declaredInFileMint,
+      pinnedIds: new Set(Object.keys(previous?.registry ?? {})),
+      minted: previous?.deprecated,
+    });
+    if (!catCheck.ok) {
+      fail(`\n[check-registry] \u2717 the catalog (src/template-catalog.json) is unsound, so nothing was minted:\n`);
+      for (const e of catCheck.errors) fail(`    ${e}`);
+      finish(1);
+    }
     let minted;
-    try { minted = freeze.mintFreezeManifest(ROOT, { release, tag, commit: git("rev-parse", "HEAD"), note }, { live, webIds, webLive }); }
+    try { minted = freeze.mintFreezeManifest(ROOT, { release, tag, commit: git("rev-parse", "HEAD"), note }, { live, webIds, webLive }, { previous, deprecated: deprecatedMint }); }
     catch (err) {
       fail(`\n[check-registry] \u2717 ${err && err.message ? err.message : err}\n`);
       finish(1);
@@ -121,6 +150,8 @@ const finish = (code) => {
     fs.writeFileSync(path.join(ROOT, freeze.FREEZE_MANIFEST_FILE), JSON.stringify(minted, null, 2) + "\n");
     const webDiverged = Object.values(minted.registry).filter((p) => p.webFile !== undefined).length;
     say(`[check-registry] \u270e freeze manifest minted (hash v${minted.hashVersion}): ${Object.keys(minted.files).length} files, ${live.length} registry pins (${webIds.length} on web, ${webDiverged} with a distinct web-side definition) at ${minted.tag} (${minted.commit.slice(0, 7)}) \u2192 ${freeze.FREEZE_MANIFEST_FILE} (commit it).`);
+    const lines = Object.entries(freeze.shippedLineCounts(minted.shipped ?? {})).map(([l, n]) => `${n} at ${l}`).join(", ");
+    say(`[check-registry] \u270e shipped lines: ${lines || "(no template folders)"}; ${(minted.deprecated ?? []).length} deprecated id(s) recorded as shipped.`);
     // Minting is a standalone act — don't drag the 94-template render sweep
     // behind it. Run the gate normally afterwards to verify.
     finish(0);
@@ -245,8 +276,24 @@ function liveRegistrations(freeze) {
   return tu.listRegisteredTemplateIds().map(String).map((id) => {
     const meta = typeof tu.getTemplateMeta === "function" ? tu.getTemplateMeta(id) : undefined;
     const from = meta?.registeredFrom;
-    return freeze.liveRegistrationOf(id, from ? freeze.registeringSourcePath(ROOT, from) : "(unknown)", tu.getTemplate(id));
+    return freeze.liveRegistrationOf(id, from ? freeze.registeringSourcePath(ROOT, from) : "(unknown)", asRegistered(tu, id));
   });
+}
+
+/** The template as its FILE declares it — before the catalog applied (0.3.1).
+ *  Pins hash this view, so a catalog edit never moves a pin. Falls back to
+ *  getTemplate on a template-utils without it. */
+function asRegistered(tu, id) {
+  return typeof tu.getTemplateAsRegistered === "function" ? tu.getTemplateAsRegistered(id) : tu.getTemplate(id);
+}
+
+/** What a template's CODE declares that belongs in its catalog sidecar (0.3.1):
+ *  catalog fields, and prop presentation as `props.<key>.<field>`. */
+function declaredInCode(platform, template) {
+  return [
+    ...Object.keys(platform.authoredCatalogFields(template)),
+    ...platform.authoredPropCopy(template).map((k) => `props.${k}`),
+  ];
 }
 
 /**
@@ -293,7 +340,21 @@ const SHIPPED_IDS = new Set(Object.keys(FREEZE_MANIFEST?.registry ?? {}));
 // The line those ids shipped at. A convention newer than it is LAG on them, not a
 // defect — reported below, never fatal.
 const SHIPPED_AT = typeof FREEZE_MANIFEST?.release === "string" ? FREEZE_MANIFEST.release : null;
+// Per template since 0.3.1: the line its FOLDER shipped at (`shipped` in the
+// manifest — the doctor's rule). A manifest minted before the map answers
+// `release` for every folder, exactly as SHIPPED_AT did.
+const shippedAtOf = (id) => {
+  const f = require("../dist/freeze.js");
+  return typeof f.shippedLineFor === "function"
+    ? f.shippedLineFor(FREEZE_MANIFEST, id, FREEZE_MANIFEST?.registry?.[id]?.file)
+    : SHIPPED_AT;
+};
 const lagging = new Map(); // convention → Set<templateId>
+// The template-convention line this pack targets (`TEMPLATE_REPO.conventions`,
+// 0.3.1): a rule newer than it is advice, never an error, until the pack moves it.
+const CONVENTIONS_TARGET = (() => {
+  try { return require("../dist/repo.js").TEMPLATE_REPO?.conventions ?? null; } catch { return null; }
+})();
 
 // ── Stage 0c: registry pins ────────────────────────────────────────────────
 // The file hashes (Stage 0) cannot see a NEW, unfrozen file registering a
@@ -310,7 +371,7 @@ const lagging = new Map(); // convention → Set<templateId>
   const manifest = freeze.readFreezeManifest(ROOT);
   const live = ids.map((id) => {
     const from = templateUtils.getTemplateMeta?.(id)?.registeredFrom;
-    return freeze.liveRegistrationOf(id, from ? freeze.registeringSourcePath(ROOT, from) : "(unknown)", templateUtils.getTemplate(id));
+    return freeze.liveRegistrationOf(id, from ? freeze.registeringSourcePath(ROOT, from) : "(unknown)", asRegistered(templateUtils, id));
   });
   const p = freeze.checkRegistryPins(manifest ?? {}, live);
   report.registryPins = { state: p.ok ? (p.pinned ? "ok" : "unpinned") : "violated", pinned: p.pinned, held: p.held.length, unpinned: p.unpinned.length, missing: p.missing, moved: p.moved, redefined: p.redefined };
@@ -380,6 +441,67 @@ const lagging = new Map(); // convention → Set<templateId>
       say(`[check-registry] \u2713 web registry pins (${manifest.release}): ${w.held.length}/${w.pinned} shipped web ids register in dist/web.js from their pinned file with their pinned definition` + (w.unpinned.length ? ` (${w.unpinned.length} on web since \u2014 new work)` : "") + `.`);
     }
   }
+}
+
+// ── Stage 0d: the catalog (0.3.1) ──────────────────────────────────────────
+// The template convention since 0.3.1: a template's CODE is immutable once it
+// ships; what describes it (label, description, tags, platforms,
+// channels, preview, internal, primitive, deprecated, and each prop's label /
+// hint / placeholder / order) lives in its catalog SIDECAR — <name>.catalog.json
+// in the template's own folder — gathered by tools/gen-template-catalog.mjs into
+// src/template-catalog.json. Sound means: every sidecar parses and sits in its
+// template's folder; the generated catalog is current; every id, replacement
+// and described prop exists; no template shipped since 0.3.1 describes itself in
+// code; nothing the last release shipped as deprecated came back.
+{
+  const freeze = require("../dist/freeze.js");
+  const cat = require("../dist/catalog.js");
+  const platform = require("@m0saic/platform");
+  const repos = require("@m0saic/platform/template-repos");
+  const manifest = freeze.readFreezeManifest(ROOT);
+  const collected = repos.collectTemplateCatalog(ROOT, { srcDir: "src/m0saic" });
+  const extra = [...collected.problems];
+  const generated = fs.readFileSync(path.join(ROOT, "src", "template-catalog.json"), "utf8");
+  if (generated !== repos.serializeTemplateCatalog(collected.file)) {
+    extra.push("src/template-catalog.json is stale — it is GENERATED from the <name>.catalog.json sidecars; run npm run build (tools/gen-template-catalog.mjs), never edit it");
+  }
+  for (const { path: rel, templateId } of collected.sidecars) {
+    const from = templateUtils.getTemplateMeta?.(templateId)?.registeredFrom;
+    const file = from ? freeze.registeringSourcePath(ROOT, from) : null;
+    const dirs = [freeze.templateFolderOfId(templateId), file ? path.posix.dirname(file) : undefined].filter(Boolean);
+    if (dirs.length && !dirs.includes(path.posix.dirname(rel))) {
+      extra.push(`${rel}: describes ${templateId} but sits outside its folder (${dirs.join(" or ")}) — a sidecar lives beside the template's code`);
+    }
+    const t = asRegistered(templateUtils, templateId);
+    if (t) {
+      for (const k of platform.unknownCatalogProps(t, cat.TEMPLATE_CATALOG.templates[templateId] ?? {})) {
+        extra.push(`${rel}: props.${k} — ${templateId} has no such prop (dotted as propsSchema nests it)`);
+      }
+    }
+  }
+  const declaredInFile = {};
+  for (const id of ids) declaredInFile[id] = declaredInCode(platform, asRegistered(templateUtils, id));
+  const deprecatedIds = new Set(ids.filter((id) => templateUtils.getTemplate(id)?.deprecated));
+  const r = freeze.checkTemplateCatalog({
+    catalog: cat.TEMPLATE_CATALOG.templates,
+    problems: [...cat.TEMPLATE_CATALOG_PROBLEMS, ...extra],
+    registeredIds: new Set(ids),
+    deprecatedIds,
+    declaredInFile,
+    pinnedIds: new Set(Object.keys(manifest?.registry ?? {})),
+    minted: manifest?.deprecated,
+  });
+  const count = collected.sidecars.length;
+  report.catalog = { state: r.ok ? "ok" : "violated", sidecars: count, deprecated: deprecatedIds.size, mintedDeprecated: (manifest?.deprecated ?? []).length, errors: r.errors, warnings: r.warnings };
+  if (!r.ok) {
+    report.ok = false;
+    fail(`\n[check-registry] \u2717 CATALOG \u2014 the <name>.catalog.json sidecars:\n`);
+    for (const e of r.errors) fail(`    ${e}`);
+    fail(`\n[check-registry] A template's code is immutable once shipped; what describes it lives in its catalog sidecar beside the code (0.3.1). A deprecation that shipped is permanent.\n`);
+    finish(1);
+  }
+  for (const w of r.warnings) warn(`[check-registry] \u26a0 catalog: ${w}`);
+  say(`[check-registry] \u2713 catalog: ${count} sidecar(s) sound, generated catalog current; ${deprecatedIds.size} template(s) deprecated` + (manifest?.deprecated ? ` (${manifest.deprecated.length} shipped deprecated, all kept)` : "") + `.`);
 }
 
 // ── Repo level: the front door (hello-world convention, 2026-09-14) ────────
@@ -470,7 +592,9 @@ for (const id of ids) {
   // conventions.
   const audit = await templateUtils.auditRenderedTemplate(template, {
     ...(SWEEP ? { sweepCanvases: templateUtils.STANDARD_SWEEP_CANVASES } : {}),
-    ...(SHIPPED_AT && SHIPPED_IDS.has(String(id)) ? { shippedAt: SHIPPED_AT } : {}),
+    ...(SHIPPED_IDS.has(String(id)) && shippedAtOf(String(id)) ? { shippedAt: shippedAtOf(String(id)) } : {}),
+    // The pack's conventions target (TEMPLATE_REPO.conventions, 0.3.1).
+    ...(CONVENTIONS_TARGET ? { conventionsTarget: CONVENTIONS_TARGET } : {}),
   });
   if (audit.skipped) {
     skipped.push(`${id}: ${audit.skipped}`);
@@ -541,10 +665,14 @@ for (const { id, layout } of layouts) {
     continue;
   }
   const result = templateUtils.checkLayoutFingerprint(ROOT, id, layout, false, FP_OPTS);
-  if (result === "missing") {
+  if (result === "missing" && MINT_MISSING_FP) {
+    templateUtils.writeLayoutFingerprint(ROOT, id, layout, FP_OPTS);
+    report.fingerprints.minted++;
+    say(`[check-registry] \u270e layout fingerprint minted for new template ${id} (commit it).`);
+  } else if (result === "missing") {
     report.fingerprints.missing++;
     const where = templateUtils.layoutFingerprintLocation(ROOT, id, FP_OPTS);
-    const f = { templateId: id, convention: "layoutFingerprint", severity: "warning", violations: [{ key: "missing", detail: `no committed fingerprint at ${path.relative(ROOT, path.join(where.dir, templateUtils.layoutFingerprintFileName(where.base)))} — run \`node tools/check-registry.mjs --update-fingerprints\` and commit it.` }] };
+    const f = { templateId: id, convention: "layoutFingerprint", severity: "warning", violations: [{ key: "missing", detail: `no committed fingerprint at ${path.relative(ROOT, path.join(where.dir, templateUtils.layoutFingerprintFileName(where.base)))} — run \`node tools/check-registry.mjs --mint-missing-fingerprints\` (writes only missing ones) and commit it.` }] };
     warnings2.push(f); report.warnings.push(toJson(f));
   } else if (result) {
     report.fingerprints.changed++; errors2.push(result); report.errors.push(toJson(result));
@@ -553,7 +681,7 @@ for (const { id, layout } of layouts) {
   }
 }
 if (UPDATE_FP) say(`[check-registry] ✎ layout fingerprints: ${report.fingerprints.minted} written, ${report.fingerprints.unchanged} unchanged → <template folder>/<slug>.layout.m0 (commit them).`);
-else say(`[check-registry] ✓ layout fingerprints: ${report.fingerprints.unchanged} unchanged, ${report.fingerprints.missing} missing, ${report.fingerprints.changed} changed.`);
+else say(`[check-registry] ✓ layout fingerprints: ${report.fingerprints.unchanged} unchanged, ${report.fingerprints.missing} missing, ${report.fingerprints.changed} changed` + (report.fingerprints.minted ? `, ${report.fingerprints.minted} minted (new)` : "") + `.`);
 
 if (errors2.length) {
   fail(`[check-registry] ✗ ${errors2.length} render-time convention error(s):`);
@@ -577,15 +705,67 @@ if (mutedTotal > 0) {
 {
   const behindIds = new Set();
   for (const ids2 of lagging.values()) for (const t of ids2) behindIds.add(t);
+  const freezeLib = require("../dist/freeze.js");
+  const shippedLines = FREEZE_MANIFEST?.shipped ? freezeLib.shippedLineCounts(FREEZE_MANIFEST.shipped) : null;
+  const byTemplate = {};
+  for (const [convention, ids2] of lagging.entries()) for (const t of ids2) (byTemplate[t] ??= []).push(convention);
+  let HELD_REASONS = {};
+  let HELD;
+  try {
+    HELD_REASONS = readConventionsHeld(ROOT);
+    HELD = checkConventionsHeld(HELD_REASONS, {
+      registered: (t) => templateUtils.getTemplate(t) !== undefined,
+      deprecated: (t) => DEPRECATED.has(t),
+      internal: (t) => !!templateUtils.getTemplate(t)?.internal,
+      behindOn: (t) => byTemplate[t] ?? [],
+    });
+  } catch (err) {
+    HELD = { ok: false, ids: [], problems: [err && err.message ? err.message : String(err)] };
+  }
   report.conventions = {
+    target: CONVENTIONS_TARGET,
     shippedAt: SHIPPED_AT,
+    shippedLines,
     current: templateUtils.conventionVersions().slice(-1)[0] ?? null,
     behind: [...lagging.entries()].map(([convention, ids2]) => ({ convention, templates: ids2.size })),
     templatesBehind: behindIds.size,
+    lagging: Object.fromEntries(Object.keys(byTemplate).sort().map((t) => [t, byTemplate[t].sort()])),
+    // The vN+1 worklist: behind on a rule its CODE must meet, and a template a
+    // person opens. Counted apart, never bumped: a DEPRECATED template is
+    // superseded (it stays exactly as shipped, its lag never clears); an
+    // INTERNAL one is composed by a parent whose own vN+1 carries the handles;
+    // one behind on `catalogSidecar` ALONE is re-described by adding a sidecar
+    // beside it — its code needs nothing; one HELD (src/conventions-held.json)
+    // stays at its shipped line on purpose, with a written reason.
+    ...(() => {
+      const buckets = { worklist: [], superseded: 0, internal: 0, catalogOnly: 0, held: [] };
+      for (const t of [...behindIds].sort()) {
+        if (DEPRECATED.has(t)) { buckets.superseded++; continue; }
+        if (templateUtils.getTemplate(t)?.internal) { buckets.internal++; continue; }
+        if ((byTemplate[t] ?? []).every((c) => c === "catalogSidecar")) { buckets.catalogOnly++; continue; }
+        if (HELD.ids.includes(t)) { buckets.held.push({ templateId: t, reason: HELD_REASONS[t] }); continue; }
+        buckets.worklist.push(t);
+      }
+      return buckets;
+    })(),
   };
+  // A stale or reasonless entry fails: the list is a record of decisions, not
+  // a place to park lag. (Judged here, where "behind" is known.)
+  if (!HELD.ok) {
+    report.ok = false;
+    report.conventions.heldProblems = HELD.problems;
+    fail(`\n[check-registry] \u2717 ${CONVENTIONS_HELD_FILE} HAS ${HELD.problems.length} ENTR${HELD.problems.length === 1 ? "Y" : "IES"} THAT DO NOT HOLD:\n`);
+    for (const p of HELD.problems) fail(`    ${p}`);
+    fail(`\n[check-registry] The list names templates that deliberately stay at their shipped conventions line, each with a reason. Fix or remove the entries above (tools/conventions-held.mjs).\n`);
+    finish(1);
+  }
   if (behindIds.size > 0) {
     const rules = [...lagging.entries()].map(([c, ids2]) => `${c} (${ids2.size})`).join(", ");
-    say(`[check-registry] \u2139 conventions: the fleet shipped at ${SHIPPED_AT}; ${behindIds.size} template(s) are behind ${report.conventions.current} on ${rules}. Not a defect \u2014 they met the conventions of their day; each clears at its next vN. \`m0saic doctor .\` lists them.`);
+    const shippedWords = shippedLines ? Object.entries(shippedLines).map(([l, n]) => `${n} folder(s) at ${l}`).join(", ") : `the fleet at ${SHIPPED_AT}`;
+    say(`[check-registry] \u2139 conventions: shipped ${shippedWords}; ${behindIds.size} template(s) are behind ${report.conventions.current} on ${rules}. Not a defect \u2014 they met the conventions of their day; each clears at its next vN. \`m0saic doctor .\` lists them.`);
+    const c = report.conventions;
+    say(`[check-registry] \u2139 conventions: vN+1 worklist ${c.worklist.length} template(s) (not counted: ${c.superseded} deprecated, ${c.internal} internal, ${c.catalogOnly} behind on catalogSidecar only, ${c.held.length} held). --json \u2192 conventions.worklist.`);
+    for (const h of c.held) say(`  \u2139 held at its shipped line (${CONVENTIONS_HELD_FILE}): ${h.templateId} \u2014 ${h.reason}`);
   }
 }
 if (SWEEP) say(`[check-registry] (sweep) each template was also rendered on ${templateUtils.STANDARD_SWEEP_CANVASES.length} standard canvases for the canvasEnvelope rule.`);

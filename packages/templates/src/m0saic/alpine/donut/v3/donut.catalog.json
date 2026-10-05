@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/donut/v3",
+  "deprecated": {
+    "reason": "Superseded by v4 — the same alpine donut chart, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/alpine/donut/v4",
+    "since": "2026-09-30"
+  }
+}

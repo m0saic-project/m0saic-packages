@@ -19,18 +19,36 @@ import type {
  * survive the merge — finite positive numbers for width / height / fps /
  * durationMs / posterTimeMs, an object for format, a string for note.
  * Width and height are rounded to even pixels (the encoder's own floor).
+ *
+ * ⭐ The reserved `outputFormat` KNOB wins over the static `format` hint
+ * (0.3.1). A template whose deliverable is per-render — trickplay's
+ * png / jpeg / mp4, screencap-grid's png / mp4, highlights' mp4 / webm —
+ * carries a prop named `outputFormat` holding a container name, AND a static
+ * `outputHints.format` equal to that knob's default (so a share link at
+ * defaults carries no format ask). The knob is the more specific statement:
+ * with it set to `mp4`, the deliverable IS a video, whatever the browse-time
+ * hint says. The CLI has applied that order since the knob existed; hosts
+ * that read only these hints (the desktop render handler, Make's Output
+ * Type) did not, so a knob off its default was refused at render — "Output
+ * extension implies container "mp4" but resolved container is "png""
+ * (founder, 2026-10-01, Trickplay). It lives HERE so every host gets it,
+ * frozen templates included. Precedence: static hint < the knob < a `format`
+ * the template's own `resolveOutputHints` returns.
  */
 export function resolveTemplateOutputHints<P extends MosaicTemplateProps>(
   template: Pick<MosaicTemplate<P>, "outputHints" | "resolveOutputHints" | "defaultProps">,
   props: Partial<P> | undefined,
 ): MosaicTemplateOutputHints {
-  const base: MosaicTemplateOutputHints = { ...(template.outputHints ?? {}) };
+  const merged = { ...(template.defaultProps ?? {}), ...(props ?? {}) } as P;
+  const staticHints: MosaicTemplateOutputHints = { ...(template.outputHints ?? {}) };
+  const knobFormat = formatFromOutputFormatKnob((merged as Record<string, unknown>).outputFormat, staticHints.format);
+  const base: MosaicTemplateOutputHints = knobFormat ? { ...staticHints, format: knobFormat } : staticHints;
   const resolver = template.resolveOutputHints;
   if (typeof resolver !== "function") return base;
 
   let resolved: unknown;
   try {
-    resolved = resolver({ ...(template.defaultProps ?? {}), ...(props ?? {}) } as P);
+    resolved = resolver(merged);
   } catch {
     return base;
   }
@@ -66,6 +84,30 @@ export function resolveTemplateOutputHints<P extends MosaicTemplateProps>(
     ...(format !== undefined ? { format } : {}),
     ...(note !== undefined ? { note } : {}),
   };
+}
+
+const IMAGE_CONTAINERS = new Set(["png", "jpeg", "webp"]);
+const VIDEO_CONTAINERS = new Set(["mp4", "mov", "webm", "mkv"]);
+
+/**
+ * The format a reserved `outputFormat` knob asks for, or undefined when the
+ * value names no container the hosts know (the static hint then stands) or
+ * already equals the static hint (which is kept whole — its `pixelFormat`,
+ * codec and the rest). A knob that MOVES the container yields the bare
+ * `{ kind, container }`: the static hint's other fields described the other
+ * container (an `rgba` pixel format means nothing to a jpeg).
+ */
+export function formatFromOutputFormatKnob(
+  raw: unknown,
+  staticFormat: MosaicTemplateOutputHints["format"] | undefined,
+): MosaicTemplateOutputHints["format"] | undefined {
+  if (typeof raw !== "string") return undefined;
+  const lower = raw.trim().toLowerCase();
+  const container = lower === "jpg" ? "jpeg" : lower;
+  const kind = IMAGE_CONTAINERS.has(container) ? "image" : VIDEO_CONTAINERS.has(container) ? "video" : null;
+  if (!kind) return undefined;
+  if (staticFormat && staticFormat.container === container && (staticFormat.kind ?? kind) === kind) return undefined;
+  return { kind, container } as MosaicTemplateOutputHints["format"];
 }
 
 /** `{ w, h }` of the resolved hints, or null when the template has no size opinion. */

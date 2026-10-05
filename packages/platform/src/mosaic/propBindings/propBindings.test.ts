@@ -1,7 +1,9 @@
 import type { MosaicTemplatePropDefinition } from "@m0saic/types";
 import {
+  choiceOptionsOf,
   bindingCompanion,
   bindingOnClear,
+  defaultOnClear,
   bindingSeedDraft,
   bindingRange,
   classifyBindableProp,
@@ -78,8 +80,23 @@ describe("classifyBindableProp", () => {
     expect(classifyBindableProp(def("json" as never), { path: [0, "color"], kind: "color" })).toBe("color");
   });
 
-  it("refuses closed pickers, hidden props and other types", () => {
-    expect(classifyBindableProp(SCHEMA.preset)).toBeNull();
+  it("a closed set is a CHOICE (2026-10-01): oneOf, or a static options list — never one that needs a connection", () => {
+    expect(classifyBindableProp(SCHEMA.preset)).toBe("choice");
+    expect(choiceOptionsOf(SCHEMA.preset)).toEqual([{ value: "dark", label: "dark" }, { value: "light", label: "light" }]);
+    const listed = def("string", { constraints: { oneOf: ["tl", "br"] }, control: { options: [{ value: "tl", label: "Top left" }, { value: "br", label: "Bottom right" }] } as never });
+    expect(classifyBindableProp(listed)).toBe("choice");
+    expect(choiceOptionsOf(listed)).toEqual([{ value: "tl", label: "Top left" }, { value: "br", label: "Bottom right" }]);
+    expect(choiceOptionsOf(SCHEMA.title)).toBeNull();
+    expect(choiceOptionsOf(SCHEMA.accent)).toBeNull();
+    // `titles.sub` is a closed set under a group: a choice too.
+    expect(classifyBindableProp(SCHEMA.titles.fields!.sub)).toBe("choice");
+    // One element of a closed-set LIST is a choice as well.
+    expect(classifyBindableProp(def("string[]", { constraints: { oneOf: ["a", "b"] } }), 1)).toBe("choice");
+    // A structured leaf has no set to offer: `kind: "choice"` there is refused.
+    expect(classifyBindableProp(def("json" as never), { path: [0, "mode"], kind: "choice" })).toBeNull();
+  });
+
+  it("refuses connection-driven pickers, hidden props and other types", () => {
     expect(classifyBindableProp(SCHEMA.picked)).toBeNull();
     expect(classifyBindableProp(SCHEMA.handle)).toBeNull();
     expect(classifyBindableProp(SCHEMA.secret)).toBeNull();
@@ -93,7 +110,7 @@ describe("classifyBindableProp", () => {
 describe("resolveBindableProp / isListPropType", () => {
   it("resolves a dotted binding to its def and kind", () => {
     expect(resolveBindableProp(SCHEMA, { propKey: "titles.title" })).toEqual({ def: SCHEMA.titles.fields!.title, kind: "string", path: [] });
-    expect(resolveBindableProp(SCHEMA, { propKey: "titles.sub" }).kind).toBeNull();
+    expect(resolveBindableProp(SCHEMA, { propKey: "titles.sub" }).kind).toBe("choice");
     expect(resolveBindableProp(SCHEMA, { propKey: "labels", index: 2 }).kind).toBe("string");
     expect(resolveBindableProp(SCHEMA, { propKey: "labels" }).kind).toBeNull();
     expect(resolveBindableProp(SCHEMA, { propKey: "ghost" })).toEqual({ def: undefined, kind: null, path: [] });
@@ -209,8 +226,27 @@ describe("bindingOnClear — what an EMPTY commit means", () => {
     // a scalar ignores its stray index — so there is no element to remove
     expect(resolveBindableProp(schema, { propKey: "titles.title", index: 3, onClear: "remove-element" }).onClear).toBeUndefined();
     expect("onClear" in resolveBindableProp(schema, { propKey: "titles.title" })).toBe(false);
-    // not bindable at all → nothing
-    expect(resolveBindableProp(schema, { propKey: "preset", onClear: "unset-leaf" }).onClear).toBeUndefined();
+    // not bindable at all → nothing (a connection-driven picker; `preset` is a choice since 2026-10-01)
+    expect(resolveBindableProp(schema, { propKey: "handle", onClear: "unset-leaf" }).onClear).toBeUndefined();
+    expect(resolveBindableProp(schema, { propKey: "preset", onClear: "unset-leaf" }).onClear).toBe("unset-leaf");
+  });
+
+  it("an OPTIONAL colour prop clears back to the template's colour without naming it; required ones and colour leaves do not", () => {
+    // the prop itself, unasked
+    expect(resolveBindableProp(SCHEMA, { propKey: "accent" }).onClear).toBe("unset-leaf");
+    expect(defaultOnClear(SCHEMA.accent, "color", [])).toBe("unset-leaf");
+    // a required colour still refuses an empty commit
+    const required = { ...SCHEMA, accent: { ...SCHEMA.accent, required: true } } as PropSchemaMap;
+    expect("onClear" in resolveBindableProp(required, { propKey: "accent" })).toBe(false);
+    // a colour leaf in a row / a list element keeps its author's explicit choice
+    const rows = { type: "json", required: false } as MosaicTemplatePropDefinition;
+    const withRows = { ...SCHEMA, rows } as PropSchemaMap;
+    expect("onClear" in resolveBindableProp(withRows, { propKey: "rows", path: [2, "color"], kind: "color" })).toBe(false);
+    expect(resolveBindableProp(withRows, { propKey: "rows", path: [2, "color"], kind: "color", onClear: "unset-leaf" }).onClear).toBe("unset-leaf");
+    expect(defaultOnClear(SCHEMA.accent, "color", [2, "color"])).toBeUndefined();
+    // not a colour → nothing new
+    expect(defaultOnClear(SCHEMA.title, "string", [])).toBeUndefined();
+    expect(defaultOnClear(SCHEMA.count, "number", [])).toBeUndefined();
   });
 });
 

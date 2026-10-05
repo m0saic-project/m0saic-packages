@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/charts/donut/v5",
+  "label": "Donut Chart",
+  "description": "Canonical donut chart: proportional ring + center total. v4 makes the premium sliver sweep RATIO via a self-framed coarse-quantize (a P-divisible S×S frame lets placeRects GCD-collapse on any canvas), so it composes at any size while keeping the smooth sweep + tight rasters. Building block of the repo-tracker hero.",
+  "tags": [
+    "data-viz",
+    "donut",
+    "distribution",
+    "animated",
+    "analysts",
+    "marketers",
+    "share",
+    "charts"
+  ],
+  "primitive": true,
+  "props": {
+    "segments": {
+      "label": "Segments",
+      "description": "Ring segments in clockwise order from 12 o'clock. Raw weights — normalized internally.",
+      "order": 1
+    },
+    "centerValue": {
+      "label": "Center value",
+      "description": "Pre-formatted hole value (e.g. \"247\"). Omit to derive the segments' sum.",
+      "placeholder": "e.g. 247",
+      "order": 2
+    },
+    "centerLabel": {
+      "label": "Center label",
+      "description": "Small muted caption under the value (e.g. \"Total Commits\").",
+      "placeholder": "e.g. Total Commits",
+      "order": 3
+    },
+    "ringThicknessFrac": {
+      "label": "Ring thickness",
+      "description": "Annulus thickness as a fraction of the outer radius (0.05–0.9).",
+      "order": 9
+    },
+    "segmentLabels": {
+      "label": "Segment labels",
+      "description": "Per-segment labels on the slices. \"percent\" shows each segment's derived share; thin slices are skipped.",
+      "order": 4
+    },
+    "backgroundColor": {
+      "label": "Card Color",
+      "description": "Card surface color. Pass \"none\" to render transparent when composed under a card-chrome primitive.",
+      "placeholder": "theme surface",
+      "order": 10
+    },
+    "renderMode": {
+      "label": "Render mode",
+      "description": "Render strategy. \"premium\" (default): smooth clockwise sliver sweep — now RATIO via a self-framed coarse-quantize (composes at any canvas). \"light\": per-segment overlay-stack revealed by enable-gated pops — composable, cheaper, W3-safe.",
+      "order": 11
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only: draw the layout contract (center value/caption + segment labels fit their cells) instead of the chart.",
+      "order": 12
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from when the namespace isn't already on ctx (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant to request (e.g. light | dark | high-contrast for @m0saic/theming/v1; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is already populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the local palette by default; set a producer slug + namespace to pull shared design tokens (self-seeds when nothing is upstream).",
+      "order": 15,
+      "collapsedByDefault": true
+    },
+    "anim.mode": {
+      "label": "Mode",
+      "description": "Quantized clockwise sweep, or staggered per-segment fade."
+    },
+    "anim.countUp": {
+      "label": "Count up",
+      "description": "Count the hole value up on intro."
+    },
+    "anim.introFrac": {
+      "label": "Intro length (× duration)",
+      "description": "Fraction of the output duration the intro fills (the rest holds)."
+    },
+    "anim.introMs": {
+      "label": "Intro (ms, override)",
+      "description": "Absolute intro duration (ms). Overrides Intro length when set.",
+      "placeholder": "from Intro fraction"
+    },
+    "anim.easing": {
+      "label": "Easing",
+      "description": "Sweep + count-up easing."
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Disable all motion — render the static final ring."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Intro animation: clockwise sweep (or per-segment fade), count-up total, easing, duration, reduceMotion.",
+      "collapsedByDefault": true
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/qr/code/v1",
+  "deprecated": {
+    "reason": "0.3.1: the code is the handle for what it encodes; eyes and centre carry their own style",
+    "replacement": "@m0saic/media/qr/code/v2",
+    "since": "2026-09-30"
+  }
+}

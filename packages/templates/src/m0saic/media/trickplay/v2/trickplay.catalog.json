@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/trickplay/v2",
+  "label": "Trickplay Sheets",
+  "description": "Generate the seek-preview thumbnails video players use while scrubbing: sprite sheets at a fixed interval with a WebVTT storyboard and a Jellyfin/DASH-compatible JSON manifest. Batch a folder for one sheet set per video.",
+  "tags": [
+    "media",
+    "trickplay",
+    "storyboard",
+    "batch",
+    "developers",
+    "creators",
+    "video-player",
+    "sprite",
+    "streaming"
+  ],
+  "props": {
+    "sourceIds": {
+      "label": "Source(s)",
+      "description": "Video(s) to index — pick a folder, one or more files, or drag-and-drop. One trickplay sheet set (sheets + WebVTT + manifest) per input.",
+      "order": 1
+    },
+    "intervalSec": {
+      "label": "Interval (s)",
+      "description": "Seconds between thumbnails.",
+      "order": 1
+    },
+    "tileWidth": {
+      "label": "Tile width (px)",
+      "description": "Thumbnail width in pixels (height derives from the source aspect; both even-rounded).",
+      "order": 2
+    },
+    "cols": {
+      "label": "Columns",
+      "description": "Thumbnails per sheet row.",
+      "order": 3
+    },
+    "rowsPerSheet": {
+      "label": "Rows per sheet",
+      "description": "Maximum thumbnail rows per sheet — longer content spills to additional sheets.",
+      "order": 4
+    },
+    "outputFormat": {
+      "label": "Output",
+      "description": "Sheet output format. \"png\"/\"jpeg\" render static sheets with WebVTT + JSON manifest sidecars; \"mp4\" renders an animated contact-sheet preview (no sidecars).",
+      "order": 1
+    }
+  }
+}

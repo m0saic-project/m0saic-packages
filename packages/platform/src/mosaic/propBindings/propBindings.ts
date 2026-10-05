@@ -17,10 +17,14 @@
  *     (`"label"`, `"titles.title"`); every segment past the first walks a
  *     `type: "group"` prop's `fields`.
  *   - Bindable: `"string"` (free text; a color-valued string — `isColor` /
- *     `colorPicker` — is kind `"color"` and gets a picker; enum / connection-
- *     option strings render closed pickers and are NOT bindable), `"number"`,
- *     and one ELEMENT of `"string[]"` / `"number[]"` (a non-negative integer
- *     `index` is required; the list itself is never bindable).
+ *     `colorPicker` — is kind `"color"` and gets a picker; a CLOSED SET —
+ *     `constraints.oneOf` or a static `control.options` list — is kind
+ *     `"choice"` and gets the pick the pane shows (2026-10-01: a card bound
+ *     to its theme preset is where the theme gets changed); a string whose
+ *     options come from a connection is NOT bindable — the host has no list
+ *     to offer without the connection), `"number"`, and one ELEMENT of
+ *     `"string[]"` / `"number[]"` (a non-negative integer `index` is
+ *     required; the list itself is never bindable).
  *   - Structured props (`json` / `list` / `array` — rows of objects, nested
  *     records): bindable at a LEAF, addressed by `path` from the prop's
  *     value (`[2, "title"]`) with an explicit `kind` — the schema carries no
@@ -46,8 +50,9 @@
  *   - `onClear` names what an EMPTY commit means: `"remove-element"` splices
  *     the element at the leading numeric path segment out of its array (a
  *     row, or one element of a basic list), `"unset-leaf"` deletes the leaf
- *     key (or unsets a basic prop). Absent ⇒ numbers / colors reject empty
- *     and strings write `""`. Validated by `bindingOnClear`: a
+ *     key (or unsets a basic prop). Absent ⇒ an OPTIONAL colour prop unsets
+ *     (back to the template's own colour — `defaultOnClear`), other numbers /
+ *     colors reject empty and strings write `""`. Validated by `bindingOnClear`: a
  *     `remove-element` without an element, or an `unset-leaf` on an array
  *     element (no key to delete), is dropped.
  *   - `seedDraft` prefills the editor when the bound leaf reads EMPTY /
@@ -68,6 +73,9 @@ import type { MosaicTemplatePropDefinition } from "@m0saic/types";
 
 /** The value kind an inline editor must produce for a bound prop. `color`
  *  is a string holding a color (the editor shows a picker instead of text).
+ *  `choice` is a string from a CLOSED SET (`constraints.oneOf` / a static
+ *  `control.options` list): never typed — the editor shows the set and
+ *  writes one of its values; `choiceOptionsOf` is the list.
  *  `rect` is a rendered cell whose rect IS the prop: a `json` prop with
  *  `picker: "regions"` capped at ONE region, bound with no path — Make
  *  opens it as a move / resize session on that cell (the regions draw
@@ -76,10 +84,10 @@ import type { MosaicTemplatePropDefinition } from "@m0saic/types";
  *  PATH (a `media` prop, one `media[]` element, or a structured leaf) —
  *  Make makes the cell a drop target and a picker handle; the value written
  *  is the dropped / picked path. */
-export type BindableKind = "string" | "number" | "color" | "rect" | "media";
+export type BindableKind = "string" | "number" | "color" | "choice" | "rect" | "media";
 
 function isKind(k: unknown): k is BindableKind {
-  return k === "string" || k === "number" || k === "color" || k === "rect" || k === "media";
+  return k === "string" || k === "number" || k === "color" || k === "choice" || k === "rect" || k === "media";
 }
 
 /** True for a prop whose VALUE is a media path or a list of them. */
@@ -131,7 +139,8 @@ export type PropBindingRef = {
   kind?: BindableKind;
   /** Which text layer of the source shows this leaf (multi-layer text). */
   layer?: number;
-  /** What an EMPTY commit means. Absent = numbers / colors reject empty,
+  /** What an EMPTY commit means. Absent = an optional colour prop unsets
+   *  (`defaultOnClear`), other numbers / colors reject empty,
    *  strings write `""`. `"remove-element"` needs an element (an `index` or
    *  a numeric first `path` segment); `"unset-leaf"` needs a keyed leaf (a
    *  basic prop, or a path ending in a key). */
@@ -207,6 +216,23 @@ export function bindingOnClear(
 }
 
 /**
+ * The clear action a binding gets WITHOUT naming one (founder 2026-10-03):
+ * an OPTIONAL colour prop unsets on an empty commit, so the template's own
+ * colour — its default, its preset, its theme — shows again; otherwise a
+ * colour picked on the canvas had no way back. Only the prop itself (an
+ * empty leaf path: a basic prop or a group field): a colour leaf inside a
+ * row or a list keeps its author's explicit `onClear`, and a REQUIRED
+ * colour still refuses an empty commit.
+ */
+export function defaultOnClear(
+  def: MosaicTemplatePropDefinition | undefined,
+  kind: BindableKind | null,
+  leafPath: ReadonlyArray<PropPathSegment>,
+): BindingClearAction | undefined {
+  return kind === "color" && leafPath.length === 0 && def?.required !== true ? "unset-leaf" : undefined;
+}
+
+/**
  * The validated seed draft of a binding, or `undefined` when it has none (or
  * one its leaf can't take). A seed is a non-blank string; on a number leaf
  * it must read as a finite number (a seed the field would refuse to commit
@@ -216,7 +242,7 @@ export function bindingSeedDraft(
   ref: { seedDraft?: unknown },
   kind: BindableKind | null,
 ): string | undefined {
-  if (kind === null || kind === "rect" || kind === "media") return undefined;
+  if (kind === null || kind === "rect" || kind === "media" || kind === "choice") return undefined;
   const s = ref.seedDraft;
   if (typeof s !== "string" || s.trim() === "") return undefined;
   if (kind === "number" && !Number.isFinite(Number(s.trim()))) return undefined;
@@ -313,10 +339,34 @@ function isFreeTextString(def: MosaicTemplatePropDefinition): boolean {
   return true;
 }
 
-/** The kind a string-typed prop edits: a color picker or free text. */
+/**
+ * A closed set's choices, as `{ value, label }` — from a static
+ * `control.options` list (its own labels) or `constraints.oneOf` (the values
+ * as labels). `null` when the prop is not a closed set (free text, a color,
+ * options that come from a connection).
+ */
+export function choiceOptionsOf(def: MosaicTemplatePropDefinition | undefined): Array<{ value: string; label: string }> | null {
+  const meta = def?.meta;
+  if (!meta) return null;
+  const opts = meta.control?.options as unknown;
+  if (Array.isArray(opts) && opts.length > 0) {
+    const out = opts
+      .filter((o): o is { value: string; label?: unknown } => !!o && typeof o === "object" && typeof (o as { value?: unknown }).value === "string")
+      .map((o) => ({ value: o.value, label: typeof o.label === "string" && o.label ? o.label : o.value }));
+    return out.length > 0 ? out : null;
+  }
+  const oneOf = meta.constraints?.oneOf as unknown;
+  if (Array.isArray(oneOf) && oneOf.length > 0 && oneOf.every((v) => typeof v === "string")) {
+    return (oneOf as string[]).map((v) => ({ value: v, label: v }));
+  }
+  return null;
+}
+
+/** The kind a string-typed prop edits: a color picker, a closed-set pick, or free text. */
 function stringKind(def: MosaicTemplatePropDefinition): BindableKind | null {
   if (isColorPropDef(def)) return "color";
-  return isFreeTextString(def) ? "string" : null;
+  if (isFreeTextString(def)) return "string";
+  return choiceOptionsOf(def) ? "choice" : null;
 }
 
 /**
@@ -357,6 +407,9 @@ export function classifyBindableProp(
         return element !== null && r.path === undefined && isRectListPickerProp(def, element) ? "rect" : null;
       }
       if (full.length === 0 || !isValidPath(full)) return null;
+      // A structured leaf has no closed set to offer — the schema carries no
+      // per-leaf options — so a `choice` there would be a pick of nothing.
+      if (r.kind === "choice") return null;
       return isKind(r.kind) ? r.kind : null;
   }
 }
@@ -392,7 +445,7 @@ export function resolveBindableProp(
   const span = bindingRange(binding, kind);
   const path = bindingPath(binding);
   const leafPath = def?.type === "string" || def?.type === "number" || def?.type === "media" ? [] : path;
-  const onClear = bindingOnClear(binding, kind, leafPath);
+  const onClear = bindingOnClear(binding, kind, leafPath) ?? defaultOnClear(def, kind, leafPath);
   const seedDraft = bindingSeedDraft(binding, kind);
   const companion = bindingCompanion(binding, seedDraft);
   return {

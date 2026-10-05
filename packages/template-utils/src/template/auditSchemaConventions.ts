@@ -125,9 +125,15 @@ export function auditNoLocalPaths<P extends MosaicTemplateProps>(
 
 /** `browseSurface`: a description and at least one tag. */
 export function auditBrowseSurface<P extends MosaicTemplateProps>(
-  template: Pick<MosaicTemplate<P>, "description" | "tags">,
+  template: Pick<MosaicTemplate<P>, "label" | "description" | "tags">,
 ): TemplateConventionViolation[] {
   const out: TemplateConventionViolation[] = [];
+  // Judged on the template AS HOSTS SEE IT — the repo's catalog is applied before
+  // this runs (0.3.1: label / description / tags live in template-catalog.json).
+  const label = typeof template.label === "string" ? template.label.trim() : "";
+  if (!label) {
+    out.push({ key: "label", detail: `label is empty — pickers, lists and the Templates page name the template by it (declare it in template-catalog.json).` });
+  }
   const description = typeof template.description === "string" ? template.description.trim() : "";
   if (!description) {
     out.push({ key: "description", detail: `description is empty — the Templates page and the manifest show it as the template's one-line summary.` });

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/screencap_grid_aspect_safe/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same screencap grid — aspect safe, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/media/screencap_grid_aspect_safe/v2",
+    "since": "2026-09-30"
+  }
+}

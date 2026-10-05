@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/commit-feed/v3",
+  "label": "Alpine Commit Feed",
+  "description": "Alpine commit feed — friendly mobile-marketing card: a scannable list of notable commits (kind icon + title + PR, area chip + author + reviewers + date) with a signal status bar (green win / amber warn / neutral). Alpine-light by default; the FFmpeg Weekly Pulse uses preset:\"dark\". v2 rebuilds the geometry as a RATIO layout (nested row/col splits with proportional weights) so it composes at any canvas without the absolute-placement precision blowup.",
+  "tags": [
+    "data-viz",
+    "alpine",
+    "commit-feed",
+    "feed",
+    "list",
+    "animated",
+    "developers",
+    "analysts",
+    "git",
+    "changelog"
+  ],
+  "primitive": true,
+  "props": {
+    "rows": {
+      "label": "Rows",
+      "description": "Feed rows. Each: title (+ optional kind, author, date, pr, reviewers, area, signal).",
+      "order": 1
+    },
+    "title": {
+      "label": "Title",
+      "description": "Card title.",
+      "placeholder": "e.g., NOTABLE COMMITS",
+      "order": 2
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Card subtitle.",
+      "order": 3
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme variant (light default; dark = the FFmpeg hero look).",
+      "order": 4
+    },
+    "showHeader": {
+      "label": "Show header",
+      "description": "Show the icon + title + subtitle band (default true). False when a parent chrome supplies the title.",
+      "order": 5
+    },
+    "accent": {
+      "label": "Accent",
+      "description": "Accent color (header chip). Defaults to the theme primary.",
+      "placeholder": "theme primary",
+      "order": 6
+    },
+    "backgroundColor": {
+      "label": "Card color",
+      "description": "Card surface color. \"black@0\" → transparent (composed under a chrome).",
+      "placeholder": "theme card",
+      "order": 7
+    },
+    "washColor": {
+      "label": "Wash base",
+      "description": "Solid color the row tiles blend against (for transparent surfaces on a colored backdrop).",
+      "placeholder": "card background",
+      "order": 8
+    },
+    "anim.renderMode": {
+      "label": "Render mode",
+      "description": "\"premium\" (default): rows cascade in via alpha fade — a geq per faded source. \"light\": the same cascade via free enable-gate pops — no geq, composable, cheap when nested."
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Reveal mode + row-cascade intro.",
+      "order": 11,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the alpine preset by default; set a producer slug + namespace to pull shared design tokens. Explicit color props still win.",
+      "order": 13,
+      "collapsedByDefault": true
+    },
+    "icon": {
+      "label": "Icon",
+      "description": "Named header glyph (shared alpine catalog). A derived HUMAN view of the raw iconPath agent prop: picking a name WRITES the SVG path into iconPath (the stored, code-friendly value); a bespoke agent-written path shows as no selection.",
+      "order": 14
+    },
+    "iconPath": {
+      "label": "Icon path (SVG d)",
+      "description": "Header glyph SVG path d (24×24) — the raw value behind the friendly `icon` knob, and the override that wins.",
+      "order": 15
+    },
+    "kindColors": {
+      "label": "Kind colors",
+      "description": "kind → chip color override (open-keyed map). Built-ins already cover feat, fix, perf, docs, test, chore, refactor, revert, security, ci, deps — this map restyles them or colors CUSTOM kinds.",
+      "order": 16,
+      "collapsedByDefault": true
+    },
+    "kindGlyphs": {
+      "label": "Kind glyphs",
+      "description": "kind → chip glyph override (open-keyed map). Values are a mark NAME (add, dash, up, lines, check, dot, shield, back, diamond, box, blocks) or a raw 24x24 SVG path starting with \"M\" — e.g. {\"hotfix\": \"shield\"}.",
+      "order": 17,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only layout contract view: renders the contract wireframe instead of the feed — rows GREEN with the measured rule when every row is the same size, offenders RED when not. Deterministic default false; production never sets it.",
+      "order": 18,
+      "collapsedByDefault": true
+    }
+  }
+}

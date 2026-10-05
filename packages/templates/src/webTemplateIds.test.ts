@@ -37,8 +37,9 @@ describe("webTemplateIds — the ids Mosaic Web can open", () => {
 describe("shipped web ids — additive-only lock on web.ts", () => {
   // `web-template-ids.json` ships in the CLI tarball and the CLI prints
   // `app.m0saic.io/make?t=<id>` for exactly those ids. The snapshot pins the
-  // list as the 0.3.0 CLI ships it (re-minted at the 0.3.0 cut from FREEZE
-  // `5d235695`, the same 78 ids 0.2.0 shipped from `d72fdcea`); an id dropped
+  // list as the 0.3.1 CLI ships it (re-minted at the 0.3.1 cut from FREEZE
+  // `a8a2042d`: 116 ids — the 78 that 0.2.0 / 0.3.0 shipped plus the 38 vN+1
+  // ids this line adds to the web entry; 0 dropped); an id dropped
   // from web.ts afterwards is
   // a dead link in every installed CLI. Same rule as
   // tools/check-registry.mjs Stage 0b — this is the unit-level twin.
@@ -46,9 +47,10 @@ describe("shipped web ids — additive-only lock on web.ts", () => {
     release: string; commit: string; note: string; ids: string[];
   };
 
-  it("is a well-formed, sorted, duplicate-free snapshot of the 0.3.0 cut", () => {
-    expect(shipped.release).toBe("0.3.0");
-    expect(shipped.commit).toBe("5d235695");
+  it("is a well-formed, sorted, duplicate-free snapshot of the 0.3.1 cut", () => {
+    expect(shipped.release).toBe("0.3.1");
+    expect(shipped.commit).toBe("a8a2042d");
+    expect(shipped.ids).toHaveLength(116);
     expect(shipped.note.length).toBeGreaterThan(0);
     expect(shipped.ids).toEqual([...shipped.ids].sort());
     expect(new Set(shipped.ids).size).toBe(shipped.ids.length);

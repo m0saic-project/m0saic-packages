@@ -29,6 +29,9 @@ const tu = require("@m0saic/template-utils");
 
 const live = tu.listRegisteredTemplateIds().map(String).sort().map((id) => {
   const from = typeof tu.getTemplateMeta === "function" ? tu.getTemplateMeta(id)?.registeredFrom : undefined;
-  return freeze.liveRegistrationOf(id, from ? freeze.registeringSourcePath(ROOT, from) : "(unknown)", tu.getTemplate(id));
+  // Pin the template AS ITS FILE DECLARES IT — before the catalog applied
+  // (0.3.1), exactly as check-registry does for the node entry.
+  const template = typeof tu.getTemplateAsRegistered === "function" ? tu.getTemplateAsRegistered(id) : tu.getTemplate(id);
+  return freeze.liveRegistrationOf(id, from ? freeze.registeringSourcePath(ROOT, from) : "(unknown)", template);
 });
 process.stdout.write(JSON.stringify(live));

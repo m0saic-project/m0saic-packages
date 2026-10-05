@@ -4,5 +4,6 @@ export { WireframeCell } from "./utils/wireframeCell";
 // baseline — useful for perf comparison and as living documentation of how the
 // template evolved as we learned more about the engine.
 export { WireframeV2 } from "./base/v2";
+export { WireframeV3 } from "./base/v3";
 export { Wireframe, Wireframe as WireframeV1 } from "./base/v1";
 export { AnimatedWireframe } from "./animated/v1";

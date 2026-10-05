@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/bar-graph/v2",
+  "label": "Alpine Bar Chart",
+  "description": "Alpine horizontal bar chart — friendly mobile-marketing card: rounded bars, category rail, inline values, value ticks.",
+  "tags": [
+    "data-viz",
+    "alpine",
+    "bar-graph",
+    "animated",
+    "analysts",
+    "developers",
+    "dashboard",
+    "report",
+    "chart"
+  ],
+  "primitive": true,
+  "props": {
+    "values": {
+      "label": "Values",
+      "description": "Numeric data values driving the bars.",
+      "order": 1
+    },
+    "labels": {
+      "label": "Category Labels",
+      "description": "Category labels (index-aligned to values). Optional — clear for a value-only chart.",
+      "order": 2,
+      "primary": true
+    },
+    "title": {
+      "label": "Title",
+      "description": "Card title.",
+      "placeholder": "e.g., BAR CHART",
+      "order": 3
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Card subtitle.",
+      "placeholder": "e.g., Sales by Channel",
+      "order": 4
+    },
+    "orientation": {
+      "label": "Orientation",
+      "description": "Bar orientation: horizontal (bars grow right) or vertical (bars grow up).",
+      "order": 5
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme variant.",
+      "order": 6
+    },
+    "barColor": {
+      "label": "Bar Color",
+      "description": "Bar fill color. Defaults to the resolved theme primary.",
+      "placeholder": "theme primary",
+      "order": 7
+    },
+    "bars.thickness": {
+      "label": "Thickness",
+      "description": "Bar width (vertical) / height (horizontal) as a fraction of its band. 1 = bars touch. Overrides Gap when set.",
+      "placeholder": "derived from Gap"
+    },
+    "bars.gap": {
+      "label": "Gap",
+      "description": "Gap between bars as a fraction of bar thickness (legacy inverse of Thickness — ignored when Thickness is set)."
+    },
+    "bars.cornerRadius": {
+      "label": "Bar rounding",
+      "description": "Bar cap rounding (0..1)."
+    },
+    "bars": {
+      "label": "Bars",
+      "description": "Bar geometry: gap between bars + cap rounding.",
+      "order": 8,
+      "collapsedByDefault": true
+    },
+    "grid.show": {
+      "label": "Show",
+      "description": "Draw gridlines + value ticks."
+    },
+    "grid.count": {
+      "label": "Tick count",
+      "description": "Number of gridline intervals."
+    },
+    "grid": {
+      "label": "Grid",
+      "description": "Gridlines + value ticks behind the bars.",
+      "order": 9,
+      "collapsedByDefault": true
+    },
+    "valueLabels.show": {
+      "label": "Show",
+      "description": "Print each bar's value inline."
+    },
+    "valueLabels.format": {
+      "label": "Format",
+      "description": "compact = 1.2K; raw = as-is; percent = share of max."
+    },
+    "valueLabels.decimals": {
+      "label": "Decimals",
+      "description": "Decimal places."
+    },
+    "valueLabels.suffix": {
+      "label": "Suffix",
+      "description": "Appended to each value (e.g. \"%\", \" MB\")."
+    },
+    "valueLabels": {
+      "label": "Value Labels",
+      "description": "Inline per-bar value labels.",
+      "order": 10,
+      "collapsedByDefault": true
+    },
+    "domain.minValue": {
+      "label": "Min Value",
+      "description": "Explicit domain minimum. Auto (0 / nice) when unset."
+    },
+    "domain.maxValue": {
+      "label": "Max Value",
+      "description": "Explicit domain maximum. Auto (nice max) when unset.",
+      "placeholder": "data max"
+    },
+    "domain": {
+      "label": "Domain",
+      "description": "Value-axis domain overrides — leave unset to auto-fit to nice round numbers.",
+      "order": 11,
+      "collapsedByDefault": true
+    },
+    "anim.renderMode": {
+      "label": "Render mode",
+      "description": "\"premium\" (default): bars fade + grow in — a per-pixel geq per bar/label. \"light\": bars grow opaquely + labels enable-gate pop — no geq, composable, cheap when nested."
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.ease": {
+      "label": "Easing",
+      "description": "Grow-in easing curve."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Reveal mode + grow-in intro.",
+      "order": 12,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the alpine preset by default; set a producer slug + namespace to pull shared design tokens. Explicit color props still win.",
+      "order": 13,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only layout contract view: renders the contract wireframe instead of the chart — bars GREEN with the measured rule when every bar is the same thickness (equal height horizontal / equal width vertical), offenders RED with the violation when not. Deterministic default false; production never sets it.",
+      "order": 14,
+      "collapsedByDefault": true
+    }
+  }
+}

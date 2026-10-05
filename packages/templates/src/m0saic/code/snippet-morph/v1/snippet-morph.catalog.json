@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/code/snippet-morph/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same code snippet morph, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/code/snippet-morph/v2",
+    "since": "2026-09-30"
+  }
+}

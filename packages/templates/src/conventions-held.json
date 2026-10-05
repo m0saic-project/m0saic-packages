@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "note": "Templates that deliberately stay at their shipped conventions line (no vN+1 planned). Read by tools/check-registry.mjs — see tools/conventions-held.mjs. Each entry needs a reason; an entry that no longer applies fails the build.",
+  "held": {
+    "@m0saic/brand/community-m/v1": "One specific job, reached one way: the Community page opens it with the folder, M and tile already filled in, so the props a v2 would put on the canvas (three colours, zoom, the dev preview levers) are not what its user is there to change. A v2 means two entry modules (node + web) kept in step and its own copy of the frozen pipeline to drop the canvas tile. Founder decision, 2026-09-30."
+  }
+}

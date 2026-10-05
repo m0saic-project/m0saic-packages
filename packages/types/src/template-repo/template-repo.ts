@@ -85,6 +85,20 @@ export type MosaicTemplateRepoDescriptor = {
    * id the repo does not register — `repoFrontDoor`).
    */
   helloWorld?: TemplateId;
+  /**
+   * The template-convention LINE this repo targets — an m0saic version such as
+   * `"0.3.1"` (0.3.1). Every convention carries the line that introduced it;
+   * the checks (the repo's build gate, `m0saic doctor`) hold this repo's
+   * templates to the rules up to its target and report newer ones as advice
+   * ("behind"), never errors — so a new m0saic release never turns a repo's
+   * build red. The author moves the target when the code has adopted the
+   * newer rules, the way a crate moves its edition.
+   *
+   * Absent: held to every rule the checker knows (the strictest reading). A
+   * template that has SHIPPED under a freeze is judged at the lower of its
+   * shipped line and this target.
+   */
+  conventions?: string;
 };
 
 /**

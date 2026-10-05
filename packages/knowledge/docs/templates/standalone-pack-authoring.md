@@ -171,10 +171,15 @@ Two authoring facts, both learned on the starters:
   `m0saic doctor` both refuse a root document carrying a static, opaque, full-canvas colour
   source. A base rect is a click target that shadows everything behind it, selected any time
   the pointer is not on a smaller tile, and it is redundant: `doc.backgroundColor` fills the
-  canvas with no rect at all. Only a STATIC, opaque, unshaped fill counts — a curtain wipe
-  (`overlay.enable` / `window`), a scrim (`overlay.alpha`), a masked shape, a rounded card
-  (`effects`) and an inset fill (`placement`) are all legitimate and never flagged.
-  Templates already frozen are exempt. `bindingsDeclared` also accepts a colour prop that IS the document background
+  canvas with no rect at all. Only a STATIC, opaque fill counts — a curtain wipe
+  (`overlay.enable` / `window`), a scrim (`overlay.alpha`), a masked shape and an inset fill
+  (`placement`) are legitimate and never flagged. A **rounded or stroked card is NOT exempt
+  from 0.3.1 on** (2026-10-01): its corners change nothing about what a click on it does. A
+  repo held to 0.3.0 (its `frozen.manifest.json` release / `repo.conventions`) keeps the
+  exemption it shipped under — a tightened rule is a new demand, and lands with its line. What does exempt a
+  full-canvas rect is a **handle** — bind it to the prop a click on it should edit (the alpine
+  cards and the GitHub year card carry `theme.preset` / `preset`, so clicking the card is where
+  the theme gets changed). Templates already frozen are exempt. `bindingsDeclared` also accepts a colour prop that IS the document background
   with neither a binding nor a declaration, because such a prop has no rect to bind.
   - ⚠️ **The one case that needs a rect: a template COMPOSED INTO another.** The engine
     lifts `backgroundColor` from the PRIMARY OUTPUT document only, so a child document's
@@ -221,16 +226,21 @@ Two authoring facts, both learned on the starters:
   `bindProp(src, key)` / `bindProps(src, entries)` / `bindPropPath(src, key, path,
   kind)` / `bindPropRange(...)` (`@m0saic/template-utils`) stamp `editor.binding` on
   the source that displays a prop; Make resolves them per render (`bindingsSound`
-  throws on a binding the schema refuses — booleans, closed pickers and whole lists
-  are never bindable) and the preview shows one glyph per thing the tile can do (T
-  text · 123 number · swatch colour · move rect · picture media), collapsing to ONE
-  dot on a small tile. Bind even when the value is empty (the rect is a handle to
+  throws on a binding the schema refuses — booleans, connection-driven pickers and
+  whole lists are never bindable) and the preview shows one glyph per thing the tile
+  can do (T text · 123 number · swatch colour · pick choice · move rect · picture
+  media), collapsing to ONE dot on a small tile. A **closed set** (`constraints.oneOf`
+  or a static `control.options` list) binds as kind `choice` (2026-10-01): the tile
+  shows the set and one click writes a value — the alpine cards and the GitHub year
+  card bind their full-canvas card surface to `preset`, so clicking the card is where
+  the theme gets changed. Bind even when the value is empty (the rect is a handle to
   ADD). ⛔ **`bindingsDeclared` (0.3.0) THROWS** when a prop that could carry a handle
   is neither bound nor named in `template.bindings.unbound` with its reason
   (`{ fps: "timing" }`) — free-text and colour strings, numbers, media, one element of a
   basic list, one leaf of json/list/array, and a regions-picker rect must all be
-  accounted for; booleans, closed sets, groups, the m0 family, code and hidden/human
-  props never are. Templates in `frozen.manifest.json` are exempt. On a rect that
+  accounted for; booleans, closed sets (bindable as a `choice`, but never demanded — a
+  mode has no rect of its own), groups, the m0 family, code and hidden/human props
+  never are. Templates in `frozen.manifest.json` are exempt. On a rect that
   already binds another prop the fix is `bindProps`, never a second `bindProp` — it
   would replace the first. The full contract — kinds, `onClear`, `seedDraft`, `kind: "media"` (a rect
   that takes a dropped file), `companion`, starter media — is

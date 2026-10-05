@@ -3,15 +3,24 @@
 Lookup reference for the three orthogonal discovery/visibility flags on
 `MosaicTemplate`. A template may carry any combination; conflating them is the
 standard mistake. Declared in https://github.com/m0saic-project/m0saic-packages/blob/main/packages/types/src/template/template.ts —
-`internal?` (:1385), `primitive?` (:1416), `deprecated?` (:1446), each with its
-truth table in the JSDoc (line numbers verified 2026-07-27; re-verify:
-`grep -n "internal?: boolean\|primitive?: boolean\|deprecated?: {" https://github.com/m0saic-project/m0saic-packages/blob/main/packages/types/src/template/template.ts).
+`internal?`, `primitive?`, `deprecated?` (a `MosaicTemplateDeprecation`), each
+with its truth table in the JSDoc (re-verify:
+`grep -n "internal?: boolean\|primitive?: boolean\|deprecated?: MosaicTemplateDeprecation" https://github.com/m0saic-project/m0saic-packages/blob/main/packages/types/src/template/template.ts).
+
+**All three are CATALOG fields (0.3.1).** They describe a template without
+changing what it renders, so they are declared in the template's catalog
+sidecar — `<name>.catalog.json` beside its module — never in its code
+(`catalogSidecar`, throw). The registry applies the sidecar catalog-first when
+the template is defined, so hosts read `template.internal` / `.primitive` /
+`.deprecated` exactly as before. Templates shipped before 0.3.1 keep the values
+in their (frozen) code; a sidecar entry overrides them. The same goes for
+`label`, `description`, `tags`, `platforms`, `channels` and `preview`.
 
 | Flag | Question | Renderable alone? | Default UI |
 |---|---|---|---|
 | `primitive?: boolean` | "Is this a base others build on?" | **Yes** | Shown + **PRIMITIVE** badge (teal) |
 | `internal?: boolean` | "Is this intended as a **top-level selection**?" (No → hidden) | **Sometimes** — the flag doesn't decide this | **Hidden**; **INTERNAL** badge (violet) when revealed |
-| `deprecated?: {reason?, replacement?, since?}` | "Is this still the recommended pick?" | Yes | **Hidden**; **DEPRECATED** tag + "use X instead" |
+| `deprecated?: MosaicTemplateDeprecation` (`{reason?, replacement?, since?}`) | "Is this still the recommended pick?" | Yes | **Hidden**; **DEPRECATED** tag + "use X instead" |
 
 **`primitive` is informational — it does NOT hide anything.** `internal` and
 `deprecated` are the visibility gates.
@@ -50,9 +59,12 @@ fixed in-code 2026-07-27; both JSDoc now carry the top-level-selection semantics
 `primitive` started as 4 seeded entries and is on **29 templates** as of 2026-07-27
 (re-verify: `grep -rn "primitive: true" https://github.com/m0saic-project/m0saic-packages/blob/main/packages/templates/src/m0saic | wc -l`).
 There is no rule that derives it — like `deprecated`, someone decides. If you're
-adding a template that other templates will compose, set it; don't wait for a sweep.
+adding a template that other templates will compose, set it (in its catalog
+sidecar); don't wait for a sweep.
 
-⚠️ **Setting `deprecated` obligates a pruning pass** — repoint the curated registry,
+⚠️ **Deprecating obligates a pruning pass** — declare `deprecated` in the old
+version's catalog sidecar (never its frozen code; a shipped deprecation is
+permanent), then repoint the curated registry,
 and remove the id from the CLI E2E cases and the e2e variant list. The full ordered
 procedure is in the maintainers' agent contract §10 (not published) "Deprecating a template"; a deprecated id must
 never linger in those lists. The default e2e sweep auto-excludes deprecated

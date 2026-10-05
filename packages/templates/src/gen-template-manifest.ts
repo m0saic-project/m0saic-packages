@@ -5,7 +5,10 @@
  *
  * This script reads the compiled template-registry, validates entries,
  * discovers preview assets via convention, and writes the manifest to
- * the package root.
+ * the package root. Browse copy (title, description, tags) comes from the
+ * template's catalog sidecar when it has one (0.3.1 — `label` is the title),
+ * else from its registry row; a row that repeats a field its sidecar declares
+ * is refused, so the manifest and the catalog can never disagree.
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
@@ -19,6 +22,7 @@ import { parseTemplateId } from "@m0saic/platform";
 
 import { templateRegistry } from "./template-registry";
 import { TEMPLATE_REPO, TEMPLATE_PACKS } from "./repo";
+import { TEMPLATE_CATALOG } from "./catalog";
 
 const ROOT = path.resolve(__dirname, "..");
 
@@ -125,6 +129,14 @@ for (const entry of templateRegistry) {
     `Duplicate exportName: "${entry.exportName}"`,
   );
   seenExports.add(entry.exportName);
+
+  const described = TEMPLATE_CATALOG.templates[entry.templateId];
+  for (const [field, catalogField] of [["title", "label"], ["description", "description"], ["tags", "tags"]] as const) {
+    assert(
+      !(described?.[catalogField] !== undefined && entry[field] !== undefined),
+      `Registry row "${entry.templateId}" repeats ${field} — its catalog sidecar declares ${catalogField}; drop the row's copy (the sidecar is the one place it lives).`,
+    );
+  }
 }
 
 /* ── Build manifest ──────────────────────────────────────── */
@@ -147,12 +159,30 @@ const templates: MosaicTemplateRepoManifestEntry[] = templateRegistry.map(
 
     const pack = parseTemplateId(templateKey).pack;
 
+    // Sidecar first (0.3.1), else the row's own copy (pre-0.3.1 rows).
+    const described = TEMPLATE_CATALOG.templates[templateKey];
+    const title = described?.label ?? entry.title;
+    const description = described?.description ?? entry.description;
+    const tags = described?.tags ?? entry.tags;
+    assert(
+      typeof title === "string" && title.trim().length > 0,
+      `Template "${templateKey}" has no title — give its catalog sidecar a label`,
+    );
+    assert(
+      typeof description === "string" && description.trim().length > 0,
+      `Template "${templateKey}" has no description — give its catalog sidecar one`,
+    );
+    assert(
+      Array.isArray(tags) && tags.length > 0,
+      `Template "${templateKey}" has no tags — give its catalog sidecar at least one`,
+    );
+
     return {
       slug: entry.slug,
       templateKey: asTemplateId(templateKey),
-      title: entry.title,
-      description: entry.description,
-      tags: entry.tags,
+      title,
+      description,
+      tags: [...tags],
       ...(pack ? { pack } : {}),
       ...(entry.author ? { author: entry.author } : {}),
       preview,

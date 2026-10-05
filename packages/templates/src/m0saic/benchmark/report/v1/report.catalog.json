@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/benchmark/report/v1",
+  "deprecated": {
+    "reason": "0.3.1: the header is the handle for the session folder; no session is a pick-a-folder card, not an error",
+    "replacement": "@m0saic/benchmark/report/v2",
+    "since": "2026-09-30"
+  }
+}

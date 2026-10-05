@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/brand/logo/v3",
+  "deprecated": {
+    "reason": "0.3.1: every tile of the mark carries its colour and the running animation's knobs",
+    "replacement": "@m0saic/brand/logo/v4",
+    "since": "2026-09-30"
+  }
+}

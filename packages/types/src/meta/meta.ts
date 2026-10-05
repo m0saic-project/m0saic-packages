@@ -113,8 +113,18 @@ export type MosaicSourceEditorMeta = {
    *   handle without guessing. `index` is shorthand for a leading numeric
    *   path segment.
    *
+   * - `kind: "choice"` (0.3.1): the leaf is one of a CLOSED SET — a string
+   *   prop with `constraints.oneOf` or a static `control.options` list. An
+   *   editor shows the set and writes one value; nothing is typed. The case
+   *   it exists for: a full-canvas card bound to its theme `preset`, so the
+   *   click on the card is where the theme gets changed. Hosts classify a
+   *   basic closed-set prop as a choice by themselves (`@m0saic/platform`
+   *   `classifyBindableProp`); a structured leaf has no set to offer, so a
+   *   `choice` declared there is refused.
+   *
    * - `onClear` says what an EMPTY commit on this binding means. Absent =
-   *   the default (numbers / colors reject an empty commit; strings write
+   *   the default (an OPTIONAL colour prop unsets — back to the template's
+   *   colour; other numbers / colors reject an empty commit; strings write
    *   `""`). `"remove-element"` splices the element at the leading numeric
    *   path segment (the whole row) out of its array — needs an `index` or a
    *   numeric first `path` segment. `"unset-leaf"` deletes the leaf key from
@@ -149,11 +159,12 @@ export type MosaicSourceEditorMeta = {
     propKey: string;
     index?: number;
     path?: Array<string | number>;
-    kind?: "string" | "number" | "color" | "rect" | "media";
+    kind?: "string" | "number" | "color" | "choice" | "rect" | "media";
     /** Which text layer of this source shows the leaf (multi-layer text). */
     layer?: number;
     /** What an EMPTY commit means: splice the row / unset the leaf. Absent =
-     *  numbers and colors reject empty, strings write `""`. */
+     *  an optional colour prop unsets, other numbers and colors reject
+     *  empty, strings write `""`. */
     onClear?: "remove-element" | "unset-leaf";
     /** Initial DRAFT when the leaf is empty / absent (an add handle) —
      *  pre-selected, written only on commit; ignored on a leaf with a value. */
@@ -194,7 +205,7 @@ export type MosaicSourceEditorMeta = {
     propKey: string;
     index?: number;
     path?: Array<string | number>;
-    kind?: "string" | "number" | "color" | "rect" | "media";
+    kind?: "string" | "number" | "color" | "choice" | "rect" | "media";
     layer?: number;
     onClear?: "remove-element" | "unset-leaf";
     seedDraft?: string;

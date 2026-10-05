@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/kpi-card/v2",
+  "deprecated": {
+    "reason": "Superseded by v3 — the same card, with every line editable on the Make canvas (a title, delta or sublabel can be added from it).",
+    "replacement": "@m0saic/alpine/kpi-card/v3",
+    "since": "2026-09-29"
+  }
+}

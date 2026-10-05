@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/screencap_grid/v3",
+  "label": "Screencap Grid",
+  "description": "Displays formatted ffprobe info in a top pane with a rows x cols grid of the same media below. Renders a static PNG contact sheet or an animated MP4 grid via the Output knob. v2 lays the pane and tiles out as exact pixel rects via inset-recovery placement, so tile gaps are pixel-exact at every canvas.",
+  "tags": [
+    "media",
+    "screencap",
+    "creators",
+    "developers",
+    "contact-sheet",
+    "thumbnails",
+    "video",
+    "grid"
+  ],
+  "props": {
+    "sourceIds": {
+      "label": "Source(s)",
+      "description": "Source video(s) for the grid — pick a folder, one or more files, or drag-and-drop. One render per file (emit:multi when >1).",
+      "order": 1
+    },
+    "outputFormat": {
+      "label": "Output",
+      "description": "Deliverable format. \"png\" renders a static contact sheet; \"mp4\" renders an animated grid where each tile plays from its timestamp.",
+      "order": 1
+    },
+    "rows": {
+      "label": "Rows",
+      "description": "Number of rows in the screenshot grid.",
+      "order": 1
+    },
+    "cols": {
+      "label": "Cols",
+      "description": "Number of columns in the screenshot grid.",
+      "order": 2
+    },
+    "infoPane.show": {
+      "label": "Show",
+      "description": "Show the info pane above the grid."
+    },
+    "infoPane.align": {
+      "label": "Align",
+      "description": "Alignment of the pane text (filename + metadata)."
+    },
+    "infoPane": {
+      "label": "Info Pane",
+      "description": "Info pane with filename + ffprobe metadata above the grid.",
+      "order": 3,
+      "collapsedByDefault": true
+    },
+    "timestamps.show": {
+      "label": "Show",
+      "description": "Overlay a timestamp in each tile."
+    },
+    "timestamps.corner": {
+      "label": "Corner",
+      "description": "Which corner the chip sits in."
+    },
+    "timestamps.color": {
+      "label": "Color",
+      "description": "Timestamp text color."
+    },
+    "timestamps.bgColor": {
+      "label": "Background",
+      "description": "Chip background behind the glyphs. Defaults to black; \"none\" is transparent."
+    },
+    "timestamps": {
+      "label": "Timestamps",
+      "description": "Per-tile timestamp chip.",
+      "order": 4,
+      "collapsedByDefault": true
+    },
+    "tiles.gapPx": {
+      "label": "Gap (px)",
+      "description": "Gap between tiles, in pixels (exact at every canvas)."
+    },
+    "tiles.fit": {
+      "label": "Fit",
+      "description": "cover crops to fill; contain letterboxes the whole frame."
+    },
+    "tiles": {
+      "label": "Tiles",
+      "description": "Tile gap + fill behavior.",
+      "order": 5,
+      "collapsedByDefault": true
+    },
+    "advanced.customGrid": {
+      "label": "Custom Grid",
+      "description": "Custom m0 layout for the grid (overrides rows/cols). One tile is bound per cell, in order — give some cells emphasis by sizing them. Other knobs still apply.",
+      "placeholder": "e.g. 2(3(F,F,F),3(F,>,F))"
+    },
+    "advanced": {
+      "label": "Advanced",
+      "description": "Escape hatches.",
+      "order": 6,
+      "collapsedByDefault": true
+    },
+    "debugGeometry": {
+      "label": "Debug geometry",
+      "description": "Dev-only geometry contract: assert every tile's computed rect survived to the pixels at this canvas; on violation render a GEOMETRY_CONTRACT error mosaic. Deterministic default false; production never sets it.",
+      "order": 1,
+      "collapsedByDefault": true
+    }
+  }
+}

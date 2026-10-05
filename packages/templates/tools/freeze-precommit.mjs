@@ -54,6 +54,32 @@ export const PACKAGE_PREFIX = "packages/templates/";
 /** Repo-relative paths of the two files held by "HEAD is law" beside the manifest. */
 export const SNAPSHOT_PATH = PACKAGE_PREFIX + "src/web-template-ids.frozen.json";
 export const WEB_ENTRY_PATH = PACKAGE_PREFIX + "src/web.ts";
+/** A template's catalog sidecar (0.3.1): `<name>.catalog.json` beside its code under src/. */
+export const isCatalogSidecarPath = (p) => p.startsWith(PACKAGE_PREFIX + "src/") && p.endsWith(".catalog.json");
+
+/** `shipped` folders in `head` whose line `next` dropped or changed (0.3.1). */
+export function movedShipped(head, next) {
+  const a = head && head.shipped && typeof head.shipped === "object" ? head.shipped : {};
+  const b = next && next.shipped && typeof next.shipped === "object" ? next.shipped : {};
+  return Object.keys(a).filter((f) => b[f] !== a[f]).map((f) => (b[f] === undefined ? `${f} (dropped)` : `${f} (${a[f]} -> ${b[f]})`));
+}
+
+/** Ids a manifest shipped as deprecated that a staged manifest dropped (0.3.1). */
+export function droppedDeprecated(head, next) {
+  const b = new Set(Array.isArray(next && next.deprecated) ? next.deprecated : []);
+  return (Array.isArray(head && head.deprecated) ? head.deprecated : []).filter((id) => !b.has(id));
+}
+
+/** The id a sidecar deprecated at HEAD, shipped as deprecated, that the staged
+ *  sidecar no longer deprecates (dropped, re-pointed at another id, deleted) —
+ *  or null. A template deprecated in its own (frozen) code is the freeze's to
+ *  hold, not the sidecar's (0.3.1). */
+export function sidecarDroppedDeprecation(shippedDeprecated, headSidecar, nextSidecar) {
+  const id = headSidecar && typeof headSidecar.templateId === "string" ? headSidecar.templateId : null;
+  if (!id || !headSidecar.deprecated || !(Array.isArray(shippedDeprecated) && shippedDeprecated.includes(id))) return null;
+  const kept = nextSidecar && nextSidecar.templateId === id && nextSidecar.deprecated;
+  return kept ? null : id;
+}
 
 /**
  * Side-effect import specifiers of a `src/web.ts` (`import "./m0saic/x";`),
@@ -149,7 +175,7 @@ const listSome = (xs) => `${xs.slice(0, 3).join(", ")}${xs.length > 3 ? ", ..." 
 /**
  * Pure core (the unit test drives it with fakes). `staged` = [{ status, path }]
  * repo-relative; `manifest` = the committed one; `read(path)` = staged bytes;
- * `freeze` = dist/freeze.js; `head` = { snapshot, webEntry, has } as committed
+ * `freeze` = dist/freeze.js; `head` = { snapshot, webEntry, has, show } as committed
  * at HEAD (`snapshot` / `webEntry` null when HEAD has none — then nothing
  * holds it; `has(path)` says whether HEAD holds a path at all, for the
  * fingerprint sidecars). Returns { ok, checked, failures: [{ path, reason }] }.
@@ -158,8 +184,13 @@ const listSome = (xs) => `${xs.slice(0, 3).join(", ")}${xs.length > 3 ? ", ..." 
  *   - a file the MANIFEST hashes (whatever folder it sits in — the frozen set
  *     is an import closure, so `isFrozenPath` alone is not the test): staged
  *     bytes must hash to the manifest's value; a deletion or typechange fails;
- *   - the manifest itself: hashes, pins, `hashVersion` and `release` are HEAD's
+ *   - the manifest itself: hashes, pins, `hashVersion`, `release`, the
+ *     per-folder `shipped` lines and the shipped `deprecated` ids are HEAD's
  *     (tag / commit / note may move — the post-tag re-mint);
+ *   - a catalog sidecar (`src/**\/<name>.catalog.json`): a deprecation it
+ *     carried that the manifest shipped stays (it may be reworded or
+ *     repointed; every other field is free to change — that is what the
+ *     catalog is for);
  *   - the shipped web-id snapshot: ids are additive-only;
  *   - src/web.ts: side-effect imports are additive-only;
  *   - layout-fingerprint sidecars HEAD already has: never modified or deleted
@@ -172,7 +203,7 @@ export function checkStagedFreeze({ staged, manifest, read, freeze, head = {} })
   let checked = 0;
   const rel = (p) => p.slice(PACKAGE_PREFIX.length);
   const frozenFile = (p) => manifest.files[rel(p)] !== undefined;
-  const held = (p) => p === manifestPath || p === SNAPSHOT_PATH || p === WEB_ENTRY_PATH || frozenFile(p) || (isFingerprintPath(p) && head.has?.(p) === true);
+  const held = (p) => p === manifestPath || p === SNAPSHOT_PATH || p === WEB_ENTRY_PATH || isCatalogSidecarPath(p) || frozenFile(p) || (isFingerprintPath(p) && head.has?.(p) === true);
   for (const { status, path: p } of staged) {
     if (!p.startsWith(PACKAGE_PREFIX)) continue;
     if (status === "T") {
@@ -192,6 +223,24 @@ export function checkStagedFreeze({ staged, manifest, read, freeze, head = {} })
       const versionOf = (m) => (typeof freeze.manifestHashVersion === "function" ? freeze.manifestHashVersion(m) : (typeof m.hashVersion === "number" ? m.hashVersion : 1));
       if (versionOf(nextManifest) !== versionOf(manifest)) failures.push({ path: p, reason: `hashVersion ${versionOf(manifest)} -> ${versionOf(nextManifest)} - the hasher version is set by the checker at a release re-mint, never by hand (it would lock every clone out until the next --no-verify re-mint)` });
       if (nextManifest.release !== manifest.release) failures.push({ path: p, reason: `release ${manifest.release} -> ${nextManifest.release} - a new release re-mints the whole manifest (a release act); only tag / commit / note move between releases` });
+      const lines = movedShipped(manifest, nextManifest);
+      if (lines.length) failures.push({ path: p, reason: `re-minted: ${lines.length} shipped line(s) moved or vanished (${listSome(lines)}) - a folder's shipped line is set by a release mint` });
+      const deps = droppedDeprecated(manifest, nextManifest);
+      if (deps.length) failures.push({ path: p, reason: `re-minted: ${deps.length} shipped deprecation(s) dropped (${listSome(deps)}) - a shipped deprecation is permanent` });
+      continue;
+    }
+    if (isCatalogSidecarPath(p)) {
+      const shipped = Array.isArray(manifest.deprecated) ? manifest.deprecated : [];
+      const headText = typeof head.show === "function" ? head.show(p) : null;
+      let headSidecar = null;
+      try { headSidecar = headText ? JSON.parse(headText) : null; } catch { headSidecar = null; }
+      let next = null;
+      if (status !== "D") {
+        try { next = JSON.parse(read(p)); }
+        catch { failures.push({ path: p, reason: "the catalog sidecar is not valid JSON" }); continue; }
+      }
+      const dropped = sidecarDroppedDeprecation(shipped, headSidecar, next);
+      if (dropped) failures.push({ path: p, reason: `${dropped} shipped deprecated through this sidecar - a deprecation that shipped is permanent; reword or repoint it, never remove it${status === "D" ? " (restore the file)" : ""}` });
       continue;
     }
     if (p === SNAPSHOT_PATH) {
@@ -254,7 +303,7 @@ export function main({ packageRoot = PACKAGE_ROOT, log = (s) => console.error(s)
   const headShow = (p) => { try { return git(["show", `HEAD:${p}`], repoRoot); } catch { return null; } };
   const snapshotText = headShow(SNAPSHOT_PATH);
   const headHas = (p) => { try { execFileSync("git", ["cat-file", "-e", `HEAD:${p}`], { cwd: repoRoot, stdio: "ignore" }); return true; } catch { return false; } };
-  const head = { snapshot: snapshotText ? JSON.parse(snapshotText) : null, webEntry: headShow(WEB_ENTRY_PATH), has: headHas };
+  const head = { snapshot: snapshotText ? JSON.parse(snapshotText) : null, webEntry: headShow(WEB_ENTRY_PATH), has: headHas, show: headShow };
   const staged = listStaged(repoRoot);
   const r = checkStagedFreeze({ staged, manifest, read: (p) => git(["show", `:${p}`], repoRoot), freeze, head });
   if (r.ok) { log(`[freeze] ok: ${r.checked} frozen file(s) staged, all unchanged against ${manifest.release}.`); return 0; }

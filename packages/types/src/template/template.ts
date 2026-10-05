@@ -350,7 +350,8 @@ export type MosaicPropControl = {
 
   /**
    * Light-gray hint text shown when the input is empty.
-   * Purely presentational; never a value or default.
+   * Purely presentational; never a value or default — so since 0.3.1 it is
+   * authored in the catalog sidecar (`props.<key>.placeholder`).
    */
   placeholder?: string;
 
@@ -912,15 +913,20 @@ export type MosaicPropColumn = {
 
 /** How a prop is presented in editors (not value semantics). */
 export type MosaicPropUI = {
+  /** PRESENTATION (0.3.1) — authored in the catalog sidecar (`props.<key>.label`). */
   label?: string;
+  /** PRESENTATION (0.3.1) — authored in the catalog sidecar (`props.<key>.order`). */
   order?: number;
   // NOTE (2026-07-21): `section` was removed. Grouping like controls is done
   // ONE way, in every editor: a `type: "group"` prop with `fields` — it folds
   // in the Make panel AND the Compose schema form. `section` was a second,
   // Compose-only visual grouping for flat props doing the same job.
+  /** PRESENTATION (0.3.1) — authored in the catalog sidecar (`props.<key>.collapsedByDefault`). */
   collapsedByDefault?: boolean;
 
   /**
+   * PRESENTATION (0.3.1) — authored in the catalog sidecar (`props.<key>.primary`).
+   *
    * Pin an OPTIONAL prop into the editor's primary (top) prop group, alongside
    * required props, instead of burying it under the collapsed "Optional" fold.
    * For knobs that are technically optional (the template has a sensible
@@ -1075,7 +1081,12 @@ export type MosaicTemplatePropDefinition = {
 
   /**
    * Human-readable description of the prop, including meaning, units,
-   * and any default behavior. Shown in docs and editors.
+   * and any default behavior. Shown in docs and editors — and in Make as the
+   * in-context hint under a bound rect.
+   *
+   * PRESENTATION (0.3.1): authored in the template's catalog sidecar
+   * (`props.<key>.description`), not here — see
+   * {@link MOSAIC_TEMPLATE_PROP_CATALOG_FIELDS}.
    */
   description?: string;
 
@@ -1408,6 +1419,128 @@ export const TEMPLATE_ROLE_ID_HINTS: Record<TemplateRole, RegExp> = {
 };
 
 /**
+ * Why a template is superseded, and by what — the `deprecated` field of a
+ * {@link MosaicTemplateCatalogEntry}, and the resolved value of
+ * {@link MosaicTemplate.deprecated}.
+ */
+export type MosaicTemplateDeprecation = {
+  /** Why this template is no longer the recommended pick. */
+  reason?: string;
+  /**
+   * Suggested replacement template ID. UIs can render this as a
+   * "use X instead" pointer next to the deprecation banner.
+   */
+  replacement?: TemplateId;
+  /**
+   * ISO date (YYYY-MM-DD) when deprecation was declared.
+   * Useful for sweeping aged-out deprecations during periodic cleanups.
+   */
+  since?: string;
+};
+
+/**
+ * The template fields that DESCRIBE a template without changing what it
+ * renders — how it is named, found, listed and recommended (0.3.1).
+ *
+ * The template convention since 0.3.1: a template FILE is immutable once it
+ * ships; everything in this list lives in the repo's catalog
+ * (`template-catalog.json`, beside `template-manifest.json`), because it may
+ * change after the template ships. A template that declares one of these
+ * itself is legacy: templates that shipped before 0.3.1 keep theirs (the
+ * catalog may override them), new work is refused (`catalogSidecar`).
+ */
+export const MOSAIC_TEMPLATE_CATALOG_FIELDS = [
+  "label",
+  "description",
+  "tags",
+  "platforms",
+  "channels",
+  "preview",
+  "internal",
+  "primitive",
+  "deprecated",
+] as const;
+
+/**
+ * A prop's PRESENTATION — the copy and layout Make shows for it, never what
+ * the value is (0.3.1). Each maps onto one place in the prop's definition:
+ * `label` → `meta.ui.label`, `description` → `description` (the in-context
+ * hint), `placeholder` → `meta.control.placeholder`, `order` →
+ * `meta.ui.order`, `primary` → `meta.ui.primary`, `collapsedByDefault` →
+ * `meta.ui.collapsedByDefault`. What decides the value or a canvas handle —
+ * type, required, constraints, picker, colorPicker, accept, units, options,
+ * `ui.hidden`, `consumer` — stays in the template.
+ */
+export const MOSAIC_TEMPLATE_PROP_CATALOG_FIELDS = [
+  "label",
+  "description",
+  "placeholder",
+  "order",
+  "primary",
+  "collapsedByDefault",
+] as const;
+
+export type MosaicTemplatePropCatalogField = (typeof MOSAIC_TEMPLATE_PROP_CATALOG_FIELDS)[number];
+
+/** One prop's catalog entry ({@link MOSAIC_TEMPLATE_PROP_CATALOG_FIELDS}). */
+export type MosaicTemplatePropCatalog = {
+  label?: string;
+  description?: string;
+  placeholder?: string;
+  order?: number;
+  primary?: boolean;
+  collapsedByDefault?: boolean;
+};
+
+export type MosaicTemplateCatalogField = (typeof MOSAIC_TEMPLATE_CATALOG_FIELDS)[number];
+
+/**
+ * One template's catalog entry: any of {@link MOSAIC_TEMPLATE_CATALOG_FIELDS}.
+ * Hosts resolve each field catalog-first, falling back to the template's own
+ * (legacy) value — so a shipped template's tags, visibility or deprecation can
+ * change while its file never does.
+ */
+export type MosaicTemplateCatalogEntry = {
+  label?: string;
+  description?: string;
+  tags?: string[];
+  platforms?: MosaicPlatform[];
+  channels?: MosaicChannelId[];
+  preview?: MosaicTemplatePreview;
+  internal?: boolean;
+  primitive?: boolean;
+  deprecated?: MosaicTemplateDeprecation;
+  /** Prop presentation, keyed by the prop's dotted path as `propsSchema`
+   *  nests it (`quote`, `titles.title`) — see {@link MosaicTemplatePropCatalog}. */
+  props?: Record<string, MosaicTemplatePropCatalog>;
+};
+
+/**
+ * A template's catalog SIDECAR — `<name>.catalog.json` next to the template's
+ * module, in its own folder (0.3.1). The authoring form: one file per
+ * template, naming it by id, editable after the template's code has frozen
+ * (the freeze hashes code, never this). The repo's build gathers every
+ * sidecar into its `template-catalog.json` ({@link MosaicTemplateCatalogFile}).
+ */
+export type MosaicTemplateCatalogSidecar = MosaicTemplateCatalogEntry & {
+  schemaVersion: 1;
+  templateId: string;
+};
+
+/**
+ * `template-catalog.json` — a template repo's catalog, beside its
+ * `template-manifest.json` (0.3.1): template id → the fields that describe it
+ * ({@link MosaicTemplateCatalogEntry}). GENERATED by the repo's build from the
+ * per-template sidecars ({@link MosaicTemplateCatalogSidecar}) — the one file a
+ * host reads (zero-exec, and signed with a community release). Hosts apply it
+ * at load, filling the matching {@link MosaicTemplate} fields.
+ */
+export type MosaicTemplateCatalogFile = {
+  schemaVersion: 1;
+  templates: Record<string, MosaicTemplateCatalogEntry>;
+};
+
+/**
  * A reusable template that turns props into a MosaicDocument.
  *
  * Templates are the main extension point in m0saic. Each template:
@@ -1445,8 +1578,13 @@ export interface MosaicTemplate<
 
   /**
    * Human-friendly name used in pickers, lists, and docs.
+   *
+   * A CATALOG field (0.3.1): declared in the repo's `template-catalog.json`,
+   * not here — see {@link MosaicTemplateCatalogEntry}. Optional since 0.3.1 for
+   * that reason; the registry / repo loader fills it from the catalog, and a
+   * template with no label anywhere fails `browseSurface`.
    */
-  label: string;
+  label?: string;
 
   /**
    * @deprecated since 2026-09-06 — the template id IS the version. A
@@ -1454,10 +1592,10 @@ export interface MosaicTemplate<
    * new `vN`, never a bump of this counter. Carrying a second version was
    * ambiguous and nothing keys on it (the only reader is the `.mosaicx`
    * resolver's advisory `templateVersion` mismatch warning, itself
-   * deprecated). Kept required for now so existing templates compile; the
-   * field and its readers are removed in the pre-launch deprecation sweep.
+   * deprecated). Optional since 0.3.1: new templates omit it; templates that
+   * shipped declaring it keep it (honoured, never required).
    */
-  version: number;
+  version?: number;
 
   /**
    * Declares the template's tier and requested capabilities.
@@ -1765,21 +1903,16 @@ export interface MosaicTemplate<
    * template still appears in lookups by ID and via the "Show deprecated"
    * toggle — `internal: true` is the stronger flag that removes it from
    * all user discovery surfaces.
+   *
+   * # A catalog field (0.3.1)
+   *
+   * Declared in the repo's `template-catalog.json`, never in the template —
+   * see {@link MosaicTemplateCatalogEntry}. A shipped template is frozen and
+   * can never be edited to add this; the catalog is how it is superseded (the
+   * `npm deprecate` model: the artifact is immutable, the registry says "use
+   * X"). A deprecation that has shipped is permanent.
    */
-  deprecated?: {
-    /** Why this template is no longer the recommended pick. */
-    reason?: string;
-    /**
-     * Suggested replacement template ID. UIs can render this as a
-     * "use X instead" pointer next to the deprecation banner.
-     */
-    replacement?: TemplateId;
-    /**
-     * ISO date (YYYY-MM-DD) when deprecation was declared.
-     * Useful for sweeping aged-out deprecations during periodic cleanups.
-     */
-    since?: string;
-  };
+  deprecated?: MosaicTemplateDeprecation;
 
   /**
    * Default options applied when finalizeRenderable is run automatically

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/video_to_png_sequence/v2",
+  "label": "Frame Stripper",
+  "description": "Drop one or more videos, get every frame as a separate numbered PNG. Multi-input renders prefix each frame with the source basename so files don't collide. One ffmpeg invocation per frame — use maxFrames to cap long inputs.",
+  "tags": [
+    "media",
+    "frames",
+    "png-sequence",
+    "extract",
+    "developers",
+    "creators",
+    "video"
+  ],
+  "props": {
+    "sourceIds": {
+      "label": "Source(s)",
+      "description": "Source video(s) to strip into PNG sequences — pick a folder, one or more files, or drag-and-drop. Every frame becomes its own PNG."
+    },
+    "clipStartMs": {
+      "label": "Clip start",
+      "description": "Source-relative ms where the extracted segment starts. Paired with clipEndMs to scrub out a section. Unset → start at 0."
+    },
+    "clipEndMs": {
+      "label": "Clip end",
+      "description": "Source-relative ms where the extracted segment ends. Must be > clipStartMs when both are set. Unset → run to the end of the clip.",
+      "placeholder": "video end"
+    },
+    "maxFrames": {
+      "label": "Max Frames (per input)",
+      "description": "Cap on the number of frames extracted per input. Each frame is a separate ffmpeg invocation — long inputs are slow. Defaults to no cap.",
+      "placeholder": "all frames"
+    }
+  }
+}

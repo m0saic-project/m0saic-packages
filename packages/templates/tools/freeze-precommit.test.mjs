@@ -16,7 +16,7 @@ import os from "node:os";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { execFileSync } from "node:child_process";
-import { BUILD_HINT, PACKAGE_PREFIX, SNAPSHOT_PATH, WEB_ENTRY_PATH, checkStagedFreeze, loadFreeze, main, movedPins, webEntryImports } from "./freeze-precommit.mjs";
+import { BUILD_HINT, PACKAGE_PREFIX, SNAPSHOT_PATH, WEB_ENTRY_PATH, checkStagedFreeze, droppedDeprecated, isCatalogSidecarPath, loadFreeze, main, movedPins, movedShipped, sidecarDroppedDeprecation, webEntryImports } from "./freeze-precommit.mjs";
 
 const freeze = createRequire(import.meta.url)("../dist/freeze.js");
 const PKG_ROOT_FOR_DIST = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
@@ -294,4 +294,73 @@ test("staged web.ts: a block-commented or template-literal-wrapped import does n
   assert.equal(run([M(p)], { [p]: joined }).ok, true);
   assert.deepEqual(webEntryImports(joined, freeze), ["./m0saic/alpine", "./m0saic/hello-world", "./m0saic/wireframe"]);
   assert.deepEqual(webEntryImports(commented, freeze), ["./m0saic/alpine", "./m0saic/wireframe"]);
+});
+
+// ── 0.3.1: per-folder shipped lines + the catalog sidecars ───────────────────
+const DEP = { reason: "v2 binds every prop", replacement: "@m0saic/alpine/a/v2", since: "2026-09-29" };
+const SIDE_A = PACKAGE_PREFIX + "src/m0saic/alpine/a/v1/a.catalog.json";
+const SIDE_C = PACKAGE_PREFIX + "src/m0saic/alpine/c/v1/c.catalog.json";
+const HEAD_SIDECARS = { [SIDE_A]: JSON.stringify({ schemaVersion: 1, templateId: "@m0saic/alpine/a/v1", tags: ["alpine"], deprecated: DEP }) };
+const manifest031 = {
+  ...manifest,
+  shipped: { "src/m0saic/alpine/a/v1": "0.2.0", "src/m0saic/alpine/b/v1": "0.2.0" },
+  // a/v1 deprecated by its sidecar; b/v1 by its own (frozen) code.
+  deprecated: ["@m0saic/alpine/a/v1", "@m0saic/alpine/b/v1"],
+};
+function run031(staged, files = {}) {
+  const read = (p) => { if (!(p in files)) throw new Error(`unexpected read of ${p}`); return files[p]; };
+  const show = (p) => HEAD_SIDECARS[p] ?? null;
+  return checkStagedFreeze({ staged, manifest: manifest031, read, freeze, head: { snapshot: HEAD_SNAPSHOT, webEntry: HEAD_WEB, show } });
+}
+const side = (templateId, fields = {}) => JSON.stringify({ schemaVersion: 1, templateId, ...fields });
+
+test("isCatalogSidecarPath / movedShipped / droppedDeprecated / sidecarDroppedDeprecation", () => {
+  assert.equal(isCatalogSidecarPath(SIDE_A), true);
+  assert.equal(isCatalogSidecarPath(PACKAGE_PREFIX + "src/template-catalog.json"), false);
+  assert.equal(isCatalogSidecarPath(PACKAGE_PREFIX + "template-catalog.json"), false);
+  assert.deepEqual(movedShipped(manifest031, { shipped: { "src/m0saic/alpine/a/v1": "0.3.1" } }), [
+    "src/m0saic/alpine/a/v1 (0.2.0 -> 0.3.1)",
+    "src/m0saic/alpine/b/v1 (dropped)",
+  ]);
+  assert.deepEqual(droppedDeprecated(manifest031, { deprecated: ["@m0saic/alpine/a/v1"] }), ["@m0saic/alpine/b/v1"]);
+  const head = JSON.parse(HEAD_SIDECARS[SIDE_A]);
+  assert.equal(sidecarDroppedDeprecation(manifest031.deprecated, head, { ...head, deprecated: undefined }), "@m0saic/alpine/a/v1");
+  assert.equal(sidecarDroppedDeprecation(manifest031.deprecated, head, null), "@m0saic/alpine/a/v1");
+  assert.equal(sidecarDroppedDeprecation(manifest031.deprecated, head, { ...head, templateId: "@m0saic/alpine/z/v1" }), "@m0saic/alpine/a/v1");
+  assert.equal(sidecarDroppedDeprecation(manifest031.deprecated, head, { ...head, deprecated: { ...DEP, reason: "reworded" } }), null);
+  assert.equal(sidecarDroppedDeprecation([], head, null), null);
+});
+
+test("staged manifest: a moved shipped line or a dropped shipped deprecation is a re-mint", () => {
+  let r = run031([M(MANIFEST_PATH)], { [MANIFEST_PATH]: JSON.stringify({ ...manifest031, shipped: { ...manifest031.shipped, "src/m0saic/alpine/a/v1": "0.3.1" } }) });
+  assert.equal(r.ok, false);
+  assert.match(r.failures[0].reason, /shipped line/);
+  r = run031([M(MANIFEST_PATH)], { [MANIFEST_PATH]: JSON.stringify({ ...manifest031, deprecated: [] }) });
+  assert.equal(r.ok, false);
+  assert.match(r.failures[0].reason, /deprecation.*permanent/);
+  const added = { ...manifest031, shipped: { ...manifest031.shipped, "src/m0saic/alpine/a/v2": "0.3.1" } };
+  assert.equal(run031([M(MANIFEST_PATH)], { [MANIFEST_PATH]: JSON.stringify(added) }).ok, true);
+});
+
+test("staged sidecar: retag, relabel, reword or repoint freely; a NEW sidecar in a frozen folder is free", () => {
+  const free = side("@m0saic/alpine/a/v1", { tags: ["alpine", "legacy"], label: "Alpine A (old)", deprecated: { ...DEP, reason: "reworded", replacement: "@m0saic/alpine/a/v3" } });
+  assert.equal(run031([M(SIDE_A)], { [SIDE_A]: free }).ok, true);
+  assert.equal(run031([{ status: "A", path: SIDE_C }], { [SIDE_C]: side("@m0saic/alpine/c/v1", { internal: true }) }).ok, true);
+});
+
+test("staged sidecar: dropping a shipped deprecation, or deleting the sidecar that carried it, fails", () => {
+  let r = run031([M(SIDE_A)], { [SIDE_A]: side("@m0saic/alpine/a/v1", { tags: ["alpine"] }) });
+  assert.equal(r.ok, false);
+  assert.match(r.failures[0].reason, /permanent/);
+  r = run031([{ status: "D", path: SIDE_A }]);
+  assert.equal(r.ok, false);
+  assert.match(r.failures[0].reason, /restore the file/);
+  r = run031([M(SIDE_A)], { [SIDE_A]: "{ nope" });
+  assert.equal(r.ok, false);
+});
+
+test("a sidecar that never carried a shipped deprecation may change or go", () => {
+  assert.equal(run031([{ status: "D", path: SIDE_C }]).ok, true);
+  const read = () => side("@m0saic/alpine/a/v1", {});
+  assert.equal(checkStagedFreeze({ staged: [M(SIDE_A)], manifest, read, freeze, head: { show: (p) => HEAD_SIDECARS[p] ?? null } }).ok, true);
 });

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/metadata-stamp/v2",
+  "label": "Metadata Stamp",
+  "description": "Stamp each video's creation date (read from its metadata) onto the video as a small chip — 9 positions, deterministic date formats. Point it at a folder for one stamped output per input; files without metadata use your fallback text or pass through clean. (Defaults to bottom-left: the free tier's m0saic QR occupies bottom-right.)",
+  "tags": [
+    "media",
+    "stamp",
+    "date",
+    "metadata",
+    "batch",
+    "utility",
+    "creators",
+    "animated",
+    "timestamp",
+    "overlay",
+    "video"
+  ],
+  "props": {
+    "sourceIds": {
+      "label": "Source(s)",
+      "description": "Videos to stamp — pick a folder, one or more files, or drag-and-drop. One stamped output per input.",
+      "order": 1
+    },
+    "stampField": {
+      "label": "Stamp",
+      "description": "What to stamp: the video's creation date from its metadata (\"creation-date\"), its filename, or fixed custom text.",
+      "order": 2
+    },
+    "dateFormat": {
+      "label": "Date Format",
+      "description": "How the creation date is written on the video.",
+      "order": 3
+    },
+    "fallbackText": {
+      "label": "Fallback Text",
+      "description": "Stamped when a file carries no creation tag. Leave EMPTY to render such files clean, with no stamp at all.",
+      "placeholder": "(empty = no stamp when metadata is missing)",
+      "order": 4
+    },
+    "utcOffsetMinutes": {
+      "label": "UTC Offset (min)",
+      "description": "Show the date at this UTC offset (minutes). Unset uses the tag's own offset when it has one, else UTC — set this when cameras wrote plain UTC but you filmed in local time.",
+      "placeholder": "tag offset, else UTC",
+      "order": 5
+    },
+    "customText": {
+      "label": "Custom Text",
+      "description": "Fixed text to stamp on every input.",
+      "placeholder": "e.g. Summer 2024",
+      "order": 6
+    },
+    "position": {
+      "label": "Position",
+      "description": "Standard placement on the canvas.",
+      "order": 7
+    },
+    "sizeRatio": {
+      "label": "Size",
+      "description": "Stamp chip height as a fraction of min(width, height).",
+      "order": 8
+    },
+    "marginRatio": {
+      "label": "Margin",
+      "description": "Margin from the canvas edges, as a fraction of min(width, height).",
+      "order": 9
+    },
+    "fontColor": {
+      "label": "Text Color",
+      "description": "Stamp text color.",
+      "order": 10
+    },
+    "chipColor": {
+      "label": "Chip Color",
+      "description": "Color of the rounded chip behind the text.",
+      "order": 11
+    },
+    "chipOpacity": {
+      "label": "Chip Opacity",
+      "description": "Chip opacity — 0 removes the chip and leaves bare text.",
+      "order": 12
+    }
+  }
+}

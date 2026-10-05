@@ -9,3 +9,4 @@ export { FfmpegPulseContributions } from "./contributions/v1";
 export { FfmpegPulseNotableCommits } from "./notable-commits/v1";
 export { FfmpegPulseFin } from "./fin/v1";
 export { FfmpegPulseRunner } from "./runner/v1";
+export { FfmpegPulseRunnerV2 } from "./runner/v2";

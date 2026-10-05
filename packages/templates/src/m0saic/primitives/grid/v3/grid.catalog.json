@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/primitives/grid/v3",
+  "label": "Primitive — Grid",
+  "description": "Composable gridline overlay primitive (horizontal/vertical/both) — thin fixed-px strips at proportional offsets; nests cleanly at any canvas.",
+  "tags": [
+    "primitive",
+    "grid",
+    "developers",
+    "layout"
+  ],
+  "primitive": true,
+  "props": {
+    "show": {
+      "label": "Show grid",
+      "description": "Whether the grid renders. Default true."
+    },
+    "count": {
+      "label": "Intervals",
+      "description": "Number of equal intervals across the axis. Default 5."
+    },
+    "direction": {
+      "label": "Direction",
+      "description": "Which axes to draw: \"horizontal\" | \"vertical\" | \"both\". Default \"horizontal\"."
+    },
+    "origin": {
+      "label": "Origin",
+      "description": "Origin for fractions: \"top\" | \"bottom\" | \"left\" | \"right\". Default depends on direction."
+    },
+    "excludeEdges": {
+      "label": "Hide outer lines",
+      "description": "If true, do not render the outer boundary lines. Default true."
+    },
+    "color": {
+      "label": "Line color",
+      "description": "Line color (FFmpeg-compatible). Default #ffffff."
+    },
+    "opacity": {
+      "label": "Opacity",
+      "description": "Line opacity multiplier (0..1). Default 0.12."
+    },
+    "thicknessFrac": {
+      "label": "Thickness",
+      "description": "Line thickness fraction. Default 0.002."
+    }
+  }
+}

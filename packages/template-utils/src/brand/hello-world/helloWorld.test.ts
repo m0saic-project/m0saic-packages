@@ -8,10 +8,14 @@
  */
 import type { MosaicDocument, MosaicEngineContext, MosaicSource } from "@m0saic/types";
 import { validateM0String } from "@m0saic/dsl";
+import { applyTemplateCatalogEntry, authoredPropCopy } from "@m0saic/platform";
 import { isSmooth } from "../../lattice/smooth";
 import { auditDefaultProps } from "../../template/auditDefaultProps";
 import {
+  HELLO_WORLD_CATALOG_ENTRY,
   HELLO_WORLD_DESCRIPTION,
+  HELLO_WORLD_PROPS_SCHEMA,
+  HELLO_WORLD_PROPS_SCHEMA_BARE,
   buildHelloGeometry,
   HELLO_WORLD_LABEL,
   HELLO_WORLD_TAGS,
@@ -202,3 +206,41 @@ describe("defineHelloWorldTemplate — mark image", () => {
     expect(auditDefaultProps(withMark())).toEqual([]);
   });
 });
+
+describe("defineHelloWorldTemplate — catalog mode (the 0.3.1 convention)", () => {
+  it("declares no label / description / tags / version and carries a schema with no presentation", () => {
+    const card = defineHelloWorldTemplate({ id: "@acme/basics/hello-world/v1", subline: "by Acme", catalog: true, label: "ignored", tags: ["ignored"] });
+    const own = card as unknown as Record<string, unknown>;
+    for (const field of ["label", "description", "tags", "version"]) expect(Object.prototype.hasOwnProperty.call(own, field)).toBe(false);
+    expect(authoredPropCopy(card)).toEqual([]);
+    expect(card.propsSchema).toBe(HELLO_WORLD_PROPS_SCHEMA_BARE);
+    expect(card.defaultProps.caption).toBe("by Acme");
+  });
+
+  it("the canonical catalog entry restores exactly what the default card declares", () => {
+    const classic = defineHelloWorldTemplate({ id: "@acme/basics/hello-world/v1" });
+    const card = defineHelloWorldTemplate({ id: "@acme/basics/hello-world/v1", catalog: true });
+    const described = applyTemplateCatalogEntry(card, HELLO_WORLD_CATALOG_ENTRY);
+    expect(described.label).toBe(classic.label);
+    expect(described.description).toBe(classic.description);
+    expect(described.tags).toEqual(classic.tags);
+    expect(described.propsSchema).toEqual(HELLO_WORLD_PROPS_SCHEMA);
+  });
+
+  it("the default path is untouched — the frozen cards keep their shape", () => {
+    const classic = defineHelloWorldTemplate({ id: "@m0saic/hello-world/v1" });
+    expect(classic.label).toBe("Hello, World");
+    expect(classic.version).toBe(1);
+    expect(classic.propsSchema).toBe(HELLO_WORLD_PROPS_SCHEMA);
+  });
+
+  it("renders the same card either way", async () => {
+    const ctx = { mode: "render", target: { width: 1920, height: 1080, fps: 30, durationMs: 2600 }, output: { width: 1920, height: 1080, fps: 30, durationMs: 2600, workspaceDir: "/tmp" }, media: {} } as unknown as MosaicEngineContext;
+    const classic = defineHelloWorldTemplate({ id: "@acme/basics/hello-world/v1", subline: "by Acme" });
+    const card = defineHelloWorldTemplate({ id: "@acme/basics/hello-world/v1", subline: "by Acme", catalog: true });
+    const a = (await classic.render(classic.defaultProps, ctx)) as MosaicDocument;
+    const b = (await card.render(card.defaultProps, ctx)) as MosaicDocument;
+    expect(JSON.stringify(b)).toBe(JSON.stringify(a));
+  });
+});
+

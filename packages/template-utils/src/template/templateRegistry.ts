@@ -1,4 +1,7 @@
-import type { MosaicTemplate, MosaicTemplateProps } from "@m0saic/types";
+import type { MosaicTemplate, MosaicTemplateCatalogEntry, MosaicTemplateProps } from "@m0saic/types";
+import { MOSAIC_TEMPLATE_CATALOG_FIELDS } from "@m0saic/types";
+import { TEMPLATE_CATALOG_AUTHORED_KEY, applyTemplateCatalogEntry, authoredCatalogFields, authoredPropsSchema } from "@m0saic/platform";
+import { declaredCatalogEntry, templateCatalogEntries, templateConventionTargets, templateOriginKey } from "./templateCatalogStore";
 import { defineMosaicTemplate } from "./defineMosaicTemplate";
 import { processRegistry } from "../processRegistry";
 import type { TemplateOrigin } from "./templateOriginScope";
@@ -161,6 +164,42 @@ const templateOrigins = processRegistry<string, TemplateOrigin>(
 const templateRegisteredFrom = processRegistry<string, string>(
   "templateRegisteredFrom",
 );
+
+/** id → the template as its FILE declares it, kept only for ids whose registered
+ *  entry carries catalog fields from a repo's catalog (see
+ *  {@link declareTemplateCatalog}) — what a freeze pin hashes and the
+ *  `catalogSidecar` rule reads. Process-global like the registry. */
+const templateAsRegistered = processRegistry<string, AnyMosaicTemplate>(
+  "templateAsRegistered",
+);
+
+const originKey = templateOriginKey;
+
+/** True when a repo loader already merged a catalog into this template (it carries the as-written fields). */
+function carriesCatalog(template: object): boolean {
+  return Object.getOwnPropertySymbols(template).includes(TEMPLATE_CATALOG_AUTHORED_KEY);
+}
+
+/**
+ * The template as its file declares it: `resolved` with every catalog field
+ * reset to the file's own value (absent where the file has none) and its
+ * original `propsSchema` (before any prop presentation was written in). Same
+ * render functions and every other field, so a pin over it is a pin over the
+ * file. `source` is the catalogued input — it carries what the file declared.
+ */
+function asWritten(resolved: AnyMosaicTemplate, source: object): AnyMosaicTemplate {
+  const authored = authoredCatalogFields(source) as Partial<Record<string, unknown>>;
+  const descriptors = Object.getOwnPropertyDescriptors(resolved) as PropertyDescriptorMap;
+  descriptors.propsSchema = { value: authoredPropsSchema(source), enumerable: true, writable: false, configurable: false };
+  for (const field of MOSAIC_TEMPLATE_CATALOG_FIELDS) {
+    if (Object.prototype.hasOwnProperty.call(authored, field)) {
+      descriptors[field] = { value: authored[field], enumerable: true, writable: false, configurable: false };
+    } else {
+      delete descriptors[field];
+    }
+  }
+  return deepFreezeTemplate(Object.create(Object.getPrototypeOf(resolved), descriptors) as AnyMosaicTemplate);
+}
 
 /** Ambient registration state: the origin currently in scope, and rejections
  *  recorded since the last drain. Process-global for the same reason, and
@@ -437,10 +476,22 @@ export function registerTemplate<P extends MosaicTemplateProps>(
     }
   }
 
+  // The repo's catalog (0.3.1) — label, tags, visibility, deprecation — applies
+  // BEFORE the wrapper, so the conventions (browseSurface, outputFormat) judge
+  // the template as hosts will see it. An entry binds only to its own origin.
+  // A repo loader may already have merged one (the copy carries the file's own
+  // catalog fields, so either way the as-written view survives).
+  const declared = declaredCatalogEntry(id, origin);
+  const catalogued = declared ? applyTemplateCatalogEntry(template, declared) : template;
+
   // Conventions fire inside defineMosaicTemplate, which reads the same
   // ambient origin: first-party violations THROW at registration; an external
   // repo's are recorded (a bad template never aborts the rest of the load).
-  const wrapped = deepFreezeTemplate(defineMosaicTemplate(template));
+  const wrapped = deepFreezeTemplate(defineMosaicTemplate(catalogued));
+  // defineMosaicTemplate keeps the as-written fields on what it returns, so a
+  // catalog applied here, by the template's own module, or by a repo loader
+  // is visible on `wrapped` either way.
+  const catalogApplied = carriesCatalog(wrapped);
   templateRegistry.set(
     wrapped.id,
     wrapped as AnyMosaicTemplate // erase P into the registry
@@ -448,7 +499,78 @@ export function registerTemplate<P extends MosaicTemplateProps>(
   templateOrigins.set(wrapped.id, origin);
   if (registeredFrom === undefined) templateRegisteredFrom.delete(wrapped.id);
   else templateRegisteredFrom.set(wrapped.id, registeredFrom);
+  if (catalogApplied) templateAsRegistered.set(wrapped.id, asWritten(wrapped as AnyMosaicTemplate, wrapped));
+  else templateAsRegistered.delete(wrapped.id);
   return { ok: true, id: wrapped.id };
+}
+
+/** What {@link declareTemplateCatalog} did. */
+export type DeclareTemplateCatalogResult = {
+  /** Ids declared for this origin. */
+  declared: string[];
+  /** Of those, ids already registered by this origin — restamped now. */
+  restamped: string[];
+};
+
+/**
+ * Declare a repo's catalog (`template-catalog.json`, see
+ * `MosaicTemplateCatalogFile`) for the CURRENT origin — the template
+ * convention since 0.3.1: a template file is immutable once shipped, and what
+ * describes it without changing what it renders (label, description, tags,
+ * platforms, channels, preview, internal, primitive, deprecated) lives in the
+ * catalog. Call it BEFORE the repo's templates register (the official pack's
+ * entries import their catalog first); {@link registerTemplate} then applies
+ * each entry catalog-first, before the definition-time conventions run.
+ *
+ * An id this origin has already registered is restamped on the spot (so the
+ * order is forgiving). An entry never touches a template another origin owns.
+ * {@link getTemplateAsRegistered} keeps answering with the template as its
+ * FILE declares it — a freeze pin hashes that, so catalog edits never move one.
+ */
+export function declareTemplateCatalog(
+  entries: Readonly<Record<string, MosaicTemplateCatalogEntry>>,
+): DeclareTemplateCatalogResult {
+  const key = originKey(currentOrigin());
+  const result: DeclareTemplateCatalogResult = { declared: [], restamped: [] };
+  for (const id of Object.keys(entries).sort()) {
+    templateCatalogEntries.set(id, { entry: entries[id]!, origin: key });
+    result.declared.push(id);
+    const current = templateRegistry.get(id);
+    if (!current || originKey(templateOrigins.get(id) ?? FIRST_PARTY) !== key) continue;
+    const written = templateAsRegistered.get(id) ?? current;
+    const stamped = deepFreezeTemplate(applyTemplateCatalogEntry(written, entries[id]!)) as AnyMosaicTemplate;
+    templateRegistry.set(id, stamped);
+    templateAsRegistered.set(id, asWritten(stamped, stamped));
+    result.restamped.push(id);
+  }
+  return result;
+}
+
+/**
+ * Declare the conventions target of the repo in the CURRENT origin — its
+ * `repo.conventions` (0.3.1): the m0saic line whose template conventions it
+ * has adopted. Conventions introduced after it are advice for this repo's
+ * templates (warnings at definition time, "behind" in the audits), never
+ * errors, until the repo moves the target. Call it where the catalog is
+ * declared — before the repo's templates are defined. `undefined` clears it
+ * (every rule applies).
+ */
+export function declareTemplateConventions(line: string | undefined): void {
+  const key = originKey(currentOrigin());
+  if (typeof line === "string" && line.trim()) templateConventionTargets.set(key, line.trim());
+  else templateConventionTargets.delete(key);
+}
+
+/**
+ * The template as its FILE declares it — the catalog fields set to the file's
+ * own values (see {@link declareTemplateCatalog}). Identical to
+ * {@link getTemplate} for every id no catalog touched. The freeze gate pins
+ * this view, and the `catalogSidecar` convention reads it.
+ */
+export function getTemplateAsRegistered<P extends MosaicTemplateProps = MosaicTemplateProps>(
+  id: string,
+): MosaicTemplate<P> | undefined {
+  return (templateAsRegistered.get(id) ?? templateRegistry.get(id)) as MosaicTemplate<P> | undefined;
 }
 
 /**
@@ -640,5 +762,8 @@ export function __resetTemplateRegistryForTests(): void {
   templateRegistry.clear();
   templateOrigins.clear();
   templateRegisteredFrom.clear();
+  templateAsRegistered.clear();
+  templateCatalogEntries.clear();
+  templateConventionTargets.clear();
   registrationState.clear();
 }

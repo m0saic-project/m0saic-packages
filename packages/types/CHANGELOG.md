@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.3.1 — 2026-10-05
+
+### The template catalog — what describes a template lives beside its code
+
+The template convention from 0.3.1: a template's CODE is immutable once it ships; what DESCRIBES it lives in its
+catalog sidecar, `<name>.catalog.json` beside the module, and may change after the code ships. New types:
+`MOSAIC_TEMPLATE_CATALOG_FIELDS` (label, description, tags, platforms, channels, preview, internal,
+primitive, deprecated), `MOSAIC_TEMPLATE_PROP_CATALOG_FIELDS` (a prop's label, description — the in-context hint —
+placeholder, order, primary, collapsedByDefault), `MosaicTemplateCatalogEntry` (with `props`),
+`MosaicTemplateCatalogSidecar` (the per-template file) and `MosaicTemplateCatalogFile` (the generated
+`template-catalog.json` hosts read). `MosaicTemplateDeprecation` names the `deprecated` shape.
+
+**Compatibility.**
+
+Types only loosen; every existing template still type-checks. Hosts read the same `MosaicTemplate` fields — the
+registry / repo loader fills them from the catalog.
+
+### `editor.binding.kind` / `bindings[].kind` gain `"choice"`
+
+The authored binding shape on a source (`src/meta/meta.ts`: `editor.binding.kind`, `editor.bindings[].kind`)
+accepts `"choice"` — the leaf is one of a closed set (`constraints.oneOf` / a static `control.options` list),
+picked and never typed. Hosts classify a basic closed-set prop as a choice by themselves; a `choice` declared on
+a structured leaf is refused (no set to offer). Doc comment explains the case it exists for: a full-canvas card
+bound to its theme `preset`.
+
+**Compatibility.**
+
+Additive (a wider union).
+
+**Release notes.**
+
+Ships with the 0.3.1 lockstep set.
+
 ## 0.3.0 — 2026-09-29
 
 ### ffmpeg failure classifier: the missing-codec hint names the one pinned build

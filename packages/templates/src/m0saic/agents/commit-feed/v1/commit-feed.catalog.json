@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/agents/commit-feed/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same agent commit feed, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/agents/commit-feed/v2",
+    "since": "2026-09-30"
+  }
+}

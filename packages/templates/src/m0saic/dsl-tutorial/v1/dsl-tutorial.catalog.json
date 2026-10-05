@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/dsl-tutorial/v1",
+  "deprecated": {
+    "reason": "0.3.1: the header carries the speed; the canvas panel carries its camera and the size the layout is parsed at",
+    "replacement": "@m0saic/dsl-tutorial/v2",
+    "since": "2026-09-30"
+  }
+}

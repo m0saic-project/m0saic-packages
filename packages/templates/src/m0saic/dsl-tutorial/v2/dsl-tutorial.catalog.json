@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/dsl-tutorial/v2",
+  "label": "DSL Tutorial",
+  "description": "Animated, IDE/debugger-style tutorial that walks the m0 DSL parse + geometry step by step — animated canvas, an inspector showing the live rect (X/Y/W/H/Z) over the hidden engine state (split arity, quantization remainder, passthrough carry), and a live DSL string. Light/dark, speed-controlled.",
+  "tags": [
+    "dsl-tutorial",
+    "tutorial",
+    "wireframe",
+    "docs",
+    "animated",
+    "developers",
+    "onboarding"
+  ],
+  "props": {
+    "M0String": {
+      "label": "m0 layout",
+      "description": "The m0 layout whose parse + geometry walk is taught (up to 16,000 characters and 6,000 frames — a layout past either is refused at any output size; open it in Layout instead)."
+    },
+    "speedMultiplier": {
+      "label": "Speed",
+      "description": "Animation speed (>1 = faster). Unset = auto by pace tier: teach runs the natural length (up to 2× for bigger lessons), summarize fits the whole walk in ~30 s, sloth in ~20 s. The Speed pill always shows the effective speed.",
+      "placeholder": "auto (by tier)"
+    },
+    "tier": {
+      "label": "Pace tier",
+      "description": "Pacing tier. auto = by the layout's character count: teach (≤ 400 chars — show everything, read it at 1×), summarize (≤ 8,000 — the whole walk in ~30 s, passthrough visuals light, camera on the full layout), sloth (beyond, up to the 16,000-char ceiling — ~20 s, passthroughs not drawn). Tile labels are size-driven in every tier: the frame number wherever it fits, dims when they fit too. Force one to preview it."
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Theme preset."
+    },
+    "title": {
+      "label": "Title",
+      "description": "Header title text.",
+      "placeholder": "DSL Tutorial"
+    },
+    "stepEvents": {
+      "label": "Step granularity",
+      "description": "Step granularity. \"enter+leaf\" (default, ~one per node) or \"all\" (includes exits)."
+    },
+    "cameraZoom": {
+      "label": "Camera zoom",
+      "description": "Camera zoom override. Leave empty for AUTO (zoom only when tiles are too small to label). 1 = fit-to-panel; >1 = manual zoom + follow.",
+      "placeholder": "auto"
+    },
+    "canvasWidth": {
+      "label": "Canvas width",
+      "description": "Target width the layout is PARSED at (default 1920). Sets the canvas aspect so vertical/square layouts preview un-stretched.",
+      "placeholder": "1920"
+    },
+    "canvasHeight": {
+      "label": "Canvas height",
+      "description": "Target height the layout is PARSED at (default 1080). With canvas width, sets the canvas aspect.",
+      "placeholder": "1080"
+    },
+    "showCanvas": {
+      "label": "Show canvas",
+      "description": "Show the canvas panel."
+    },
+    "showInspector": {
+      "label": "Show inspector",
+      "description": "Show the inspector panel."
+    },
+    "showDslString": {
+      "label": "Show DSL string",
+      "description": "Show the DSL string panel."
+    },
+    "showChrome": {
+      "label": "Show chrome",
+      "description": "Show the IDE chrome."
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Debug: check the layout contract (every fitted string must fit its cell under the CLI width model, through the nested panels) and render the contract wireframe instead of the tutorial.",
+      "collapsedByDefault": true
+    }
+  }
+}

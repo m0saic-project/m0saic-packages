@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/collage/image-collage/v2",
+  "label": "Image Collage",
+  "description": "Packs any set of photos into a designed contact sheet: a searched layout with hero, portrait and panorama cells sized to each image's aspect, even pixel gutters, and a soft crop budget so nothing is trimmed too hard. Big sets page into one PNG per sheet. With no images it shows a demo set.",
+  "tags": [
+    "media",
+    "collage",
+    "image",
+    "layout-solver",
+    "contact-sheet",
+    "creators",
+    "designers",
+    "photos",
+    "grid",
+    "social",
+    "images"
+  ],
+  "props": {
+    "sourceIds": {
+      "label": "Images",
+      "description": "Images to pack — pick a folder, one or more files, or drag-and-drop. Empty renders a built-in demo set so you can preview the layout before adding photos.",
+      "order": 1
+    },
+    "gutter": {
+      "label": "Gutter",
+      "description": "Space between images, as a fraction of the canvas short edge.",
+      "order": 1
+    },
+    "margin": {
+      "label": "Margin",
+      "description": "Outer margin as a fraction of the gutter — 1 matches the gutter, 0 runs the images to the canvas edge.",
+      "order": 2
+    },
+    "cropBudget": {
+      "label": "Crop budget",
+      "description": "How much of an image the cover-crop may trim. Soft — exceeded minimally when nothing else fits.",
+      "order": 3
+    },
+    "seed": {
+      "label": "Seed",
+      "description": "Seed for the layout search's taste tie-breaks (which images become heroes, band rhythm). Same seed → same layout.",
+      "order": 4
+    },
+    "maxImagesPerSheet": {
+      "label": "Max per sheet",
+      "description": "Images per sheet. Sets larger than this page into a multi-file pipeline (one PNG per page). 30 is a tuned default.",
+      "order": 1
+    },
+    "pageLattice": {
+      "label": "Page lattice",
+      "description": "Paged sets: \"uniform\" shares one mix-fitted lattice across pages (a designed set); \"independent\" re-searches per page (best per-page crops).",
+      "order": 2
+    },
+    "background": {
+      "label": "Background",
+      "description": "Canvas background color (shows in gutters and margins).",
+      "order": 1
+    },
+    "minCellPx": {
+      "label": "Min cell (px)",
+      "description": "Smallest typical cell scale in px (readability floor). Default 120.",
+      "order": 1
+    },
+    "maxCellPx": {
+      "label": "Max cell (px)",
+      "description": "Largest typical cell scale in px. Default 320.",
+      "order": 2
+    },
+    "gutterPx": {
+      "label": "Gutter (px)",
+      "description": "Explicit gutter in pixels (overrides Gutter; 0 = flush collage).",
+      "placeholder": "from Gutter fraction",
+      "order": 1
+    },
+    "marginPx": {
+      "label": "Margin (px)",
+      "description": "Explicit outer margin in pixels (overrides Margin; must not exceed the gutter).",
+      "placeholder": "from Margin fraction",
+      "order": 2
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only layout contract: verify per-image aspect, lattice gutters, coverage and equal-size classes; on violation render a LAYOUT_CONTRACT error mosaic and stamp editor.layoutContract. Deterministic default false.",
+      "order": 1,
+      "collapsedByDefault": true
+    }
+  }
+}

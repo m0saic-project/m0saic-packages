@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/donut/v4",
+  "label": "Alpine Donut Chart",
+  "description": "Alpine donut chart — friendly mobile-marketing card: proportional ring, center value + label, side legend. v3's premium mode does the full clockwise radial SWEEP (self-framed coarse-quantize) — smooth draw-on that still composes at any canvas; light mode stays the composable per-segment path.",
+  "tags": [
+    "data-viz",
+    "alpine",
+    "donut",
+    "distribution",
+    "animated",
+    "analysts",
+    "marketers",
+    "dashboard",
+    "share"
+  ],
+  "primitive": true,
+  "props": {
+    "segments": {
+      "label": "Segments",
+      "description": "Ring segments (clockwise from 12 o'clock). Raw weights — normalized internally.",
+      "order": 1
+    },
+    "title": {
+      "label": "Title",
+      "description": "Card title.",
+      "placeholder": "e.g., DONUT CHART",
+      "order": 2
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Card subtitle.",
+      "placeholder": "e.g., Revenue Mix",
+      "order": 3
+    },
+    "centerValue": {
+      "label": "Center value",
+      "description": "Pre-formatted hole value (e.g. \"$12,480\"). Omit to derive the sum.",
+      "placeholder": "e.g. $12,480",
+      "order": 4
+    },
+    "centerLabel": {
+      "label": "Center label",
+      "description": "Small caption under the center value (e.g. \"Total\").",
+      "placeholder": "e.g. Total",
+      "order": 5
+    },
+    "legend": {
+      "label": "Legend",
+      "description": "Side legend: right or none.",
+      "order": 6
+    },
+    "segmentLabels": {
+      "label": "Segment Labels",
+      "description": "Per-segment labels: none or percent.",
+      "order": 7
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme variant.",
+      "order": 8
+    },
+    "ringThicknessFrac": {
+      "label": "Ring thickness",
+      "description": "Ring thickness as a fraction of the outer radius.",
+      "order": 9
+    },
+    "anim.renderMode": {
+      "label": "Render mode",
+      "description": "\"premium\" (default): smooth clockwise radial SWEEP (per-sliver alpha fade) — the softest look, head/standalone use. \"light\": composable per-segment enable-gate pop — no geq, cheap when nested."
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.countUp": {
+      "label": "Count up",
+      "description": "Count the center value up during the intro."
+    },
+    "anim.easing": {
+      "label": "Easing",
+      "description": "Intro easing curve."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Reveal mode + clockwise sweep intro.",
+      "order": 10,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the alpine preset by default; set a producer slug + namespace to pull shared design tokens. Explicit segment colors still win.",
+      "order": 11,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only layout contract view: renders the contract wireframe instead of the chart — legend swatches GREEN with the measured rule when all equal-size, offenders RED when not. Deterministic false default; production never sets it.",
+      "order": 12
+    }
+  }
+}

@@ -1,9 +1,11 @@
 /**
  * Authoring registry for official built-in templates.
  *
- * Each entry provides the metadata needed to generate template-manifest.json.
- * This is the single source of truth for browse metadata (title, description,
- * tags, preview paths) for the official template pack.
+ * Each entry provides the metadata needed to generate template-manifest.json:
+ * a template's identity (slug, id, export) and its preview paths. Browse copy
+ * (title, description, tags) lives in the template's catalog sidecar since
+ * 0.3.1 (`<name>.catalog.json` beside its code); rows written before that
+ * still carry it here, and the generator takes the sidecar's where it exists.
  *
  * ALL registered templates belong here — including internal ones — so that
  * preview assets and repo metadata are resolved for every template.
@@ -12,12 +14,22 @@ import type { MosaicTemplateRepoManifestEntry } from "@m0saic/types";
 
 export type OfficialTemplateRegistryEntry = Omit<
   MosaicTemplateRepoManifestEntry,
-  "templateKey"
+  "templateKey" | "title" | "description" | "tags"
 > & {
   /** The template's id field (= templateKey in manifest). */
   templateId: string;
   /** Named export from dist/index.js (must match barrel export). */
   exportName: string;
+  /**
+   * Browse copy for a template WITHOUT a catalog sidecar — the pre-0.3.1 rows.
+   * Since 0.3.1 a template is described in `<name>.catalog.json` beside its
+   * code (label → title, description, tags) and its row is identity only
+   * (slug, templateId, exportName); the manifest generator refuses a row that
+   * repeats what its sidecar says, so the two can never drift apart.
+   */
+  title?: string;
+  description?: string;
+  tags?: string[];
 };
 
 export const templateRegistry: OfficialTemplateRegistryEntry[] = [
@@ -35,6 +47,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   // ── Web ────────────────────────────────────────────────────
   {
     slug: "page-skeleton",
+    templateId: "@m0saic/web/page-skeleton/v2",
+    exportName: "PageSkeletonV2",
+  },
+  {
+    slug: "page-skeleton-v1",
     templateId: "@m0saic/web/page-skeleton/v1",
     exportName: "PageSkeleton",
     title: "Page Skeleton",
@@ -44,6 +61,12 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
 
   // ── Wireframe ──────────────────────────────────────────────
+  {
+    // "wireframe" is v1's slug (frozen in links), so each later version spells its own.
+    slug: "wireframe-v3",
+    templateId: "@m0saic/wireframe/base/v3",
+    exportName: "WireframeV3",
+  },
   {
     slug: "wireframe-v2",
     templateId: "@m0saic/wireframe/base/v2",
@@ -98,6 +121,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
     tags: ["brand", "logo"],
   },
   {
+    slug: "brand-logo",
+    templateId: "@m0saic/brand/logo/v4",
+    exportName: "TheMosaicMV4",
+  },
+  {
     slug: "brand-logo-v3",
     templateId: "@m0saic/brand/logo/v3",
     exportName: "TheMosaicMV3",
@@ -115,6 +143,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "business-card",
+    templateId: "@m0saic/brand/business-card/v2",
+    exportName: "BusinessCardV2",
+  },
+  {
+    slug: "business-card-v1",
     templateId: "@m0saic/brand/business-card/v1",
     exportName: "BusinessCard",
     title: "Business Card",
@@ -123,6 +156,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "qr-code",
+    templateId: "@m0saic/media/qr/code/v2",
+    exportName: "QrCodeV2",
+  },
+  {
+    slug: "qr-code-v1",
     templateId: "@m0saic/media/qr/code/v1",
     exportName: "QrCode",
     title: "QR Code",
@@ -141,6 +179,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "barcode",
+    templateId: "@m0saic/media/barcode/v2",
+    exportName: "BarcodeV2",
+  },
+  {
+    slug: "barcode-v1",
     templateId: "@m0saic/media/barcode/v1",
     exportName: "Barcode",
     title: "Barcode",
@@ -177,6 +220,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "qr-stamp-custom",
+    templateId: "@m0saic/media/qr/stamp/v2",
+    exportName: "QrStampCustomV2",
+  },
+  {
+    slug: "qr-stamp-custom-v1",
     templateId: "@m0saic/media/qr/stamp/v1",
     exportName: "QrStampCustom",
     title: "QR Stamp",
@@ -242,6 +290,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "benchmark-report",
+    templateId: "@m0saic/benchmark/report/v2",
+    exportName: "BenchmarkReportV2",
+  },
+  {
+    slug: "benchmark-report-v1",
     templateId: "@m0saic/benchmark/report/v1",
     exportName: "BenchmarkReport",
     title: "Benchmark — Report",
@@ -324,6 +377,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "ffmpeg-pulse-runner",
+    templateId: "@m0saic/hero/ffmpeg-pulse/runner/v2",
+    exportName: "FfmpegPulseRunnerV2",
+  },
+  {
+    slug: "ffmpeg-pulse-runner-v1",
     templateId: "@m0saic/hero/ffmpeg-pulse/runner/v1",
     exportName: "FfmpegPulseRunner",
     title: "Weekly Pulse · Runner",
@@ -342,6 +400,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "bar-graph",
+    templateId: "@m0saic/charts/bar-graph/v3",
+    exportName: "ChartsBarGraphV3",
+  },
+  {
+    slug: "bar-graph-v2",
     templateId: "@m0saic/charts/bar-graph/v2",
     exportName: "ChartsBarGraphV2",
     title: "Bar Graph",
@@ -351,6 +414,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "stat-card",
+    templateId: "@m0saic/charts/stat-card/v2",
+    exportName: "StatCardV2",
+  },
+  {
+    slug: "stat-card-v1",
     templateId: "@m0saic/charts/stat-card/v1",
     exportName: "StatCard",
     title: "KPI Stat Card",
@@ -360,6 +428,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "donut",
+    templateId: "@m0saic/charts/donut/v5",
+    exportName: "DonutV5",
+  },
+  {
+    slug: "donut-v4",
     templateId: "@m0saic/charts/donut/v4",
     exportName: "DonutV4",
     title: "Donut Chart",
@@ -387,6 +460,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "line-chart",
+    templateId: "@m0saic/charts/line-chart/v2",
+    exportName: "ChartsLineChartV2",
+  },
+  {
+    slug: "line-chart-v1",
     templateId: "@m0saic/charts/line-chart/v1",
     exportName: "ChartsLineChart",
     title: "Line Chart",
@@ -462,6 +540,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   {
     // slug "bar-graph" coexists with charts/bar-graph — pack-scoped uniqueness.
     slug: "bar-graph",
+    templateId: "@m0saic/alpine/bar-graph/v2",
+    exportName: "AlpineBarGraphV2",
+  },
+  {
+    slug: "bar-graph-v1",
     templateId: "@m0saic/alpine/bar-graph/v1",
     exportName: "AlpineBarGraph",
     title: "Alpine Bar Chart",
@@ -471,6 +554,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "donut",
+    templateId: "@m0saic/alpine/donut/v4",
+    exportName: "AlpineDonutV4",
+  },
+  {
+    slug: "donut-v3",
     templateId: "@m0saic/alpine/donut/v3",
     exportName: "AlpineDonutV3",
     title: "Alpine Donut Chart",
@@ -498,6 +586,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "line-chart",
+    templateId: "@m0saic/alpine/line-chart/v3",
+    exportName: "AlpineLineChartV3",
+  },
+  {
+    slug: "line-chart-v2",
     templateId: "@m0saic/alpine/line-chart/v2",
     exportName: "AlpineLineChartV2",
     title: "Alpine Line Chart",
@@ -516,6 +609,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "kpi-card",
+    templateId: "@m0saic/alpine/kpi-card/v3",
+    exportName: "AlpineKpiCardV3",
+  },
+  {
+    slug: "kpi-card-v2",
     templateId: "@m0saic/alpine/kpi-card/v2",
     exportName: "AlpineKpiCardV2",
     title: "Alpine KPI Card",
@@ -534,6 +632,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "stat-card",
+    templateId: "@m0saic/alpine/stat-card/v2",
+    exportName: "AlpineStatCardV2",
+  },
+  {
+    slug: "stat-card-v1",
     templateId: "@m0saic/alpine/stat-card/v1",
     exportName: "AlpineStatCard",
     title: "Hero KPI Stat Card",
@@ -543,6 +646,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "contributor-table",
+    templateId: "@m0saic/alpine/contributor-table/v2",
+    exportName: "AlpineContributorTableV2",
+  },
+  {
+    slug: "contributor-table-v1",
     templateId: "@m0saic/alpine/contributor-table/v1",
     exportName: "AlpineContributorTable",
     title: "Alpine Contributor Table",
@@ -552,6 +660,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "commit-feed",
+    templateId: "@m0saic/alpine/commit-feed/v3",
+    exportName: "AlpineCommitFeedV3",
+  },
+  {
+    slug: "commit-feed-v2",
     templateId: "@m0saic/alpine/commit-feed/v2",
     exportName: "AlpineCommitFeedV2",
     title: "Alpine Commit Feed",
@@ -570,6 +683,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "progress-card",
+    templateId: "@m0saic/alpine/progress-card/v2",
+    exportName: "AlpineProgressCardV2",
+  },
+  {
+    slug: "progress-card-v1",
     templateId: "@m0saic/alpine/progress-card/v1",
     exportName: "AlpineProgressCard",
     title: "Alpine Progress Card",
@@ -579,6 +697,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "leaderboard",
+    templateId: "@m0saic/alpine/leaderboard/v2",
+    exportName: "AlpineLeaderboardV2",
+  },
+  {
+    slug: "leaderboard-v1",
     templateId: "@m0saic/alpine/leaderboard/v1",
     exportName: "AlpineLeaderboard",
     title: "Alpine Leaderboard",
@@ -588,6 +711,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "heatmap",
+    templateId: "@m0saic/alpine/heatmap/v3",
+    exportName: "AlpineHeatmapV3",
+  },
+  {
+    slug: "heatmap-v2",
     templateId: "@m0saic/alpine/heatmap/v2",
     exportName: "AlpineHeatmapV2",
     title: "Alpine Heatmap",
@@ -606,6 +734,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "timeline",
+    templateId: "@m0saic/alpine/timeline/v3",
+    exportName: "AlpineTimelineV3",
+  },
+  {
+    slug: "timeline-v2",
     templateId: "@m0saic/alpine/timeline/v2",
     exportName: "AlpineTimelineV2",
     title: "Alpine Timeline",
@@ -624,6 +757,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "treemap",
+    templateId: "@m0saic/alpine/treemap/v3",
+    exportName: "AlpineTreemapV3",
+  },
+  {
+    slug: "treemap-v2",
     templateId: "@m0saic/alpine/treemap/v2",
     exportName: "AlpineTreemapV2",
     title: "Alpine Treemap",
@@ -644,6 +782,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   // ── Primitives ─────────────────────────────────────────────
   {
     slug: "grid",
+    templateId: "@m0saic/primitives/grid/v3",
+    exportName: "PrimitiveGridV3",
+  },
+  {
+    slug: "grid-v2",
     templateId: "@m0saic/primitives/grid/v2",
     exportName: "PrimitiveGridV2",
     title: "Primitive \u2014 Grid",
@@ -664,6 +807,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   // ── Collage (layout-solver contact sheets) ─────────────────
   {
     slug: "image-collage",
+    templateId: "@m0saic/collage/image-collage/v2",
+    exportName: "ImageCollageV2",
+  },
+  {
+    slug: "image-collage-v1",
     templateId: "@m0saic/collage/image-collage/v1",
     exportName: "ImageCollage",
     title: "Image Collage",
@@ -684,6 +832,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   // ── Social (share-ready social graphics) ───────────────────
   {
     slug: "quote-card",
+    templateId: "@m0saic/social/quote-card/v2",
+    exportName: "QuoteCardV2",
+  },
+  {
+    slug: "quote-card-v1",
     templateId: "@m0saic/social/quote-card/v1",
     exportName: "QuoteCard",
     title: "Quote Card",
@@ -695,6 +848,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   // ── Code (developer-facing visual tools) ──────────────────
   {
     slug: "code-snippet-morph",
+    templateId: "@m0saic/code/snippet-morph/v2",
+    exportName: "SnippetMorphV2",
+  },
+  {
+    slug: "code-snippet-morph-v1",
     templateId: "@m0saic/code/snippet-morph/v1",
     exportName: "SnippetMorphV1",
     title: "Code Snippet Morph",
@@ -715,6 +873,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "screencap-grid",
+    templateId: "@m0saic/media/screencap_grid/v3",
+    exportName: "ScreencapGridV3",
+  },
+  {
+    slug: "screencap-grid-v2",
     templateId: "@m0saic/media/screencap_grid/v2",
     exportName: "ScreencapGridV2",
     title: "Screencap Grid",
@@ -733,6 +896,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "subtitle-burn",
+    templateId: "@m0saic/media/subtitle-burn/v2",
+    exportName: "SubtitleBurnV2",
+  },
+  {
+    slug: "subtitle-burn-v1",
     templateId: "@m0saic/media/subtitle-burn/v1",
     exportName: "SubtitleBurn",
     title: "Subtitle Burn",
@@ -742,6 +910,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "screencap-grid-aspect-safe",
+    templateId: "@m0saic/media/screencap_grid_aspect_safe/v2",
+    exportName: "ScreencapGridAspectSafeV2",
+  },
+  {
+    slug: "screencap-grid-aspect-safe-v1",
     templateId: "@m0saic/media/screencap_grid_aspect_safe/v1",
     exportName: "ScreencapGridAspectSafe",
     title: "Screencap Grid — Aspect Safe",
@@ -751,6 +924,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "scroll-wall",
+    templateId: "@m0saic/media/scroll_wall/v2",
+    exportName: "ScrollWallV2",
+  },
+  {
+    slug: "scroll-wall-v1",
     templateId: "@m0saic/media/scroll_wall/v1",
     exportName: "ScrollWallV1",
     title: "Scroll Wall",
@@ -760,6 +938,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "frame-stripper",
+    templateId: "@m0saic/media/video_to_png_sequence/v2",
+    exportName: "FrameStripperV2",
+  },
+  {
+    slug: "frame-stripper-v1",
     templateId: "@m0saic/media/video_to_png_sequence/v1",
     exportName: "FrameStripper",
     title: "Frame Stripper",
@@ -769,6 +952,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "media-watermark",
+    templateId: "@m0saic/media/watermark/v2",
+    exportName: "WatermarkV2",
+  },
+  {
+    slug: "media-watermark-v1",
     templateId: "@m0saic/media/watermark/v1",
     exportName: "WatermarkV1",
     title: "Watermark",
@@ -778,6 +966,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "metadata-stamp",
+    templateId: "@m0saic/media/metadata-stamp/v2",
+    exportName: "MetadataStampV2",
+  },
+  {
+    slug: "metadata-stamp-v1",
     templateId: "@m0saic/media/metadata-stamp/v1",
     exportName: "MetadataStampV1",
     title: "Metadata Stamp",
@@ -787,6 +980,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "highlights",
+    templateId: "@m0saic/media/highlights/v2",
+    exportName: "HighlightsV2",
+  },
+  {
+    slug: "highlights-v1",
     templateId: "@m0saic/media/highlights/v1",
     exportName: "Highlights",
     title: "Highlight Clips",
@@ -796,6 +994,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "blur-regions",
+    templateId: "@m0saic/media/blur-regions/v2",
+    exportName: "BlurRegionsV2",
+  },
+  {
+    slug: "blur-regions-v1",
     templateId: "@m0saic/media/blur-regions/v1",
     exportName: "BlurRegions",
     title: "Easy Blur",
@@ -805,6 +1008,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "trickplay",
+    templateId: "@m0saic/media/trickplay/v2",
+    exportName: "TrickplayV2",
+  },
+  {
+    slug: "trickplay-v1",
     templateId: "@m0saic/media/trickplay/v1",
     exportName: "Trickplay",
     title: "Trickplay Sheets",
@@ -814,6 +1022,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "logo-animate",
+    templateId: "@m0saic/media/logo-animate/v2",
+    exportName: "LogoAnimateV2",
+  },
+  {
+    slug: "logo-animate-v1",
     templateId: "@m0saic/media/logo-animate/v1",
     exportName: "LogoAnimateV1",
     title: "Logo Animate",
@@ -845,6 +1058,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   // ── DSL Tutorial (animated geometry-walk teaching template) ─
   {
     slug: "dsl-tutorial",
+    templateId: "@m0saic/dsl-tutorial/v2",
+    exportName: "DslTutorialV2",
+  },
+  {
+    slug: "dsl-tutorial-v1",
     templateId: "@m0saic/dsl-tutorial/v1",
     exportName: "DslTutorial",
     title: "DSL Tutorial",
@@ -956,6 +1174,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
     tags: ["github", "adapter", "pulse", "data", "developers"],
   },
   {
+    slug: "agents-commit-feed",
+    templateId: "@m0saic/agents/commit-feed/v2",
+    exportName: "AgentCommitFeedV2",
+  },
+  {
     slug: "agents-commit-feed-v1",
     templateId: "@m0saic/agents/commit-feed/v1",
     exportName: "AgentCommitFeedV1",
@@ -964,12 +1187,22 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
     tags: ["github", "commits", "agents", "ai", "developers", "devrel", "engineering-leaders", "alpine", "animated"],
   },
   {
+    slug: "agents-trace-timeline",
+    templateId: "@m0saic/agents/trace-timeline/v2",
+    exportName: "TraceTimelineV2",
+  },
+  {
     slug: "agents-trace-timeline-v1",
     templateId: "@m0saic/agents/trace-timeline/v1",
     exportName: "TraceTimelineV1",
     title: "Agent Trace Timeline",
     description: "What the agent did on a run — a waterfall of tool calls: the tool and its target per lane, a latency bar on a shared time axis, tokens per hop, and status colours for errors, retries and cache hits. Alpine card, composes at any canvas.",
     tags: ["agents", "trace", "timeline", "waterfall", "observability", "latency", "tokens", "developers", "sre", "alpine", "animated"],
+  },
+  {
+    slug: "github-year-card",
+    templateId: "@m0saic/github/year-card/v2",
+    exportName: "YearCardV2",
   },
   {
     slug: "github-year-card-v1",
@@ -991,6 +1224,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
 
   // ── Theming (design-token producer) ────────────────────────
   {
+    slug: "theming",
+    templateId: "@m0saic/theming/v2",
+    exportName: "ThemingV2",
+  },
+  {
     slug: "theming-v1",
     templateId: "@m0saic/theming/v1",
     exportName: "Theming",
@@ -1003,6 +1241,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   // ── Story (agentic-video: narrated multi-chapter pipelines) ─
   {
     slug: "narrated-chapters",
+    templateId: "@m0saic/story/narrated-chapters/v2",
+    exportName: "NarratedChaptersV2",
+  },
+  {
+    slug: "narrated-chapters-v1",
     templateId: "@m0saic/story/narrated-chapters/v1",
     exportName: "NarratedChapters",
     title: "Narrated Chapters",
@@ -1012,6 +1255,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "scrapbook",
+    templateId: "@m0saic/story/scrapbook/v2",
+    exportName: "ScrapbookV2",
+  },
+  {
+    slug: "scrapbook-v1",
     templateId: "@m0saic/story/scrapbook/v1",
     exportName: "ScrapbookV1",
     title: "Scrapbook",

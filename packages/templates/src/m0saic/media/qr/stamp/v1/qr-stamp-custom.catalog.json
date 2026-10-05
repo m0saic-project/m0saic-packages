@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/qr/stamp/v1",
+  "deprecated": {
+    "reason": "0.3.1: a drop slot under the real stamp before the media; the stamp carries its size and margin",
+    "replacement": "@m0saic/media/qr/stamp/v2",
+    "since": "2026-09-30"
+  }
+}

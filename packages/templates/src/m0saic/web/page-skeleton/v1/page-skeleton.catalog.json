@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/web/page-skeleton/v1",
+  "deprecated": {
+    "reason": "0.3.1: every skeleton rect carries its kind's fill and the loop's knobs",
+    "replacement": "@m0saic/web/page-skeleton/v2",
+    "since": "2026-09-30"
+  }
+}

@@ -1,5 +1,7 @@
 import { enforceTemplateConventions } from "./templateConventions";
 import { currentTemplateOrigin } from "./templateOriginScope";
+import { declaredCatalogEntry, declaredConventionsTarget } from "./templateCatalogStore";
+import { TEMPLATE_CATALOG_AUTHORED_KEY, applyTemplateCatalogEntry } from "@m0saic/platform";
 import type {
   MosaicTemplate,
   MosaicTemplateProps,
@@ -271,7 +273,18 @@ export function defineMosaicTemplate<
   // caller overrides it.
   const conventions =
     opts.conventions ?? (currentTemplateOrigin().kind === "external" ? "record" : "throw");
-  enforceTemplateConventions(template as unknown as MosaicTemplate<P>, { mode: conventions });
+  // The repo's catalog (0.3.1) applies BEFORE the conventions: what describes a
+  // template (label, tags, a prop's hint, …) lives in its catalog sidecar, not
+  // its code, and the conventions judge the template as hosts will see it. Only
+  // an entry THIS origin declared applies; a copy already carrying a catalog
+  // (the loader's merge, an earlier define) takes it idempotently.
+  const catalogEntry = declaredCatalogEntry(String(template.id), currentTemplateOrigin());
+  if (catalogEntry) template = applyTemplateCatalogEntry(template, catalogEntry);
+  // The repo's conventions target (0.3.1): rules newer than it are advice here.
+  enforceTemplateConventions(template as unknown as MosaicTemplate<P>, {
+    mode: conventions,
+    target: declaredConventionsTarget(currentTemplateOrigin()),
+  });
 
   const originalRender = template.render;
   const originalRenderLite = template.renderLite;
@@ -344,7 +357,7 @@ export function defineMosaicTemplate<
     return rest as MosaicEngineContext<U, D>;
   };
 
-  return {
+  const defined: MosaicTemplate<P, O, U, D, S> = {
     ...template,
 
     // IMPORTANT: must be `function`, not arrow, to preserve `this`
@@ -434,4 +447,12 @@ export function defineMosaicTemplate<
         }
       : {}),
   };
+  // Keep what the template's CODE declared (0.3.1): the spread above drops the
+  // non-enumerable record a catalog merge leaves, and a freeze pin / the
+  // `catalogSidecar` rule must still see the file, not the catalog.
+  const authored = (template as unknown as Record<symbol, unknown>)[TEMPLATE_CATALOG_AUTHORED_KEY];
+  if (authored !== undefined) {
+    Object.defineProperty(defined, TEMPLATE_CATALOG_AUTHORED_KEY, { value: authored, enumerable: false, configurable: true });
+  }
+  return defined;
 }

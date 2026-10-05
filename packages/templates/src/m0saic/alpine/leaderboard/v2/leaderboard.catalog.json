@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/leaderboard/v2",
+  "label": "Alpine Leaderboard",
+  "description": "Alpine leaderboard — friendly mobile-marketing card: a ranked list with gold/silver/bronze rank badges, names, count-up values, and a soft podium tint. Standalone Alpine brand flavor.",
+  "tags": [
+    "data-viz",
+    "alpine",
+    "leaderboard",
+    "ranking",
+    "animated",
+    "analysts",
+    "creators",
+    "top-10"
+  ],
+  "primitive": true,
+  "props": {
+    "items": {
+      "label": "Items",
+      "description": "Leaderboard rows. Each: name, value, optional Display label + color. Auto-sorted by value unless preSorted.",
+      "order": 1
+    },
+    "title": {
+      "label": "Title",
+      "description": "Card title.",
+      "placeholder": "e.g., TOP CONTRIBUTORS",
+      "order": 2
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Card subtitle.",
+      "order": 3
+    },
+    "valuePrefix": {
+      "label": "Value Prefix",
+      "description": "Prepended to derived values (e.g. \"$\").",
+      "placeholder": "none",
+      "order": 4
+    },
+    "valueSuffix": {
+      "label": "Value Suffix",
+      "description": "Appended to derived values (e.g. \" pts\").",
+      "placeholder": "none",
+      "order": 5
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme variant.",
+      "order": 6
+    },
+    "showValue": {
+      "label": "Show value",
+      "description": "Show the per-row value.",
+      "order": 7
+    },
+    "podiumTint": {
+      "label": "Podium tint",
+      "description": "Soft medal-tint the top-3 rows.",
+      "order": 8
+    },
+    "preSorted": {
+      "label": "Pre-sorted",
+      "description": "Keep input order instead of auto-sorting by value (desc).",
+      "order": 9
+    },
+    "anim.renderMode": {
+      "label": "Render mode",
+      "description": "\"premium\" (default): rows cascade in via alpha fade — a geq per faded leaf. \"light\": the same via free enable-gate pops — no geq, composable, cheap when nested."
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.countUp": {
+      "label": "Count up",
+      "description": "Count each value up on intro."
+    },
+    "anim.easing": {
+      "label": "Easing",
+      "description": "Intro easing curve."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Reveal mode + row-cascade intro.",
+      "order": 10,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the alpine preset by default; set a producer slug + namespace to pull shared design tokens. Explicit color props still win.",
+      "order": 11,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only layout contract view: renders the contract wireframe instead of the board — rows GREEN with the measured rule when all equal-size, offenders RED when not. Deterministic false default; production never sets it.",
+      "order": 12
+    }
+  }
+}

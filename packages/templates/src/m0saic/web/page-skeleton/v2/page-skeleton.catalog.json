@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/web/page-skeleton/v2",
+  "label": "Page Skeleton",
+  "description": "Turns anonymous browser geometry into an editable skeleton-loading still or looping shimmer/pulse video.",
+  "tags": [
+    "web",
+    "skeleton",
+    "loading",
+    "capture",
+    "wireframe",
+    "animated",
+    "designers",
+    "developers",
+    "landing-page",
+    "mockup"
+  ],
+  "props": {
+    "captureSnippet": {
+      "label": "Browser capture snippet",
+      "description": "Copy this exact JavaScript into the browser console. It copies anonymous visible-page geometry as JSON for Page capture.",
+      "order": 1,
+      "primary": true
+    },
+    "capture": {
+      "label": "Page capture",
+      "description": "Anonymous geometry from the page-skeleton browser snippet. See packages/docs/web-page-skeleton/README.md for the capture workflow.",
+      "order": 2,
+      "primary": true
+    },
+    "outputFormat": {
+      "label": "Output",
+      "description": "PNG keeps the editable still; MP4 animates the same rectangles as a looping loading skeleton.",
+      "order": 3,
+      "primary": true
+    },
+    "motion.mode": {
+      "label": "Mode",
+      "description": "Shimmer scans a bright band across the page; pulse breathes all content together."
+    },
+    "motion.direction": {
+      "label": "Direction",
+      "description": "Canvas direction used by the shimmer scan."
+    },
+    "motion.bandWidth": {
+      "label": "Band width",
+      "description": "Width of the shimmer band as a fraction of the canvas axis."
+    },
+    "motion.minOpacity": {
+      "label": "Resting opacity",
+      "description": "Lowest skeleton opacity between shimmer passes or pulse peaks."
+    },
+    "motion": {
+      "label": "Motion",
+      "description": "Looping loading motion used by Animated MP4 output. Geometry and source count stay unchanged.",
+      "order": 4,
+      "collapsedByDefault": false
+    },
+    "appearance.bg": {
+      "label": "Background",
+      "description": "Canvas color behind the captured page geometry."
+    },
+    "appearance.fill": {
+      "label": "Fill",
+      "description": "Skeleton rectangle fill."
+    },
+    "appearance.textFill": {
+      "label": "Text fill",
+      "description": "Captured browser line-box fill."
+    },
+    "appearance.imageFill": {
+      "label": "Image fill",
+      "description": "Image, video, avatar, and control fill."
+    },
+    "appearance.radiusMode": {
+      "label": "Radius mode",
+      "description": "Use captured browser radii, square corners, or one uniform canvas-pixel radius."
+    },
+    "appearance.uniformRadiusPx": {
+      "label": "Uniform radius",
+      "description": "Canvas-pixel radius used by uniform mode."
+    },
+    "appearance": {
+      "label": "Appearance",
+      "description": "Page, per-kind skeleton colors, and corner treatment.",
+      "order": 5,
+      "collapsedByDefault": true
+    },
+    "behavior.maxRects": {
+      "label": "Max rects",
+      "description": "Maximum retained capture rectangles and independently placed skeleton sources."
+    },
+    "behavior.showTextLines": {
+      "label": "Text lines",
+      "description": "Render captured browser line boxes."
+    },
+    "behavior.showImages": {
+      "label": "Images",
+      "description": "Render image/replaced-element rectangles."
+    },
+    "behavior.showControls": {
+      "label": "Controls",
+      "description": "Render form-control rectangles."
+    },
+    "behavior.showDividers": {
+      "label": "Dividers",
+      "description": "Render thin divider rectangles."
+    },
+    "behavior.scaleMode": {
+      "label": "Scale",
+      "description": "fit letterboxes, fill crops, stretch scales each axis independently."
+    },
+    "behavior.containerMode": {
+      "label": "Containers",
+      "description": "Keep large painted wrappers or prune wrappers containing several descendants."
+    },
+    "behavior.pureRects": {
+      "label": "Pure DSL rects",
+      "description": "Emit exact frame bounds with no placement insets. Easier for custom cell-local masks, at the cost of a larger m0 program."
+    },
+    "behavior": {
+      "label": "Behavior",
+      "description": "Capture filtering, scaling, and containing-block behavior.",
+      "order": 6,
+      "collapsedByDefault": true
+    },
+    "overrides": {
+      "label": "Rect overrides",
+      "description": "Array of {i, hide?, fill?, shape?: \"rect\"|\"rounded\"|\"pill\"|\"circle\", radiusPx?}. Indices refer to capture.rects[].",
+      "order": 7
+    },
+    "debug": {
+      "label": "Debug geometry",
+      "description": "Run the geometry contract and include capture filtering/drop counts in the document label.",
+      "order": 8,
+      "collapsedByDefault": true
+    },
+    "debugIndices": {
+      "label": "Show rect indices",
+      "description": "Programmatic diagnostic that overlays retained capture indices. Prefer Make canvas selection and the Structure panel for interactive editing.",
+      "order": 9
+    }
+  }
+}

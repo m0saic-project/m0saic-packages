@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/barcode/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same barcode, with its ground as the document background (no click-blocking base tile in Make) and the payload editable by double-clicking the bars.",
+    "replacement": "@m0saic/media/barcode/v2",
+    "since": "2026-09-29"
+  }
+}

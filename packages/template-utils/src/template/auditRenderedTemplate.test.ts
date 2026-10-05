@@ -2,8 +2,9 @@ import type { MosaicDocument, MosaicTemplate, MosaicTemplatePropDefinition } fro
 import { asTemplateId } from "@m0saic/types";
 import { weightedSplit } from "@m0saic/dsl-stdlib";
 
-import { COST_BUDGETS, STANDARD_SWEEP_CANVASES, accountableProps, auditRenderedTemplate, diffLayoutFingerprint, drawnAsNumber, fingerprintHash, layoutFingerprintFinding, numberSpellings } from "./auditRenderedTemplate";
-import { drainTemplateConventionFindings, listTemplateConventionFindings } from "./templateConventions";
+import { withTemplateCatalog } from "@m0saic/platform";
+import { COST_BUDGETS, STANDARD_SWEEP_CANVASES, accountableProps, auditCatalogSidecar, auditRenderedTemplate, diffLayoutFingerprint, drawnAsNumber, fingerprintHash, layoutFingerprintFinding, numberSpellings } from "./auditRenderedTemplate";
+import { clearTemplateConventionFinding, drainTemplateConventionFindings, listTemplateConventionFindings } from "./templateConventions";
 
 type Props = Record<string, unknown>;
 type AnyRec = Record<string, unknown>;
@@ -32,13 +33,13 @@ const doc = (sources: Src[]): MosaicDocument =>
 const schema = (s: Record<string, Partial<MosaicTemplatePropDefinition> & { type: MosaicTemplatePropDefinition["type"] }>) =>
   Object.fromEntries(Object.entries(s).map(([k, d]) => [k, { required: false, description: `${k} — what it does`, meta: { ui: { label: k } }, ...d }])) as never;
 
+/** A 0.3.1-style template: nothing descriptive in the file (label / description
+ *  / tags live in a catalog), so `catalogSidecar` stays quiet and each test
+ *  judges only its own rule. */
 function tmpl(id: string, render: MosaicTemplate<Props>["render"], extra: Partial<MosaicTemplate<Props>> = {}): MosaicTemplate<Props> {
   return {
     id: asTemplateId(id),
-    label: id,
     version: 1,
-    description: "t",
-    tags: ["test"],
     // Compliant with the `outputFormat` convention so the render-time rules test alone.
     outputHints: { format: { kind: "image", container: "png" } },
     capabilities: { tier: "core" },
@@ -54,6 +55,18 @@ function tmpl(id: string, render: MosaicTemplate<Props>["render"], extra: Partia
 
 beforeEach(() => drainTemplateConventionFindings());
 
+/** The fixtures in this file describe their props in their own schema (labels,
+ *  placeholders, hints) for brevity — the pre-0.3.1 shape. `catalogSidecar` is
+ *  tested on its own (below, against the real audit), so every other test sees
+ *  the audit without it: out of findings, lagging and the shared log. */
+async function auditRendered(...args: Parameters<typeof auditRenderedTemplate>): ReturnType<typeof auditRenderedTemplate> {
+  const a = await auditRenderedTemplate(...args);
+  a.findings = a.findings.filter((f) => f.convention !== "catalogSidecar");
+  a.lagging = a.lagging.filter((f) => f.convention !== "catalogSidecar");
+  clearTemplateConventionFinding(a.templateId, "catalogSidecar");
+  return a;
+}
+
 /** The finding for ONE convention. `bindingsDeclared` is TOTAL — any unbound
  *  prop trips it — so a test about another rule filters to its own rule, and
  *  the pairing is asserted once, explicitly. */
@@ -62,7 +75,7 @@ const only = (a: Audit, convention: string): Audit["findings"] => a.findings.fil
 
 describe("auditRenderedTemplate — the render-time seam", () => {
   it("a compliant template: rendered, no findings, nothing recorded", async () => {
-    const a = await auditRenderedTemplate(tmpl("@x/ok/v1", async () => doc([bound("Hello there", "title"), text("mode a")])));
+    const a = await auditRendered(tmpl("@x/ok/v1", async () => doc([bound("Hello there", "title"), text("mode a")])));
     expect(a.skipped).toBeUndefined();
     expect(a.findings).toEqual([]);
     expect(a.canvas).toEqual({ width: 1280, height: 720 });
@@ -70,12 +83,12 @@ describe("auditRenderedTemplate — the render-time seam", () => {
   });
 
   it("uses the template's outputHints canvas", async () => {
-    const a = await auditRenderedTemplate(tmpl("@x/hint/v1", async () => doc([bound("Hello there", "title")]), { outputHints: { width: 1080, height: 1920 } } as never));
+    const a = await auditRendered(tmpl("@x/hint/v1", async () => doc([bound("Hello there", "title")]), { outputHints: { width: 1080, height: 1920 } } as never));
     expect(a.canvas).toEqual({ width: 1080, height: 1920 });
   });
 
   it("bindingsCover (warning): a free-text prop drawn verbatim but unbound", async () => {
-    const a = await auditRenderedTemplate(tmpl("@x/cover/v1", async () => doc([text("Hello there"), text("mode a")])));
+    const a = await auditRendered(tmpl("@x/cover/v1", async () => doc([text("Hello there"), text("mode a")])));
     const cover = only(a, "bindingsCover");
     expect(cover).toMatchObject([{ severity: "warning", violations: [{ key: "title" }] }]);
     expect(cover[0].violations[0].detail).toMatch(/bindProp\(src, "title"\)/);
@@ -93,7 +106,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
       tmpl(id, async () => doc(sources), { propsSchema: silentSchema, defaultProps: { title: "Hello there" }, ...extra } as never);
 
     it("a bound prop with neither a hint nor a description is an error", async () => {
-      const a = await auditRenderedTemplate(silent("@x/hints/v1", [bound("Hello there", "title")]));
+      const a = await auditRendered(silent("@x/hints/v1", [bound("Hello there", "title")]));
       const f = only(a, "bindingHints");
       expect(f).toMatchObject([{ severity: "error", violations: [{ key: "title" }] }]);
       expect(f[0].violations[0].detail).toMatch(/propsSchema\.title\.description/);
@@ -101,9 +114,9 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     });
 
     it("the prop's description satisfies every binding of it; a binding's own hint satisfies its rect", async () => {
-      const described = await auditRenderedTemplate(tmpl("@x/hints-desc/v1", async () => doc([bound("Hello there", "title")])));
+      const described = await auditRendered(tmpl("@x/hints-desc/v1", async () => doc([bound("Hello there", "title")])));
       expect(only(described, "bindingHints")).toEqual([]);
-      const hinted = await auditRenderedTemplate(
+      const hinted = await auditRendered(
         silent("@x/hints-hint/v1", [text("Hello there", { editor: { binding: { propKey: "title", hint: "The big words on the cover." } } })]),
       );
       expect(only(hinted, "bindingHints")).toEqual([]);
@@ -111,7 +124,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
 
     it("reports a prop once however many rects bind it, and reaches bindings in a nested child", async () => {
       const child = doc([bound("Hello there", "title")]);
-      const a = await auditRenderedTemplate(
+      const a = await auditRendered(
         silent("@x/hints-nested/v1", [bound("Hello there", "title"), { type: "mosaic", ref: "card" }], {
           render: async () => ({ ...doc([bound("Hello there", "title"), { type: "mosaic", ref: "card" }]), children: { card: child } }) as never,
         }),
@@ -120,7 +133,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     });
 
     it("a template that shipped before the rule lags instead of failing", async () => {
-      const a = await auditRenderedTemplate(silent("@x/hints-shipped/v1", [bound("Hello there", "title")]), { shippedAt: "0.2.0" });
+      const a = await auditRendered(silent("@x/hints-shipped/v1", [bound("Hello there", "title")]), { shippedAt: "0.2.0" });
       expect(only(a, "bindingHints")).toEqual([]);
       expect(a.lagging.map((f) => f.convention)).toContain("bindingHints");
     });
@@ -151,7 +164,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
       } as never);
 
     it("names every accountable prop, and ONLY those", async () => {
-      const a = await auditRenderedTemplate(everything());
+      const a = await auditRendered(everything());
       const f = a.findings.find((x) => x.convention === "bindingsDeclared");
       expect(f).toMatchObject({ severity: "error" }); // throw posture
       expect(f!.violations.map((v) => v.key).sort()).toEqual(["accent", "count", "label", "poster", "region", "rows", "tags"]);
@@ -162,7 +175,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     });
 
     it("a bound prop and a declared prop both satisfy it", async () => {
-      const a = await auditRenderedTemplate(
+      const a = await auditRendered(
         tmpl("@x/rollcall-ok/v1", async () => doc([bound("hello", "label")]), {
           propsSchema: schema({
             label: { type: "string", meta: { ui: { label: "Label" } } },
@@ -198,7 +211,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
           children: { card: child },
           sources: [{ type: "mosaic", ref: "card" }],
         }) as unknown as MosaicDocument;
-      const a = await auditRenderedTemplate(
+      const a = await auditRendered(
         tmpl("@x/nested-bind/v1", async () => nested(), {
           propsSchema: schema({ title: { type: "string", meta: { ui: { label: "Title" } } } }),
           defaultProps: { title: "Hello there" },
@@ -209,7 +222,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
 
     it("...and a stale declaration for a child-bound prop is still caught", async () => {
       const child: Src = { kind: "mosaic_document", version: 1, m0: "1", assets: {}, sources: [bound("Hello there", "title")] };
-      const a = await auditRenderedTemplate(
+      const a = await auditRendered(
         tmpl("@x/nested-stale/v1", async () => (({
           kind: "mosaic_document", version: 1, m0: "1", assets: {},
           children: { card: child }, sources: [{ type: "mosaic", ref: "card" }],
@@ -240,28 +253,28 @@ describe("auditRenderedTemplate — the render-time seam", () => {
         } as never);
 
       it("accounted for, with no binding and no declaration", async () => {
-        const a = await auditRenderedTemplate(withBg("#1c2833", "#1c2833"));
+        const a = await auditRendered(withBg("#1c2833", "#1c2833"));
         expect(only(a, "bindingsDeclared")).toEqual([]);
       });
 
       it("case-insensitively — #1C2833 is #1c2833", async () => {
-        const a = await auditRenderedTemplate(withBg("#1C2833", "#1c2833"));
+        const a = await auditRendered(withBg("#1C2833", "#1c2833"));
         expect(only(a, "bindingsDeclared")).toEqual([]);
       });
 
       it("a colour that is NOT the background still has to be accounted for", async () => {
-        const a = await auditRenderedTemplate(withBg("#000000", "#c0392b"));
+        const a = await auditRendered(withBg("#000000", "#c0392b"));
         expect(only(a, "bindingsDeclared")[0].violations.map((v) => v.key)).toEqual(["pageColor"]);
       });
 
       it("no background at all — still accountable", async () => {
-        const a = await auditRenderedTemplate(withBg(undefined, "#c0392b"));
+        const a = await auditRendered(withBg(undefined, "#c0392b"));
         expect(only(a, "bindingsDeclared")[0].violations.map((v) => v.key)).toEqual(["pageColor"]);
       });
 
       it("a CHILD's background counts too — a nested card sets its own", async () => {
         const child = { kind: "mosaic_document", version: 1, m0: "1", assets: {}, backgroundColor: "#1c2833", sources: [text("x")] };
-        const a = await auditRenderedTemplate(
+        const a = await auditRendered(
           tmpl("@x/bg-child/v1", async () => (({
             kind: "mosaic_document", version: 1, m0: "1", assets: {},
             children: { card: child }, sources: [{ type: "mosaic", ref: "card" }],
@@ -275,7 +288,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     });
 
     it("a template that SHIPPED before the rule reports it as lag, not a finding", async () => {
-      const a = await auditRenderedTemplate(everything(), { shippedAt: "0.2.0" });
+      const a = await auditRendered(everything(), { shippedAt: "0.2.0" });
       // not fatal, not in the shared log…
       expect(a.findings.filter((f) => f.convention === "bindingsDeclared")).toEqual([]);
       // …but VISIBLE, which a bare skip destroyed
@@ -286,7 +299,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     it("a rule OLDER than the shipped line is still a real error — it shipped non-compliant", async () => {
       // `bindingsDeclared` landed in 0.3.0, so a template claiming to have shipped
       // AT 0.3.0 gets no pass on it.
-      const a = await auditRenderedTemplate(everything(), { shippedAt: "0.3.0" });
+      const a = await auditRendered(everything(), { shippedAt: "0.3.0" });
       expect(a.findings.map((f) => f.convention)).toContain("bindingsDeclared");
       expect(a.lagging).toEqual([]);
     });
@@ -303,21 +316,21 @@ describe("auditRenderedTemplate — the render-time seam", () => {
         } as never);
 
       it("names a prop that cannot carry a handle", async () => {
-        const a = await auditRenderedTemplate(withDecl({ label: "n/a", enabled: "a toggle" }));
+        const a = await auditRendered(withDecl({ label: "n/a", enabled: "a toggle" }));
         const f = a.findings.find((x) => x.convention === "bindingsDeclared")!;
         expect(f.violations.map((v) => v.key)).toEqual(["enabled"]);
         expect(f.violations[0].detail).toMatch(/not a prop that can carry a canvas handle/);
       });
 
       it("names a prop that IS bound", async () => {
-        const a = await auditRenderedTemplate(withDecl({ label: "n/a" }, [bound("hello", "label")]));
+        const a = await auditRendered(withDecl({ label: "n/a" }, [bound("hello", "label")]));
         const f = a.findings.find((x) => x.convention === "bindingsDeclared")!;
         expect(f.violations.map((v) => v.key)).toEqual(["label"]);
         expect(f.violations[0].detail).toMatch(/but a source binds it — drop the entry/);
       });
 
       it("has an empty reason", async () => {
-        const a = await auditRenderedTemplate(withDecl({ label: "   " }));
+        const a = await auditRendered(withDecl({ label: "   " }));
         const f = a.findings.find((x) => x.convention === "bindingsDeclared")!;
         expect(f.violations.map((v) => v.key)).toEqual(["label"]);
         expect(f.violations[0].detail).toMatch(/has no reason/);
@@ -372,7 +385,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
       } as never);
 
     it("a static full-canvas colour source is an ERROR, and names the fix", async () => {
-      const a = await auditRenderedTemplate(one([fill()]));
+      const a = await auditRendered(one([fill()]));
       const f = only(a, "canvasFill");
       expect(f).toMatchObject([{ severity: "error", violations: [{ key: "source[0]" }] }]);
       expect(f[0].violations[0].detail).toMatch(/whole 1280×720 canvas/);
@@ -380,36 +393,58 @@ describe("auditRenderedTemplate — the render-time seam", () => {
       expect(f[0].violations[0].detail).toMatch(/click target over everything/);
     });
 
+    it("a rounded / stroked card that nothing binds is an ERROR too (2026-10-01) — its corners do not change the click", async () => {
+      const a = await auditRendered(one([fill({ effects: { rounding: { cornerStyle: "rounded", borderRadius: 0.08 }, stroke: { width: 0.002, color: "#eee" } } })]));
+      const f = only(a, "canvasFill");
+      expect(f).toMatchObject([{ severity: "error", violations: [{ key: "source[0]" }] }]);
+      expect(f[0].violations[0].detail).toMatch(/rounded or stroked/);
+      expect(f[0].violations[0].detail).toMatch(/make the rect a handle/);
+    });
+
+    it("…but a repo HELD TO 0.3.0 keeps the rule it shipped under: the rounded card stays exempt there (a plain fill never was)", async () => {
+      const card = () => fill({ effects: { rounding: { cornerStyle: "rounded", borderRadius: 0.08 } } });
+      expect(only(await auditRendered(one([card()]), { shippedAt: "0.3.0" }), "canvasFill")).toEqual([]);
+      expect(only(await auditRendered(one([card()]), { conventionsTarget: "0.3.0" }), "canvasFill")).toEqual([]);
+      // held to the LOWER of the two
+      expect(only(await auditRendered(one([card()]), { shippedAt: "0.3.0", conventionsTarget: "0.3.1" }), "canvasFill")).toEqual([]);
+      expect(only(await auditRendered(one([card()]), { shippedAt: "0.3.1" }), "canvasFill")).toHaveLength(1);
+      // the plain fill was never exempt: flagged on every line
+      expect(only(await auditRendered(one([fill()]), { shippedAt: "0.3.0" }), "canvasFill")).toHaveLength(1);
+    });
+
     it("the legacy form counts too — an empty text source with visual.backgroundColor", async () => {
       const legacy: Src = { type: "text", visual: { backgroundColor: "#1c2833" }, layers: [{ content: { kind: "literal", text: "  " } }] };
-      expect(only(await auditRenderedTemplate(one([legacy])), "canvasFill")).toHaveLength(1);
+      expect(only(await auditRendered(one([legacy])), "canvasFill")).toHaveLength(1);
     });
 
     describe("every legitimate full-canvas colour is left alone", () => {
       it("a curtain wipe (overlay.enable / window)", async () => {
-        expect(only(await auditRenderedTemplate(one([fill({ overlay: { enable: "gte(t,1)" } })])), "canvasFill")).toEqual([]);
+        expect(only(await auditRendered(one([fill({ overlay: { enable: "gte(t,1)" } })])), "canvasFill")).toEqual([]);
       });
       it("a scrim (overlay.alpha)", async () => {
-        expect(only(await auditRenderedTemplate(one([fill({ overlay: { alpha: "0.4" } })])), "canvasFill")).toEqual([]);
+        expect(only(await auditRendered(one([fill({ overlay: { alpha: "0.4" } })])), "canvasFill")).toEqual([]);
       });
       it("a masked shape", async () => {
-        expect(only(await auditRenderedTemplate(one([fill({ mask: { kind: "image", assetId: "a" } })])), "canvasFill")).toEqual([]);
+        expect(only(await auditRendered(one([fill({ mask: { kind: "image", assetId: "a" } })])), "canvasFill")).toEqual([]);
       });
-      it("a rounded / stroked card (effects)", async () => {
-        expect(only(await auditRenderedTemplate(one([fill({ effects: { cornerRadius: 12 } })])), "canvasFill")).toEqual([]);
+      it("a full-canvas rect that CARRIES A HANDLE — the click on it edits something", async () => {
+        const bound = fill({ editor: { binding: { propKey: "useNestedBackgroundColor" } } });
+        expect(only(await auditRendered(one([bound])), "canvasFill")).toEqual([]);
+        const card = fill({ effects: { rounding: { cornerStyle: "rounded", borderRadius: 0.08 } }, editor: { bindings: [{ propKey: "useNestedBackgroundColor" }] } });
+        expect(only(await auditRendered(one([card])), "canvasFill")).toEqual([]);
       });
       it("an inset fill (placement)", async () => {
-        expect(only(await auditRenderedTemplate(one([fill({ placement: { inset: 8 } })])), "canvasFill")).toEqual([]);
+        expect(only(await auditRendered(one([fill({ placement: { inset: 8 } })])), "canvasFill")).toEqual([]);
       });
       it("a lavfi FILTER GRAPH, which is not a fill", async () => {
-        expect(only(await auditRenderedTemplate(one([{ type: "lavfi", lavfi: "gradients=s=1280x720" }])), "canvasFill")).toEqual([]);
+        expect(only(await auditRendered(one([{ type: "lavfi", lavfi: "gradients=s=1280x720" }])), "canvasFill")).toEqual([]);
       });
       it("a colour that does NOT cover the canvas (one half of a split)", async () => {
-        expect(only(await auditRenderedTemplate(one([fill(), text("x")])), "canvasFill")).toEqual([]);
+        expect(only(await auditRendered(one([fill(), text("x")])), "canvasFill")).toEqual([]);
       });
       it("text with real content and a background (a chip, not a fill)", async () => {
         const chip: Src = { type: "text", visual: { backgroundColor: "#1c2833" }, layers: [{ content: { kind: "literal", text: "LIVE" } }] };
-        expect(only(await auditRenderedTemplate(one([chip])), "canvasFill")).toEqual([]);
+        expect(only(await auditRendered(one([chip])), "canvasFill")).toEqual([]);
       });
     });
 
@@ -422,19 +457,19 @@ describe("auditRenderedTemplate — the render-time seam", () => {
         } as never);
 
       it("a stated reason satisfies the rule", async () => {
-        const a = await auditRenderedTemplate(withReason("the lesson IS the full-rect base under two overlays"));
+        const a = await auditRendered(withReason("the lesson IS the full-rect base under two overlays"));
         expect(only(a, "canvasFill")).toEqual([]);
       });
 
       it("an EMPTY reason is itself a violation — a checkbox is not a statement", async () => {
-        const a = await auditRenderedTemplate(withReason("   "));
+        const a = await auditRendered(withReason("   "));
         const f = only(a, "canvasFill");
         expect(f[0].violations.map((v) => v.key)).toContain("canvas.baseRect");
         expect(f[0].violations.find((v) => v.key === "canvas.baseRect")!.detail).toMatch(/no reason/);
       });
 
       it("the two escapes are not interchangeable — the detail names both", async () => {
-        const a = await auditRenderedTemplate(one([fill()]));
+        const a = await auditRendered(one([fill()]));
         const detail = only(a, "canvasFill")[0].violations[0].detail;
         expect(detail).toMatch(/canvas\.baseRect = "<why>"/);
         expect(detail).toMatch(/composed INTO another uses defaultProps\.useNestedBackgroundColor/);
@@ -442,22 +477,22 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     });
 
     it("a template that MUST ship the rect declares it — useNestedBackgroundColor default true", async () => {
-      expect(only(await auditRenderedTemplate(one([fill()], { useNestedBackgroundColor: true })), "canvasFill")).toEqual([]);
+      expect(only(await auditRendered(one([fill()], { useNestedBackgroundColor: true })), "canvasFill")).toEqual([]);
     });
 
     it("...and declaring it FALSE is no escape", async () => {
-      expect(only(await auditRenderedTemplate(one([fill()], { useNestedBackgroundColor: false })), "canvasFill")).toHaveLength(1);
+      expect(only(await auditRendered(one([fill()], { useNestedBackgroundColor: false })), "canvasFill")).toHaveLength(1);
     });
 
     it("a shipped template reports it as lag — the rule is not retroactive", async () => {
-      const a = await auditRenderedTemplate(one([fill()]), { shippedAt: "0.2.0" });
+      const a = await auditRendered(one([fill()]), { shippedAt: "0.2.0" });
       expect(only(a, "canvasFill")).toEqual([]);
       expect(a.lagging.map((f) => f.convention)).toEqual(["canvasFill"]);
     });
 
     it("a CHILD filling its own slot is the sanctioned workaround, not the smell", async () => {
       const child = { kind: "mosaic_document", version: 1, m0: "1", assets: {}, sources: [{ type: "lavfi", color: "#1c2833" }] };
-      const a = await auditRenderedTemplate(
+      const a = await auditRendered(
         tmpl("@x/fill-child/v1", async () => (({
           kind: "mosaic_document", version: 1, m0: "1", assets: {},
           children: { card: child }, sources: [{ type: "mosaic", ref: "card" }],
@@ -479,26 +514,26 @@ describe("auditRenderedTemplate — the render-time seam", () => {
       } as never);
 
     it("an unbound drawn number warns; the bound one does not", async () => {
-      const a = await auditRenderedTemplate(nums(async () => doc([bound("42 items", "count"), text("$1,200 / yr")])));
+      const a = await auditRendered(nums(async () => doc([bound("42 items", "count"), text("$1,200 / yr")])));
       const cover = only(a, "bindingsCover");
       expect(cover).toMatchObject([{ severity: "warning", violations: [{ key: "price" }] }]);
       expect(cover[0].violations[0].detail).toMatch(/default 1200, drawn as "1,200".+bindProp\(src, "price"\)/);
     });
 
     it("both bound: nothing recorded", async () => {
-      const a = await auditRenderedTemplate(nums(async () => doc([bound("42 items", "count"), bound("$1,200 / yr", "price")])));
+      const a = await auditRendered(nums(async () => doc([bound("42 items", "count"), bound("$1,200 / yr", "price")])));
       expect(a.findings).toEqual([]);
       expect(listTemplateConventionFindings()).toEqual([]);
     });
 
     it("toFixed spellings count — a rate drawn as 4.50 covers the prop 4.5", async () => {
-      const a = await auditRenderedTemplate(nums(async () => doc([text("4.50% APR")]), { count: 4.5, price: 1200 }));
+      const a = await auditRendered(nums(async () => doc([text("4.50% APR")]), { count: 4.5, price: 1200 }));
       expect(a.findings[0].violations.map((v) => v.key)).toEqual(["count"]);
       expect(a.findings[0].violations[0].detail).toMatch(/drawn as "4.50"/);
     });
 
     it("a digit INSIDE a longer number is not the prop (12 is not in 2012)", async () => {
-      const a = await auditRenderedTemplate(nums(async () => doc([text("© 2012 Acme")]), { count: 12, price: 7 }));
+      const a = await auditRendered(nums(async () => doc([text("© 2012 Acme")]), { count: 12, price: 7 }));
       // 12 hides inside 2012; 7 has no spelling worth matching
       expect(only(a, "bindingsCover")).toEqual([]);
       // the roll call does not care whether a prop is DRAWN — both are unbound
@@ -508,7 +543,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     it("a composite line: the rect already binds another prop, so the fix is bindProps or a split", async () => {
       // `year-card/v1`'s header: one rect draws the handle AND the year, and the
       // single binding belongs to the handle. A bare bindProp would REPLACE it.
-      const a = await auditRenderedTemplate(
+      const a = await auditRendered(
         tmpl("@x/composite/v1", async () => doc([bound("@qsbuilds · 2026 on GitHub", "handle")]), {
           propsSchema: schema({
             handle: { type: "string", meta: { ui: { label: "Handle" } } },
@@ -526,14 +561,14 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     });
 
     it("one rect free and one bound: the free rect is the fix", async () => {
-      const a = await auditRenderedTemplate(nums(async () => doc([bound("42 · 1,200 seats", "count"), text("1,200 seats")])));
+      const a = await auditRendered(nums(async () => doc([bound("42 · 1,200 seats", "count"), text("1,200 seats")])));
       expect(a.findings[0].violations[0].detail).toMatch(/bindProp\(src, "price"\)/);
     });
 
     it("bindProps on one rect covers BOTH props — no finding", async () => {
       const both = (t: string, keys: { propKey: string; kind?: string }[]): Src =>
         text(t, { editor: { bindings: keys } });
-      const a = await auditRenderedTemplate(
+      const a = await auditRendered(
         tmpl("@x/composite-ok/v1", async () => doc([both("@qsbuilds · 2026 on GitHub", [{ propKey: "handle" }, { propKey: "year", kind: "number" }])]), {
           propsSchema: schema({
             handle: { type: "string", meta: { ui: { label: "Handle" } } },
@@ -546,7 +581,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     });
 
     it("a closed / hidden / human number is never a coverage target", async () => {
-      const a = await auditRenderedTemplate(
+      const a = await auditRendered(
         tmpl("@x/nums-skip/v1", async () => doc([text("24 fps · 48 px · 96 dpi")]), {
           propsSchema: schema({
             fps: { type: "number", meta: { control: { options: [{ value: "24" }, { value: "30" }, { value: "60" }] }, ui: { label: "FPS" } } },
@@ -584,18 +619,27 @@ describe("auditRenderedTemplate — the render-time seam", () => {
   });
 
   it("bindingsSound (error): a binding the schema refuses, with the reason and the fix", async () => {
-    const a = await auditRenderedTemplate(
-      tmpl("@x/sound/v1", async () => doc([bound("Hello there", "title"), bound("mode a", "mode"), bound("x", "nope")])),
+    // `mode` is a closed set — a CHOICE handle since 2026-10-01, so it is sound;
+    // `on` (a boolean) is still refused, as is an unknown prop.
+    const a = await auditRendered(
+      tmpl("@x/sound/v1", async () => doc([bound("Hello there", "title"), bound("mode a", "mode"), bound("on", "on"), bound("x", "nope")]), {
+        propsSchema: schema({
+          title: { type: "string", meta: { ui: { label: "Title" } } },
+          mode: { type: "string", meta: { constraints: { oneOf: ["a", "b"] }, ui: { label: "Mode" } } },
+          on: { type: "boolean", meta: { ui: { label: "On" } } },
+        }),
+        defaultProps: { title: "Hello there", mode: "a", on: true },
+      }),
     );
     const sound = a.findings.find((f) => f.convention === "bindingsSound");
     expect(sound).toMatchObject({ severity: "error" });
-    expect(sound!.violations.map((v) => v.key).sort()).toEqual(["mode", "nope"]);
-    expect(sound!.violations.find((v) => v.key === "mode")!.detail).toMatch(/unsupported-type/);
+    expect(sound!.violations.map((v) => v.key).sort()).toEqual(["nope", "on"]);
+    expect(sound!.violations.find((v) => v.key === "on")!.detail).toMatch(/unsupported-type/);
     expect(sound!.violations.find((v) => v.key === "nope")!.detail).toMatch(/unknown-prop/);
   });
 
   it("svgGlyphCoverage (error): a character the bundled font lacks, checked against the REAL font", async () => {
-    const a = await auditRenderedTemplate(
+    const a = await auditRendered(
       tmpl("@x/glyph/v1", async () => doc([bound("Hello there", "title"), text("ok … “quoted” · × – —"), text("bad → ✓"), text("drawtext → is fine", {}, false)])),
     );
     const glyph = a.findings.find((f) => f.convention === "svgGlyphCoverage");
@@ -605,7 +649,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
   });
 
   it("rendersAtDefaults (error) when render throws and every required input has a default", async () => {
-    const a = await auditRenderedTemplate(tmpl("@x/throws/v1", async () => { throw new Error("boom\nmore"); }));
+    const a = await auditRendered(tmpl("@x/throws/v1", async () => { throw new Error("boom\nmore"); }));
     expect(a.findings).toMatchObject([{ convention: "rendersAtDefaults", severity: "error", violations: [{ key: "render" }] }]);
     expect(a.findings[0].violations[0].detail).toMatch(/threw: boom$/);
   });
@@ -618,7 +662,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
       items.sort(); // in place — on the frozen default array
       return doc([text(items.join(","))]);
     }, { defaultProps: { title: "Hello there", mode: "a", items: ["b", "a"] } });
-    const a = await auditRenderedTemplate(t);
+    const a = await auditRendered(t);
     expect(a.skipped).toBeUndefined();
     expect(a.findings.map((f) => f.convention)).toContain("rendersAtDefaults");
     expect(a.findings.find((f) => f.convention === "rendersAtDefaults")!.violations[0]!.detail).toMatch(/read only|not extensible|Cannot assign|frozen|object is not extensible/i);
@@ -631,11 +675,11 @@ describe("auditRenderedTemplate — the render-time seam", () => {
       (props as Record<string, unknown>).scratch = 1; // top-level write is fine — production hands a fresh shallow copy
       return doc([text(items.join(","))]);
     }, { defaultProps: { title: "Hello there", mode: "a", items: ["b", "a"] } });
-    expect((await auditRenderedTemplate(ok)).findings.map((f) => f.convention)).not.toContain("rendersAtDefaults");
+    expect((await auditRendered(ok)).findings.map((f) => f.convention)).not.toContain("rendersAtDefaults");
   });
 
   it("SKIPS (no finding) a throwing template whose required inputs have no default", async () => {
-    const a = await auditRenderedTemplate(
+    const a = await auditRendered(
       tmpl("@x/inputs/v1", async () => { throw new Error("no source"); }, {
         propsSchema: schema({ sourceId: { type: "media", required: true }, title: { type: "string", meta: { control: { placeholder: "x" } } } }),
         defaultProps: { title: "t" },
@@ -647,28 +691,28 @@ describe("auditRenderedTemplate — the render-time seam", () => {
 
   it("SKIPS capability-tier templates without rendering them", async () => {
     let rendered = false;
-    const a = await auditRenderedTemplate(tmpl("@x/cap/v1", async () => { rendered = true; return doc([]); }, { capabilities: { tier: "capability", caps: {} } } as never));
+    const a = await auditRendered(tmpl("@x/cap/v1", async () => { rendered = true; return doc([]); }, { capabilities: { tier: "capability", caps: {} } } as never));
     expect(a.skipped).toMatch(/capability tier/);
     expect(rendered).toBe(false);
   });
 
   it("audits a pipeline's inline step documents", async () => {
     const pipeline = { kind: "mosaic_pipeline", version: 1, steps: [{ durationMs: 1000, file: doc([text("Hello there")]) }, { durationMs: 1000, ref: "x" }] };
-    const a = await auditRenderedTemplate(tmpl("@x/pipe/v1", async () => pipeline as never));
+    const a = await auditRendered(tmpl("@x/pipe/v1", async () => pipeline as never));
     expect(a.findings.map((f) => f.convention)).toEqual(["bindingsCover", "bindingsDeclared"]);
   });
 
   it("external + record:false: findings are flagged external and NOT written to the log; a later pass clears an old finding", async () => {
     const t = tmpl("@x/ext/v1", async () => doc([text("Hello there")]));
-    const a = await auditRenderedTemplate(t, { external: true, record: false });
+    const a = await auditRendered(t, { external: true, record: false });
     expect(only(a, "bindingsCover")[0]).toMatchObject({ external: true, severity: "warning" });
     // an external pack's throw-posture finding is recorded, never fatal, but
     // KEEPS error severity — the host's publish requirement (see latticeSmooth)
     expect(only(a, "bindingsDeclared")[0]).toMatchObject({ external: true, severity: "error" });
     expect(listTemplateConventionFindings()).toEqual([]);
-    await auditRenderedTemplate(t);
+    await auditRendered(t);
     expect(listTemplateConventionFindings()).toHaveLength(2);
-    await auditRenderedTemplate(tmpl("@x/ext/v1", async () => doc([bound("Hello there", "title")])));
+    await auditRendered(tmpl("@x/ext/v1", async () => doc([bound("Hello there", "title")])));
     expect(listTemplateConventionFindings()).toEqual([]);
   });
 
@@ -681,7 +725,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
       }) as MosaicDocument;
 
     it("safeMinimumCanvas (warning): the template is below its own floor at its hinted canvas", async () => {
-      const a = await auditRenderedTemplate(tmpl("@x/floor/v1", async () => tall(), { outputHints: { width: 1280, height: 720 } } as never));
+      const a = await auditRendered(tmpl("@x/floor/v1", async () => tall(), { outputHints: { width: 1280, height: 720 } } as never));
       const f = a.findings.find((x) => x.convention === "safeMinimumCanvas");
       expect(f).toMatchObject({ severity: "warning", violations: [{ key: "1280×720" }] });
       expect(f!.violations[0].detail).toMatch(/safe minimum is \d+×1000/);
@@ -689,17 +733,17 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     });
 
     it("says when the floor breach CULLS cells (below feasibility), not just squashes them", async () => {
-      const a = await auditRenderedTemplate(tmpl("@x/floor-cull/v1", async () => tall(), { outputHints: { width: 1280, height: 2 } } as never));
+      const a = await auditRendered(tmpl("@x/floor-cull/v1", async () => tall(), { outputHints: { width: 1280, height: 2 } } as never));
       expect(a.findings.find((x) => x.convention === "safeMinimumCanvas")!.violations[0].detail).toMatch(/culled: content is missing/);
     });
 
     it("is silent when the hinted canvas clears the floor", async () => {
-      const a = await auditRenderedTemplate(tmpl("@x/floor-ok/v1", async () => tall(), { outputHints: { width: 1280, height: 1000 } } as never));
+      const a = await auditRendered(tmpl("@x/floor-ok/v1", async () => tall(), { outputHints: { width: 1280, height: 1000 } } as never));
       expect(a.findings.map((x) => x.convention)).not.toContain("safeMinimumCanvas");
     });
 
     it("canvasEnvelope (warning, opt-in): renders at each sweep canvas and lists the ones below the floor", async () => {
-      const a = await auditRenderedTemplate(tmpl("@x/envelope/v1", async () => tall(), { outputHints: { width: 1280, height: 1000 } } as never), {
+      const a = await auditRendered(tmpl("@x/envelope/v1", async () => tall(), { outputHints: { width: 1280, height: 1000 } } as never), {
         sweepCanvases: [{ width: 1920, height: 1080 }, { width: 1080, height: 1920 }, { width: 1080, height: 1080 }, { width: 1280, height: 1000 }],
       });
       // 1080 tall clears 1000; the hinted canvas is skipped; 1920×1080 clears —
@@ -709,7 +753,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     });
 
     it("canvasEnvelope flags exactly the canvases that fall below", async () => {
-      const a = await auditRenderedTemplate(tmpl("@x/envelope-2/v1", async () => tall(), { outputHints: { width: 1280, height: 1000 } } as never), {
+      const a = await auditRendered(tmpl("@x/envelope-2/v1", async () => tall(), { outputHints: { width: 1280, height: 1000 } } as never), {
         sweepCanvases: [{ width: 1920, height: 800 }, { width: 800, height: 1200 }],
       });
       const env = a.findings.find((x) => x.convention === "canvasEnvelope")!;
@@ -720,14 +764,14 @@ describe("auditRenderedTemplate — the render-time seam", () => {
   describe("deterministic", () => {
     it("THROW-posture finding when two renders of the defaults differ, naming the first differing path", async () => {
       let n = 0;
-      const a = await auditRenderedTemplate(tmpl("@x/nondet/v1", async () => ({ ...doc([bound("Hello there", "title")]), label: `run ${++n}` }) as never));
+      const a = await auditRendered(tmpl("@x/nondet/v1", async () => ({ ...doc([bound("Hello there", "title")]), label: `run ${++n}` }) as never));
       const f = a.findings.find((x) => x.convention === "deterministic");
       expect(f).toMatchObject({ severity: "error", violations: [{ key: "$.label" }] });
       expect(f!.violations[0].detail).toMatch(/differ at \$\.label/);
     });
 
     it("silent for a pure render", async () => {
-      const a = await auditRenderedTemplate(tmpl("@x/det/v1", async () => doc([bound("Hello there", "title")])));
+      const a = await auditRendered(tmpl("@x/det/v1", async () => doc([bound("Hello there", "title")])));
       expect(a.findings.map((x) => x.convention)).not.toContain("deterministic");
     });
   });
@@ -743,16 +787,16 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     it("THROW-posture finding when an svg text layer measures wider than its cell", async () => {
       // The 2-way split is two ROWS of 1280×360 at 1280×720; 400px type
       // measures ~1925×469 and does not fit "Hello there".
-      const a = await auditRenderedTemplate(tmpl("@x/clip/v1", async () => doc([svgText("Hello there", 400), text("x")])));
+      const a = await auditRendered(tmpl("@x/clip/v1", async () => doc([svgText("Hello there", 400), text("x")])));
       const f = a.findings.find((x) => x.convention === "textFits");
       expect(f).toMatchObject({ severity: "error", violations: [{ key: "src[0]" }] });
       expect(f!.violations[0].detail).toMatch(/needs \d+×\d+ px but its cell offers \d+×\d+ px/);
     });
 
     it("honours inset and padding — the same text that fits the raw cell can fail the padded box", async () => {
-      const fits = await auditRenderedTemplate(tmpl("@x/fit/v1", async () => doc([svgText("Hello there", 40), text("x")])));
+      const fits = await auditRendered(tmpl("@x/fit/v1", async () => doc([svgText("Hello there", 40), text("x")])));
       expect(fits.findings.map((x) => x.convention)).not.toContain("textFits");
-      const padded = await auditRenderedTemplate(
+      const padded = await auditRendered(
         tmpl("@x/fit-pad/v1", async () => doc([svgText("Hello there", 40, { placement: { padding: { left: 0.45, right: 0.45 } } }), text("x")])),
       );
       expect(padded.findings.map((x) => x.convention)).toContain("textFits");
@@ -761,16 +805,16 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     it("sizes height by the em (glyph ink), and subtracts a plain-number xExpr offset", async () => {
       // 1280×360 rows: a 300px "●" is 300 tall by the em (fits 360) though its
       // font metrics span ~350; the same glyph pushed 1200px right does not fit.
-      const ok = await auditRenderedTemplate(tmpl("@x/em/v1", async () => doc([svgText("●", 300), text("x")])));
+      const ok = await auditRendered(tmpl("@x/em/v1", async () => doc([svgText("●", 300), text("x")])));
       expect(ok.findings.map((x) => x.convention)).not.toContain("textFits");
-      const pushed = await auditRenderedTemplate(
+      const pushed = await auditRendered(
         tmpl("@x/em-x/v1", async () => doc([svgText("●", 300, { placement: { hAlign: "left", xExpr: "1200" } }), text("x")])),
       );
       expect(pushed.findings.map((x) => x.convention)).toContain("textFits");
     });
 
     it("ignores drawtext sources and layers without a font size", async () => {
-      const a = await auditRenderedTemplate(
+      const a = await auditRendered(
         tmpl("@x/fit-skip/v1", async () => doc([{ ...svgText("Hello there", 400), rasterizer: "drawtext" }, { type: "text", rasterizer: "svg", layers: [{ content: { kind: "literal", text: "Hello there" } }] }])),
       );
       expect(a.findings.map((x) => x.convention)).not.toContain("textFits");
@@ -779,7 +823,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
 
   describe("layout fingerprint", () => {
     it("the audit returns the flattened layout with a stable hash and frame count", async () => {
-      const a = await auditRenderedTemplate(tmpl("@x/fp/v1", async () => doc([bound("Hello there", "title"), text("x")])));
+      const a = await auditRendered(tmpl("@x/fp/v1", async () => doc([bound("Hello there", "title"), text("x")])));
       expect(a.layout).toMatchObject({ canvas: { width: 1280, height: 720 }, docs: ["2[1,1]"], m0: "2[1,1]", chars: 6, frames: 2 });
       expect(a.layout!.hash).toBe(fingerprintHash("2[1,1]"));
       expect(fingerprintHash("2[1,1]")).toMatch(/^[0-9a-f]{16}$/);
@@ -802,7 +846,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
       const n = COST_BUDGETS.frames + 1;
       const many = (): MosaicDocument =>
         ({ kind: "mosaic_document", version: 1, m0: `${n}[${Array(n).fill("1").join(",")}]`, assets: {}, sources: Array.from({ length: n }, () => ({ type: "lavfi", color: "#000" })) }) as unknown as MosaicDocument;
-      const a = await auditRenderedTemplate(tmpl("@x/cost/v1", async () => many()));
+      const a = await auditRendered(tmpl("@x/cost/v1", async () => many()));
       const f = a.findings.find((x) => x.convention === "costBudget")!;
       expect(f.severity).toBe("warning");
       expect(f.violations.map((v) => v.key).sort()).toEqual(["frames", "sources"]);
@@ -810,7 +854,7 @@ describe("auditRenderedTemplate — the render-time seam", () => {
     });
 
     it("counts inline masks and overlay depth; a small document is silent", async () => {
-      const a = await auditRenderedTemplate(tmpl("@x/cost-ok/v1", async () => doc([bound("Hello there", "title"), text("x")])));
+      const a = await auditRendered(tmpl("@x/cost-ok/v1", async () => doc([bound("Hello there", "title"), text("x")])));
       expect(a.findings.map((x) => x.convention)).not.toContain("costBudget");
     });
 
@@ -827,23 +871,23 @@ describe("auditRenderedTemplate — the render-time seam", () => {
       const outer = chain(12, masked, { children: { card: inner } });
       // the base tile of the outer chain IS the child — flattened, the tree reads 24 deep
       (outer as unknown as { sources: Src[] }).sources[0] = { type: "mosaic", ref: "card" };
-      const a = await auditRenderedTemplate(tmpl("@x/cost-nested/v1", async () => outer));
+      const a = await auditRendered(tmpl("@x/cost-nested/v1", async () => outer));
       expect(a.findings.filter((x) => x.convention === "costBudget")).toEqual([]);
     });
 
     it("names the node whose own chain is past the budget with inline masks riding it", async () => {
       const deep = chain(COST_BUDGETS.overlayDepth + 1, masked, { size: { width: 1280, height: 720 } });
       const root = { ...doc([{ type: "mosaic", ref: "deep" }, text("x")]), children: { deep } } as unknown as MosaicDocument;
-      const a = await auditRenderedTemplate(tmpl("@x/cost-deep-child/v1", async () => root));
+      const a = await auditRendered(tmpl("@x/cost-deep-child/v1", async () => root));
       const f = a.findings.find((x) => x.convention === "costBudget")!;
       expect(f.violations.map((v) => v.key)).toEqual(["overlayDepth"]);
       expect(f.violations[0].detail).toMatch(/^overlayDepth 21 on child document "deep" exceeds the budget of 20 — the engine drops inline masks past ~25 overlay layers on one node/);
-      const atRoot = await auditRenderedTemplate(tmpl("@x/cost-deep-root/v1", async () => chain(COST_BUDGETS.overlayDepth + 1, masked)));
+      const atRoot = await auditRendered(tmpl("@x/cost-deep-root/v1", async () => chain(COST_BUDGETS.overlayDepth + 1, masked)));
       expect(atRoot.findings.find((x) => x.convention === "costBudget")!.violations[0].detail).toMatch(/^overlayDepth 21 exceeds the budget/);
     });
 
     it("a deep chain with no inline masks is silent, as the engine's own warning is", async () => {
-      const a = await auditRenderedTemplate(tmpl("@x/cost-deep-plain/v1", async () => chain(COST_BUDGETS.overlayDepth + 1, () => ({ type: "lavfi", color: "#000" }))));
+      const a = await auditRendered(tmpl("@x/cost-deep-plain/v1", async () => chain(COST_BUDGETS.overlayDepth + 1, () => ({ type: "lavfi", color: "#000" }))));
       expect(a.findings.map((x) => x.convention)).not.toContain("costBudget");
     });
   });
@@ -859,18 +903,18 @@ describe("latticeSmooth — split counts above 12 are 5-smooth (throw posture)",
   const latticeFinding = (a: Awaited<ReturnType<typeof auditRenderedTemplate>>) => a.findings.find((f) => f.convention === "latticeSmooth");
 
   it("a 5-smooth basis (30 = 2·3·5) is on the lattice — no finding", async () => {
-    const a = await auditRenderedTemplate(tmpl("@x/lattice-ok/v1", async () => basisDoc(30)));
+    const a = await auditRendered(tmpl("@x/lattice-ok/v1", async () => basisDoc(30)));
     expect(latticeFinding(a)).toBeUndefined();
     expect(a.notes.filter((n) => n.startsWith("latticeSmooth"))).toEqual([]);
   });
 
   it("an external pack's finding is recorded, not fatal, but keeps error severity — the doctor's publish requirement", async () => {
-    const a = await auditRenderedTemplate(tmpl("@x/lattice-ext/v1", async () => basisDoc(121)), { external: true, record: false });
+    const a = await auditRendered(tmpl("@x/lattice-ext/v1", async () => basisDoc(121)), { external: true, record: false });
     expect(latticeFinding(a)).toMatchObject({ severity: "error", external: true });
   });
 
   it("121 (the cap-and-round fencepost) is an error naming the count, the factor, and the precision fix", async () => {
-    const a = await auditRenderedTemplate(tmpl("@x/lattice-121/v1", async () => basisDoc(121)));
+    const a = await auditRendered(tmpl("@x/lattice-121/v1", async () => basisDoc(121)));
     const f = latticeFinding(a);
     expect(f).toMatchObject({ severity: "error", violations: [{ key: "N=121" }] });
     expect(f!.violations[0].detail).toContain("split count 121 (row ×1) = 11² is not 5-smooth");
@@ -881,23 +925,23 @@ describe("latticeSmooth — split counts above 12 are 5-smooth (throw posture)",
   });
 
   it("a small rough count (7 weekday rows) is content fill — no finding", async () => {
-    const a = await auditRenderedTemplate(tmpl("@x/lattice-7/v1", async () => basisDoc(7)));
+    const a = await auditRendered(tmpl("@x/lattice-7/v1", async () => basisDoc(7)));
     expect(latticeFinding(a)).toBeUndefined();
   });
 
   it("lattice.mode \"bitmap\" skips the rule with a note", async () => {
-    const a = await auditRenderedTemplate(tmpl("@x/lattice-bitmap/v1", async () => basisDoc(121), { lattice: { mode: "bitmap" } } as never));
+    const a = await auditRendered(tmpl("@x/lattice-bitmap/v1", async () => basisDoc(121), { lattice: { mode: "bitmap" } } as never));
     expect(latticeFinding(a)).toBeUndefined();
     expect(a.notes).toContain('latticeSmooth: skipped — lattice.mode is "bitmap" (a baked raster is never live-composed)');
   });
 
   it("lattice.allow accepts a declared content count and notes the reason", async () => {
     const extra = { lattice: { allow: [{ count: 53, reason: "one row per ISO week" }] } } as never;
-    const a = await auditRenderedTemplate(tmpl("@x/lattice-allow/v1", async () => basisDoc(53), extra));
+    const a = await auditRendered(tmpl("@x/lattice-allow/v1", async () => basisDoc(53), extra));
     expect(latticeFinding(a)).toBeUndefined();
     expect(a.notes).toContain("latticeSmooth: allowed content counts 53 (one row per ISO week)");
     // The declaration is per count: an undeclared rough count still surfaces.
-    const b = await auditRenderedTemplate(tmpl("@x/lattice-allow-miss/v1", async () => basisDoc(121), extra));
+    const b = await auditRendered(tmpl("@x/lattice-allow-miss/v1", async () => basisDoc(121), extra));
     expect(latticeFinding(b)).toMatchObject({ violations: [{ key: "N=121" }] });
   });
 
@@ -911,7 +955,7 @@ describe("latticeSmooth — split counts above 12 are 5-smooth (throw posture)",
         sources: [{ type: "mosaic", ref: "kid", editor: { label: "slot" } }],
         children: { kid: basisDoc(121, "col") },
       }) as unknown as MosaicDocument;
-    const a = await auditRenderedTemplate(tmpl("@x/lattice-nested/v1", async () => nested()));
+    const a = await auditRendered(tmpl("@x/lattice-nested/v1", async () => nested()));
     const f = latticeFinding(a);
     expect(f).toMatchObject({ violations: [{ key: "N=121" }] });
     expect(f!.violations[0].detail).toContain("(col ×1)");
@@ -927,14 +971,14 @@ describe("latticeSmooth — split counts above 12 are 5-smooth (throw posture)",
         sources: [{ type: "mosaic", ref: "qr", editor: { label: "qr" } }],
         children: { qr: { ...basisDoc(37, "col"), engine: { lattice: { mode: "bitmap" } } } },
       }) as unknown as MosaicDocument;
-    const a = await auditRenderedTemplate(tmpl("@x/lattice-bitmap-child/v1", async () => nested()));
+    const a = await auditRendered(tmpl("@x/lattice-bitmap-child/v1", async () => nested()));
     expect(latticeFinding(a)).toBeUndefined();
     expect(a.notes).toContain("latticeSmooth: 1 bitmap child document(s) skipped at 1280×720 (engine.lattice.mode)");
   });
 
   it("lattice.canvas \"physical\" drops the rough-canvas finding and charges the canvas for the counts it explains", async () => {
     // 1130 = 2·5·113: a 113-slot split is the canvas's doing; 137 is not.
-    const a = await auditRenderedTemplate(
+    const a = await auditRendered(
       tmpl("@x/lattice-physical/v1", async () => basisDoc(113, "col"), {
         lattice: { canvas: "physical" },
         outputHints: { width: 1130, height: 720, format: { kind: "image", container: "png" } },
@@ -942,7 +986,7 @@ describe("latticeSmooth — split counts above 12 are 5-smooth (throw posture)",
     );
     expect(latticeFinding(a)).toBeUndefined();
     expect(a.notes.some((n) => n.includes("declared physical"))).toBe(true);
-    const b = await auditRenderedTemplate(
+    const b = await auditRendered(
       tmpl("@x/lattice-physical-miss/v1", async () => basisDoc(137, "row"), {
         lattice: { canvas: "physical" },
         outputHints: { width: 1130, height: 720, format: { kind: "image", container: "png" } },
@@ -952,7 +996,7 @@ describe("latticeSmooth — split counts above 12 are 5-smooth (throw posture)",
   });
 
   it("a rough hinted canvas is reported once, first, even when the layout itself is smooth", async () => {
-    const a = await auditRenderedTemplate(
+    const a = await auditRendered(
       tmpl("@x/lattice-canvas/v1", async () => basisDoc(30), { outputHints: { width: 1200, height: 628, format: { kind: "image", container: "png" } } } as never),
     );
     const f = latticeFinding(a);
@@ -969,9 +1013,82 @@ describe("latticeSmooth — the sweep canvases are checked too", () => {
         ...doc([bound("Hello there", "title"), text("x")]),
         m0: String(weightedSplit([1, ctx.target.height === 1080 ? 120 : 29], "row", { mode: "literal", claimants: ["1", "1"] })),
       }) as MosaicDocument;
-    const a = await auditRenderedTemplate(tmpl("@x/lattice-sweep/v1", async (_p, ctx) => byCanvas(ctx as never)), { sweepCanvases: STANDARD_SWEEP_CANVASES });
+    const a = await auditRendered(tmpl("@x/lattice-sweep/v1", async (_p, ctx) => byCanvas(ctx as never)), { sweepCanvases: STANDARD_SWEEP_CANVASES });
     const f = a.findings.find((x) => x.convention === "latticeSmooth");
     expect(f!.violations.map((v) => v.key)).toEqual(["1920×1080:N=121", "1080×1080:N=121"]);
     expect(f!.violations[0].detail).toMatch(/^at 1920×1080: split count 121/);
+  });
+});
+
+describe("catalogSidecar (0.3.1) — the template file declares none of the catalog fields", () => {
+  const described = (id: string, extra: Partial<MosaicTemplate<Props>> = {}) =>
+    tmpl(id, async () => doc([bound("Hello there", "title")]), { label: "Card", description: "d", tags: ["t"], ...extra });
+
+  it("new work that describes itself in its code is an error naming each field — and each prop's presentation", async () => {
+    const a = await auditRenderedTemplate(described("@x/catalog-new/v1"), { record: false });
+    const f = only(a, "catalogSidecar");
+    expect(f).toHaveLength(1);
+    expect(f[0]!.severity).toBe("error");
+    const keys = f[0]!.violations.map((v) => v.key).sort();
+    expect(keys.filter((k) => !k.startsWith("props."))).toEqual(["description", "label", "tags"]);
+    // tmpl()'s schema (via the schema() helper) carries hints, ui labels and a placeholder — presentation, which lives in the catalog now
+    expect(keys.filter((k) => k.startsWith("props."))).toEqual([
+      "props.mode.description",
+      "props.mode.label",
+      "props.title.description",
+      "props.title.label",
+      "props.title.placeholder",
+    ]);
+  });
+
+  it("a template shipped before 0.3.1 lags it — its file can never change", async () => {
+    const a = await auditRenderedTemplate(described("@x/catalog-shipped/v1"), { record: false, shippedAt: "0.3.0" });
+    expect(only(a, "catalogSidecar")).toEqual([]);
+    expect(a.lagging.map((f) => f.convention)).toContain("catalogSidecar");
+  });
+
+  it("is judged even when the render audit is skipped (a capability-tier template has a file too)", async () => {
+    const a = await auditRenderedTemplate(described("@x/catalog-capability/v1", { capabilities: { tier: "capability" } } as never), { record: false });
+    expect(a.skipped).toBeDefined();
+    expect(only(a, "catalogSidecar")).toHaveLength(1);
+  });
+
+  it("a loader-merged copy answers for its FILE: catalogued fields and prop copy are not the file's", () => {
+    // A RAW schema (not schema(), which gives every prop a hint and a label): what a 0.3.1 template's code holds.
+    const bare = tmpl("@x/catalog-merged/v1", async () => doc([]), {
+      propsSchema: { title: { type: "string", required: false }, mode: { type: "string", required: false, meta: { constraints: { oneOf: ["a", "b"] } } } } as never,
+    });
+    const [merged] = withTemplateCatalog([bare], {
+      "@x/catalog-merged/v1": { label: "Card", tags: ["t"], props: { title: { label: "Title", description: "The headline." } } },
+    }).templates;
+    expect((merged as { label?: string }).label).toBe("Card");
+    expect((merged as unknown as { propsSchema: Record<string, { description?: string }> }).propsSchema.title!.description).toBe("The headline.");
+    expect(auditCatalogSidecar(merged!)).toEqual([]);
+    const direct = auditCatalogSidecar(described("@x/catalog-direct/v1")).map((v) => v.key);
+    expect(direct.filter((k) => !k.startsWith("props.")).sort()).toEqual(["description", "label", "tags"]);
+  });
+});
+
+describe("conventionsTarget (repo.conventions, 0.3.1)", () => {
+  const described = (id: string) =>
+    tmpl(id, async () => doc([bound("Hello there", "title")]), { label: "Card", description: "d", tags: ["t"] } as never);
+
+  it("a repo targeting 0.3.0 gets catalogSidecar (0.3.1) as lag, not a finding", async () => {
+    const a = await auditRenderedTemplate(described("@x/target-030/v1"), { record: false, conventionsTarget: "0.3.0" });
+    expect(only(a, "catalogSidecar")).toEqual([]);
+    expect(a.lagging.map((f) => f.convention)).toContain("catalogSidecar");
+  });
+
+  it("targeting the newest line holds the template to every rule", async () => {
+    const a = await auditRenderedTemplate(described("@x/target-031/v1"), { record: false, conventionsTarget: "0.3.1" });
+    expect(only(a, "catalogSidecar")).toHaveLength(1);
+  });
+
+  it("the LOWER of the shipped line and the target wins", async () => {
+    // shipped at 0.2.0, targets 0.3.1: held to 0.2.0 — bindingsDeclared (0.3.0) is lag too.
+    const unbound = tmpl("@x/target-shipped/v1", async () => doc([text("Hello there")]));
+    const a = await auditRenderedTemplate(unbound, { record: false, shippedAt: "0.2.0", conventionsTarget: "0.3.1" });
+    expect(a.findings.filter((f) => f.convention === "bindingsDeclared")).toEqual([]);
+    expect(a.lagging.map((f) => f.convention)).toContain("bindingsDeclared");
   });
 });

@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/treemap/v3",
+  "label": "Alpine Treemap",
+  "description": "Alpine treemap — friendly mobile-marketing card: value-sized rounded tiles (squarified) filling the card, each labelled with its name + share, tiles fading in biggest→smallest. Standalone Alpine brand flavor. v2 rebuilds the geometry as a ratio layout (squarified nested splits + gap-as-inset) so it composes at any canvas without the absolute-placement precision blowup.",
+  "tags": [
+    "data-viz",
+    "alpine",
+    "treemap",
+    "proportion",
+    "animated",
+    "analysts",
+    "developers",
+    "breakdown",
+    "composition"
+  ],
+  "primitive": true,
+  "props": {
+    "items": {
+      "label": "Items",
+      "description": "Treemap items. Each: a label, a value (sizes the tile), an optional color.",
+      "order": 1
+    },
+    "title": {
+      "label": "Title",
+      "description": "Card title.",
+      "placeholder": "e.g., MARKET SHARE",
+      "order": 2
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Card subtitle.",
+      "order": 3
+    },
+    "valueMode": {
+      "label": "Value mode",
+      "description": "Second label line: percent share, raw value, or none.",
+      "order": 4
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme variant.",
+      "order": 5
+    },
+    "showValue": {
+      "label": "Show value",
+      "description": "Show the value / share line in each tile.",
+      "order": 6
+    },
+    "tiles.cornerRadius": {
+      "label": "Tile radius",
+      "description": "Tile corner radius (0..0.5)."
+    },
+    "tiles": {
+      "label": "Tiles",
+      "description": "Tile geometry.",
+      "order": 7,
+      "collapsedByDefault": true
+    },
+    "anim.renderMode": {
+      "label": "Render mode",
+      "description": "\"premium\" (default): tiles + text fade in — a geq each. \"light\": the same cascade via free enable-gate pops — no geq, composable, cheap when nested."
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.easing": {
+      "label": "Easing",
+      "description": "Intro easing curve."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Reveal mode + tile-cascade intro.",
+      "order": 8,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the alpine preset by default; set a producer slug + namespace to pull shared design tokens. Explicit color props still win.",
+      "order": 9,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only: draw the layout contract (tile text fits its slot) instead of the card.",
+      "order": 10
+    }
+  }
+}

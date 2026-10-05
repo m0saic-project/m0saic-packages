@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/wireframe/base/v2",
+  "deprecated": {
+    "reason": "0.3.1: every cell carries its label, its colour, the rect fill and the trace image",
+    "replacement": "@m0saic/wireframe/base/v3",
+    "since": "2026-09-30"
+  }
+}

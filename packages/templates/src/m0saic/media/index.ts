@@ -1,4 +1,5 @@
 export { Barcode } from "./barcode/v1";
+export { BarcodeV2 } from "./barcode/v2";
 export * from "./blur-regions";
 export * from "./highlights";
 export * from "./logo-animate";

@@ -41,9 +41,17 @@ Rules:
   prop's value plus an explicit `kind` (the schema has no per-leaf type, and an
   empty leaf must still be an "add" handle). `index` is shorthand for a leading
   numeric segment.
-- `meta.ui.hidden` props, booleans, enum / connection-option strings (closed
-  pickers) and whole lists are never bindable. A stray `index` on a scalar is
-  ignored.
+- `meta.ui.hidden` props, booleans, connection-driven option strings
+  (`optionsFromConnection` — the host has no list without the connection) and
+  whole lists are never bindable. A stray `index` on a scalar is ignored.
+- A **closed set** — `constraints.oneOf` or a static `control.options` list — binds
+  as kind **`choice`** (2026-10-01): Make shows the set (a segmented row up to four
+  choices, a select beyond) on the inline editor and on the tile card, and one click
+  writes the value; nothing is typed, `seedDraft` is dropped. Basic props only — a
+  structured leaf has no set to offer, so `kind: "choice"` there is refused. The case it exists for:
+  a full-canvas card bound to its theme `preset` (the alpine cards, the GitHub year
+  card) — the click on the card is where the theme gets changed, and the `canvasFill`
+  rule accepts a full-canvas rect that carries such a handle.
 - Bind even when the value is empty — the rect is then a handle to ADD.
 
 ## Kinds
@@ -85,7 +93,9 @@ right-hand panel is its surface, and the rule stays silent.
 | `string[]` · `number[]` · `media[]` | per element, by index | **MUST ACCOUNT** (bound anywhere on the prop counts) |
 | `json` · `list` · `array` | per leaf, `path` + `kind` | **MUST ACCOUNT** (any leaf counts) |
 | `json` + `picker: "regions"` | `rect` | **MUST ACCOUNT** |
-| `string` / `number` + closed set (`oneOf`, `options`, `optionsFrom…`) | — | **NEVER** — a picker is a mode, not a value on canvas |
+| `string` + closed set (`oneOf`, a static `options` list) | `choice` (a pick, never typed) | **NEVER DEMANDED** — a mode has no rect of its own; bind it when a rect IS the mode (the card → `preset`) |
+| `string` / `number` + `optionsFromConnection` | — | **NEVER** — the host has no list without the connection |
+| `number` + closed set | — | **NEVER** |
 | `boolean` | — | **NEVER** — a one-way door: `false` renders no rect to click |
 | `group` | — | **NEVER** — a container; its fields are walked individually |
 | `m0` · `m0c` · `m0p` | — | **NEVER** — the value IS the composition of every rect, not one of them |
@@ -133,13 +143,14 @@ The line comes from either of two places, and the gate accepts either:
 
 | Where | How | Reaches |
 |---|---|---|
-| the prop | `propsSchema.<key>.description = "…"` | every rect bound to that prop |
+| the prop | the catalog sidecar: `props.<key>.description` in `<name>.catalog.json` (0.3.1; `propsSchema.<key>.description` in code is the pre-0.3.1 form, kept only by shipped templates) | every rect bound to that prop |
 | the binding | `bindProp(src, key, i, { hint: "…" })` · a `bindProps` entry's `hint` · `withBindingHint(src, "…")` (composes with every binder) | that rect only — the wording for THIS place |
 
 One plain sentence, never markdown, never the value itself ("The month this calendar shows; the grid
 re-flows to its weeks", not "October"). Make trims it and caps it near 200 characters. The tax is
-therefore one honest sentence per bound prop, paid once in the schema; a per-rect `hint` is for the
-cases where the same prop means something different in different places.
+therefore one honest sentence per bound prop, paid once in the sidecar; a per-rect `hint` (code — it
+describes one specific rect) is for the cases where the same prop means something different in
+different places. The gate judges hints AFTER the catalog applies, so a sidecar description satisfies it.
 
 **Needs none:** a `companion` leaf (filled only by a media drop, never shown in a form), and any prop
 that is not bound (an `unbound` declaration already carries its reason). A binding on an unknown prop
@@ -207,9 +218,12 @@ Colour coverage is not checked: a colour is never drawn as text, so it needs a d
   `index` or a numeric first `path` segment.
 - `"unset-leaf"` — delete the leaf key from its object, or unset a basic prop
   so its default shows again. Not for array-element leaves (no key).
-- Absent — numbers and colours refuse an empty commit; strings write `""`;
-  a scalar media clears to `""`; a `media[]` element refuses (a hole in a media
-  list is not a value the engine can open).
+- Absent — an OPTIONAL colour prop (a basic prop or a group field, not a leaf
+  inside a row or list) unsets, back to the template's own colour (platform
+  `defaultOnClear`); a required colour and other numbers refuse an empty commit;
+  strings write `""`; a scalar media clears to `""`; a `media[]` element refuses
+  (a hole in a media list is not a value the engine can open). `"none"` is never
+  a clear — it is a colour (transparent).
 
 Editor rules: "empty" is blank for numbers / colours, `""` for text. An empty
 commit against an already-empty leaf writes nothing. In a multi-field session a

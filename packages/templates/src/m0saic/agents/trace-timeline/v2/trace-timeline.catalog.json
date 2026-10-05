@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/agents/trace-timeline/v2",
+  "label": "Agent Trace Timeline",
+  "description": "What the agent did on a run — a waterfall of tool calls: the tool and its target per lane, a latency bar on a shared time axis, tokens per hop, and status colours for errors, retries and cache hits. Alpine card, composes at any canvas.",
+  "tags": [
+    "agents",
+    "trace",
+    "timeline",
+    "waterfall",
+    "observability",
+    "latency",
+    "tokens",
+    "developers",
+    "sre",
+    "alpine",
+    "animated"
+  ],
+  "props": {
+    "title": {
+      "label": "Title",
+      "description": "Card title.",
+      "placeholder": "none",
+      "order": 1,
+      "primary": true
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Line under the title. Empty = the run totals (calls · wall time · tokens).",
+      "placeholder": "run totals",
+      "order": 2
+    },
+    "spans": {
+      "label": "Spans",
+      "description": "The run's tool calls in order: tool, what it touched, start and duration in ms, tokens, status (ok · error · retry · cached). Up to 10 are drawn.",
+      "order": 3,
+      "primary": true
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme: \"light\" (default) or \"dark\".",
+      "order": 4
+    },
+    "accent": {
+      "label": "Accent",
+      "description": "Bar colour for ok spans.",
+      "placeholder": "theme primary",
+      "order": 5
+    },
+    "errorColor": {
+      "label": "Error colour",
+      "description": "Bar colour for error spans.",
+      "order": 6
+    },
+    "retryColor": {
+      "label": "Retry colour",
+      "description": "Bar colour for retried spans.",
+      "order": 7
+    },
+    "cachedColor": {
+      "label": "Cached colour",
+      "description": "Bar colour for cached spans.",
+      "order": 8
+    },
+    "showTokens": {
+      "label": "Show tokens",
+      "description": "Print each span's token cost after its bar.",
+      "order": 9
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.renderMode": {
+      "label": "Render mode",
+      "description": "premium = alpha-fade; light = enable-gate pops (cheaper when nested)."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Reveal: lanes appear in run order over the intro. reduceMotion renders the final frame.",
+      "order": 10,
+      "collapsedByDefault": true
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt-in producer theme tokens.",
+      "order": 11,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only: overlay the layout contract.",
+      "order": 12
+    }
+  }
+}

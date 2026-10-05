@@ -236,13 +236,14 @@ export type PropBindingEntry = {
   /** Leaf value type — required on structured leaves. `"media"` is a leaf
    *  holding a file path: Make makes the rect a DROP target + picker handle.
    *  Basic `media` / `media[]` props need no kind (the schema says). */
-  kind?: "string" | "number" | "color" | "rect" | "media";
+  kind?: "string" | "number" | "color" | "choice" | "rect" | "media";
   /** Which text layer of the source shows this leaf. */
   layer?: number;
   /** The in-context line Make shows for this leaf (0.3.0) — see {@link withBindingHint}. */
   hint?: string;
-  /** What an EMPTY commit on this leaf means. Absent = the default (numbers /
-   *  colors reject an empty commit, strings write `""`). `"remove-element"`
+  /** What an EMPTY commit on this leaf means. Absent = the default (an
+   *  OPTIONAL colour prop unsets — back to the template's colour; other
+   *  numbers / colors reject an empty commit, strings write `""`). `"remove-element"`
    *  splices the element at the leading numeric path segment (the whole row)
    *  out of its array — needs `index` or a numeric first `path` segment.
    *  `"unset-leaf"` deletes the leaf key from its object (or unsets a basic
@@ -317,7 +318,7 @@ function checkOnClear(
 export function bindProps<
   T extends {
     editor?: {
-      bindings?: Array<{ propKey: string; index?: number; path?: Array<string | number>; kind?: "string" | "number" | "color" | "rect" | "media"; layer?: number; onClear?: PropBindingClearAction; seedDraft?: string; companion?: boolean; hint?: string }>;
+      bindings?: Array<{ propKey: string; index?: number; path?: Array<string | number>; kind?: "string" | "number" | "color" | "choice" | "rect" | "media"; layer?: number; onClear?: PropBindingClearAction; seedDraft?: string; companion?: boolean; hint?: string }>;
     };
   },
 >(src: T, entries: ReadonlyArray<PropBindingEntry>): T {
@@ -329,7 +330,7 @@ export function bindProps<
       const ok = typeof seg === "number" ? Number.isInteger(seg) && seg >= 0 : typeof seg === "string" && seg.length > 0;
       if (!ok) throw new Error(`bindProps: bad path segment ${JSON.stringify(seg)}`);
     }
-    if (e.kind !== undefined && e.kind !== "string" && e.kind !== "number" && e.kind !== "color" && e.kind !== "rect" && e.kind !== "media") throw new Error(`bindProps: bad kind ${String(e.kind)}`);
+    if (e.kind !== undefined && e.kind !== "string" && e.kind !== "number" && e.kind !== "color" && e.kind !== "choice" && e.kind !== "rect" && e.kind !== "media") throw new Error(`bindProps: bad kind ${String(e.kind)}`);
     if (e.kind === "rect" && e.path?.length) throw new Error("bindProps: a rect binding names the whole prop or ONE element by index — never a path");
     if (e.layer !== undefined && (!Number.isInteger(e.layer) || e.layer < 0)) throw new Error(`bindProps: bad layer ${String(e.layer)}`);
     checkOnClear("bindProps", e.onClear, e.index !== undefined ? [e.index, ...(e.path ?? [])] : e.path ?? []);
@@ -384,7 +385,7 @@ export function stripPropBindings<
  *  keeps rendering the template's own placement while the prop (or the
  *  element) is empty; the binding is the handle. Sibling of {@link bindProp}. */
 export function bindPropRect<
-  T extends { editor?: { binding?: { propKey: string; index?: number; kind?: "string" | "number" | "color" | "rect" | "media" } } },
+  T extends { editor?: { binding?: { propKey: string; index?: number; kind?: "string" | "number" | "color" | "choice" | "rect" | "media" } } },
 >(src: T, propKey: string, index?: number): T {
   if (!propKey) throw new Error("bindPropRect: propKey must be a non-empty dotted path");
   if (index !== undefined && (!Number.isInteger(index) || index < 0)) {
@@ -395,12 +396,12 @@ export function bindPropRect<
 }
 
 export function bindPropPath<
-  T extends { editor?: { binding?: { propKey: string; path?: Array<string | number>; kind?: "string" | "number" | "color" | "rect" | "media"; onClear?: PropBindingClearAction; seedDraft?: string } } },
+  T extends { editor?: { binding?: { propKey: string; path?: Array<string | number>; kind?: "string" | "number" | "color" | "choice" | "rect" | "media"; onClear?: PropBindingClearAction; seedDraft?: string } } },
 >(
   src: T,
   propKey: string,
   path: ReadonlyArray<string | number>,
-  kind: "string" | "number" | "color" | "media",
+  kind: "string" | "number" | "color" | "choice" | "media",
   opts?: { onClear?: PropBindingClearAction; seedDraft?: string },
 ): T {
   if (!propKey) throw new Error("bindPropPath: propKey must be a non-empty dotted path");
@@ -409,7 +410,7 @@ export function bindPropPath<
     const ok = typeof seg === "number" ? Number.isInteger(seg) && seg >= 0 : typeof seg === "string" && seg.length > 0;
     if (!ok) throw new Error(`bindPropPath: bad path segment ${JSON.stringify(seg)}`);
   }
-  if (kind !== "string" && kind !== "number" && kind !== "color" && kind !== "media") throw new Error(`bindPropPath: kind must be "string" | "number" | "color" | "media" (got ${String(kind)})`);
+  if (kind !== "string" && kind !== "number" && kind !== "color" && kind !== "choice" && kind !== "media") throw new Error(`bindPropPath: kind must be "string" | "number" | "color" | "choice" | "media" (got ${String(kind)})`);
   checkOnClear("bindPropPath", opts?.onClear, path);
   checkSeedDraft("bindPropPath", opts?.seedDraft, kind);
   src.editor = {

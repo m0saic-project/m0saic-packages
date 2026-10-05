@@ -3,6 +3,8 @@ import { asTemplateId } from "@m0saic/types";
 import {
   TEMPLATE_CONVENTION_POSTURE,
   TEMPLATE_CONVENTION_SINCE,
+  effectiveConventionLine,
+  isConventionBeyond,
   TemplateConventionError,
   compareConventionVersions,
   conventionVersions,
@@ -268,7 +270,7 @@ describe("the convention VERSION axis — does template X pass conventions at Y?
       expect(TEMPLATE_CONVENTION_SINCE[name as never]).toMatch(/^\d+\.\d+\.\d+$/);
     }
     // ...and no rule claims a line that does not exist in the table
-    expect(conventionVersions()).toEqual(["0.2.0", "0.3.0"]);
+    expect(conventionVersions()).toEqual(["0.2.0", "0.3.0", "0.3.1"]);
   });
 
   it("compares 0.x versions", () => {
@@ -280,13 +282,19 @@ describe("the convention VERSION axis — does template X pass conventions at Y?
 
   describe("conventionsLevel", () => {
     it("a clean template meets the newest line", () => {
-      expect(conventionsLevel([])).toEqual({ meets: "0.3.0", behind: [] });
+      expect(conventionsLevel([])).toEqual({ meets: "0.3.1", behind: [] });
     });
 
     it("⭐ the case the axis exists for: passes 0.2.0, behind on 0.3.0", () => {
       const level = conventionsLevel([err("canvasFill"), err("bindingsDeclared")]);
       expect(level.meets).toBe("0.2.0");
       expect(level.behind).toEqual([{ since: "0.3.0", conventions: ["bindingsDeclared", "canvasFill"] }]);
+    });
+
+    it("0.3.1's line is the catalog convention: code that describes itself meets 0.3.0, not 0.3.1", () => {
+      const level = conventionsLevel([err("catalogSidecar")]);
+      expect(level.meets).toBe("0.3.0");
+      expect(level.behind).toEqual([{ since: "0.3.1", conventions: ["catalogSidecar"] }]);
     });
 
     it("a rule OLDER than the newest failure still fails the older line", () => {
@@ -296,7 +304,7 @@ describe("the convention VERSION axis — does template X pass conventions at Y?
     });
 
     it("warnings are advice, not a failure to meet a line", () => {
-      expect(conventionsLevel([warn("bindingsCover"), warn("costBudget")])).toEqual({ meets: "0.3.0", behind: [] });
+      expect(conventionsLevel([warn("bindingsCover"), warn("costBudget")])).toEqual({ meets: "0.3.1", behind: [] });
     });
 
     it("groups the failures by line, oldest first", () => {
@@ -311,5 +319,21 @@ describe("the convention VERSION axis — does template X pass conventions at Y?
       const level = conventionsLevel([err("canvasFill"), err("canvasFill")]);
       expect(level.behind).toEqual([{ since: "0.3.0", conventions: ["canvasFill"] }]);
     });
+  });
+});
+
+describe("conventions target (repo.conventions, 0.3.1)", () => {
+  it("effectiveConventionLine is the LOWEST valid line given — undefined when none", () => {
+    expect(effectiveConventionLine("0.3.1", "0.2.0")).toBe("0.2.0");
+    expect(effectiveConventionLine(undefined, "0.3.0")).toBe("0.3.0");
+    expect(effectiveConventionLine("0.10.0", "0.9.0")).toBe("0.9.0");
+    expect(effectiveConventionLine(undefined, null, "not-a-line")).toBeUndefined();
+  });
+
+  it("isConventionBeyond: a rule introduced after the line is behind, not broken", () => {
+    expect(isConventionBeyond("catalogSidecar", "0.3.0")).toBe(true);
+    expect(isConventionBeyond("catalogSidecar", "0.3.1")).toBe(false);
+    expect(isConventionBeyond("bindingsDeclared", "0.3.0")).toBe(false);
+    expect(isConventionBeyond("catalogSidecar", undefined)).toBe(false);
   });
 });

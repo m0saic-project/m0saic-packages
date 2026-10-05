@@ -6,12 +6,19 @@ import "./m0saic"; // side-effect: register every template
 
 describe("official template registry", () => {
   it("publishes Page Skeleton through the web pack", () => {
+    // 0.3.1: the public slug names the current version (its copy lives in the
+    // catalog sidecar); the superseded one keeps its row under a versioned slug.
+    expect(
+      templateRegistry.find(
+        (entry) => entry.templateId === "@m0saic/web/page-skeleton/v2",
+      ),
+    ).toMatchObject({ slug: "page-skeleton", exportName: "PageSkeletonV2" });
     expect(
       templateRegistry.find(
         (entry) => entry.templateId === "@m0saic/web/page-skeleton/v1",
       ),
     ).toMatchObject({
-      slug: "page-skeleton",
+      slug: "page-skeleton-v1",
       exportName: "PageSkeleton",
       title: "Page Skeleton",
       tags: expect.arrayContaining(["loading", "animated"]),
@@ -25,10 +32,15 @@ describe("official template registry", () => {
   it("publishes Code Snippet Morph with its public export", () => {
     expect(
       templateRegistry.find(
+        (entry) => entry.templateId === "@m0saic/code/snippet-morph/v2",
+      ),
+    ).toMatchObject({ slug: "code-snippet-morph", exportName: "SnippetMorphV2" });
+    expect(
+      templateRegistry.find(
         (entry) => entry.templateId === "@m0saic/code/snippet-morph/v1",
       ),
     ).toMatchObject({
-      slug: "code-snippet-morph",
+      slug: "code-snippet-morph-v1",
       exportName: "SnippetMorphV1",
       title: "Code Snippet Morph",
       tags: expect.arrayContaining(["code", "developer", "animation"]),

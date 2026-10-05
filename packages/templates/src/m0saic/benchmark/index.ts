@@ -5,3 +5,4 @@ export * from "./run/v1";
 /* Benchmark report (core tier) — reads a benchmark.json session and renders the
    standard shareable results dashboard video. */
 export * from "./report/v1";
+export * from "./report/v2";

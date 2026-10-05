@@ -1,5 +1,66 @@
 # Changelog
 
+## 0.3.1 — 2026-10-05
+
+### Template catalog: sidecar parser, merge, collector; the loader reads `template-catalog.json`
+
+- Browser-safe (root): `TEMPLATE_CATALOG_FILE`, `TEMPLATE_CATALOG_SIDECAR_SUFFIX`, `parseTemplateCatalogFile`,
+  `parseTemplateCatalogSidecar`, `parseTemplateCatalogEntry` (lenient: malformed fields dropped and reported; a key
+  outside the catalog refused — a catalog never changes what a template renders), `applyTemplateCatalogEntry` /
+  `withTemplateCatalog` (catalog-first; the code's own values kept for the as-written view),
+  `authoredCatalogFields`, `authoredPropsSchema`, `authoredPropCopy`, `unknownCatalogProps`,
+  `sameTemplateDeprecation`, `splitPropPresentation` / `stripPropPresentation` (a props schema split into what the
+  code keeps and the catalog's `props` — the migration tool, and how a library schema with baked-in copy serves a
+  catalog-convention repo).
+- Node (`template-repos`): `collectTemplateCatalog(repoRoot)` gathers every `<name>.catalog.json` sidecar into the
+  wire catalog (one sidecar per id); `serializeTemplateCatalog`, `writeTemplateCatalog`.
+- `loadTemplateRepoFromPath` reads `template-catalog.json` beside `template-manifest.json` and merges it into the
+  templates it returns; a broken or stale entry is a warning (`TEMPLATE_REPO_CATALOG_INVALID`,
+  `TEMPLATE_REPO_CATALOG_UNKNOWN_ID`) — a catalog never fails a load. `LoadedTemplateRepo.catalog` reports it.
+
+**Compatibility.**
+
+A repo without a catalog loads exactly as before.
+
+### `BindableKind` gains `"choice"`: a closed-set string prop is bindable, picked, never typed
+
+`classifyBindableProp` returns `"choice"` for a string prop with `constraints.oneOf` or a static
+`control.options` list (and for one element of such a `string[]`). `choiceOptionsOf(def)` (new export) is the
+set as `{ value, label }[]` — the options list's own labels, else the `oneOf` values. A string whose options come
+from a connection (`optionsFromConnection`) stays unbindable (the host has no list without the connection), as
+do booleans and whole lists. A `choice` declared on a structured leaf is refused (the schema carries no per-leaf
+options). `bindingSeedDraft` drops a seed on a choice.
+
+**Compatibility.**
+
+- Additive. A host that switches exhaustively on `BindableKind` gets a new member: Make (this monorepo) maps
+  it to a pick affordance; an external host that ignores unknown kinds sees a choice as it saw nothing before.
+- A prop that resolved as "not bindable" now resolves as `choice` when a template binds it — no template
+  shipped at 0.3.0 does (the predicate refused it), so nothing already published changes behaviour.
+
+**Release notes.**
+
+Ships with the 0.3.1 lockstep set. `@m0saic/types` of the same cut adds `"choice"` to the authored binding
+shape; `@m0saic/template-utils` of the same cut accepts it in `bindProps` / `bindPropPath` and the resolver.
+
+### An optional colour prop clears back to the template's colour without naming `onClear`
+
+`resolveBindableProp` now gives a binding with no `onClear` of its own a DEFAULT clear: an optional colour
+prop (`kind === "color"`, `required !== true`, an empty leaf path — a basic prop or a group field) resolves
+`onClear: "unset-leaf"`. `defaultOnClear(def, kind, leafPath)` (new export) is the rule. Colour leaves inside
+a row or a list element, required colours and every other kind are unchanged.
+
+**Compatibility.**
+
+- A host that commits an empty value on an optional colour now UNSETS the prop instead of refusing it. Make
+  (this monorepo) shows a × on such a colour. A host that never commits an empty colour sees no change.
+- An authored `onClear` always wins; an invalid one is still dropped (and then the default applies).
+
+**Release notes.**
+
+Ships with the 0.3.1 lockstep set. Doc-only touches in `@m0saic/types` (`meta.ts`) and
+`@m0saic/template-utils` (`PropBindingEntry.onClear`) describe the new default.
+
 ## 0.3.0 — 2026-09-29
 
 ### ffmpeg toolchain install: prefer Windows' own bsdtar over a GNU tar on PATH

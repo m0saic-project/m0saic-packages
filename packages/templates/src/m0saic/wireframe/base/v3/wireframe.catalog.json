@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/wireframe/base/v3",
+  "label": "Wireframe",
+  "description": "Wireframe of any m0 layout string: every cell drawn as an outlined rectangle with its number, pixel size and aspect ratio on a white canvas. Switch the background to transparent to composite over anything or trace a reference screenshot, or pick the thumb, heatmap or paper presets for clean tiles.",
+  "tags": [
+    "wireframe",
+    "docs-only",
+    "designers",
+    "developers",
+    "layout",
+    "blueprint"
+  ],
+  "props": {
+    "M0String": {
+      "label": "Mosaic Layout String",
+      "description": "m0 string to generate layout of",
+      "placeholder": "e.g., F, 2(1,1), 3[1,0,1]"
+    },
+    "labels": {
+      "label": "Cell Labels",
+      "description": "Optional labels for wireframe cells (1-based order). A labeled cell shows its label; cells without one keep their number and pixel size (see Label Content / Unlabeled Cells)."
+    },
+    "unlabeledCells": {
+      "label": "Unlabeled Cells",
+      "description": "What a cell without a custom label shows once some cells are labeled: \"marks\" (default — its number / dims per Label Content) or \"empty\" (blank — labels are the only text on the board)."
+    },
+    "labelsByStableKey": {
+      "label": "Labels by stableKey",
+      "description": "Per-cell labels keyed by stableKey (Record<StableKey, {text, color?}>, same shape as M0cFile.labels). Resolved to positional labels internally; overrides `labels`. Agent/programmatic prop.",
+      "collapsedByDefault": true
+    },
+    "cellColors": {
+      "label": "Cell Colors",
+      "description": "Optional per-cell body fill colors (1-based order, parallel to labels). Cell N's body is painted cellColors[N-1] beneath the border/label ink; an empty string leaves it transparent. Used by the perf heatmap. Debug mode only."
+    },
+    "mode": {
+      "label": "Mode",
+      "description": "Render mode. \"debug\" (default) shows numbers/dims/AR. \"thumb\" shows clean tiles only."
+    },
+    "labelContent": {
+      "label": "Label Content",
+      "description": "Most detail to show per tile (cumulative): none → number → dimensions → aspect. Default dimensions."
+    },
+    "labelOverflow": {
+      "label": "Label Overflow",
+      "description": "How to back off when the content won't fit a tile: hide (all-or-nothing), degrade (drop richest lines), number-floor (fall back to just the number). Default degrade."
+    },
+    "background": {
+      "label": "Background",
+      "description": "Canvas backing: \"white\" (default — an opaque white fill) or \"transparent\" (lines/labels only, null regions empty — composites over anything). Ignored when a theme/preset sets its own background."
+    },
+    "nullFrames": {
+      "label": "Null Frames",
+      "description": "Dev: \"show\" explodes the layout into LAYERS — one PNG per overlay depth (emit:multi), each printing that depth's cells plus its null (-) holes as dashed, muted cells labelled \"null\" + size. \"hide\" (default) renders the normal single composite."
+    },
+    "nullLabel": {
+      "label": "Null Label",
+      "description": "Dev: the text drawn inside a hole cell when null frames show — the word \"null\" (default) or the m0 token \"-\"."
+    },
+    "fill": {
+      "label": "Rect Fill",
+      "description": "Translucent rect fill (debug mode), 0..1. Body wash beneath the borders/labels so rects read as filled regions over a traced image. 0 = lines only."
+    },
+    "backgroundImage": {
+      "label": "Background Image",
+      "description": "Image baked beneath the wireframe — lines/labels render on top. A file path or an inline base64 data: URI. Drop a reference screenshot here to trace a layout over it."
+    },
+    "backgroundImageOpacity": {
+      "label": "Background Image Opacity",
+      "description": "Background-image opacity, 0..1. Default 1 (fully opaque).",
+      "placeholder": "1 (opaque)"
+    },
+    "backgroundImageFit": {
+      "label": "Background Image Fit",
+      "description": "How the background image fills the canvas: \"cover\" (default, fill + crop) or \"contain\" (letterbox, pad reveals the canvas background)."
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Named theme preset. Sets mode, colors, borders, and effects. Explicit mode/theme override preset values."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Theme overrides applied on top of preset defaults. Colors, borders, rounding, shadows.",
+      "collapsedByDefault": true
+    }
+  }
+}

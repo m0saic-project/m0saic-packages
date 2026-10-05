@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/contributor-table/v2",
+  "label": "Alpine Contributor Table",
+  "description": "Alpine contributor table — friendly mobile-marketing card: a ranked multi-column table (rank · avatar · name + arbitrary right-aligned value columns), icon + title header, top-N accent wash, count-up values. Alpine-light by default; the FFmpeg Weekly Pulse uses preset:\"dark\".",
+  "tags": [
+    "data-viz",
+    "alpine",
+    "contributor-table",
+    "ranking",
+    "table",
+    "animated",
+    "developers",
+    "analysts",
+    "team",
+    "open-source"
+  ],
+  "primitive": true,
+  "props": {
+    "rows": {
+      "label": "Rows",
+      "description": "Table rows. Each: name, optional rank + avatar, and values[] index-aligned to columns.",
+      "order": 1
+    },
+    "columns": {
+      "label": "Columns",
+      "description": "Value-column headers (index-aligned to each row's values).",
+      "placeholder": "Commits",
+      "order": 2
+    },
+    "title": {
+      "label": "Title",
+      "description": "Card title.",
+      "placeholder": "e.g., TOP CONTRIBUTORS",
+      "order": 3
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Card subtitle.",
+      "order": 4
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme variant (light default; dark = the FFmpeg hero look).",
+      "order": 5
+    },
+    "showHeader": {
+      "label": "Show header",
+      "description": "Show the icon + title + subtitle band (default true). False when a parent chrome supplies the title.",
+      "order": 6
+    },
+    "topTint": {
+      "label": "Top tint rows",
+      "description": "How many top rows get the accent wash (default 3).",
+      "order": 7
+    },
+    "accent": {
+      "label": "Accent",
+      "description": "Accent color (icon chip + top-row wash). Defaults to the theme primary.",
+      "placeholder": "theme primary",
+      "order": 8
+    },
+    "backgroundColor": {
+      "label": "Card color",
+      "description": "Card surface color. \"black@0\" → transparent (composed under a chrome).",
+      "placeholder": "theme card",
+      "order": 9
+    },
+    "washColor": {
+      "label": "Wash base",
+      "description": "Solid color the row washes blend against (for transparent surfaces composed on a colored backdrop).",
+      "placeholder": "card background",
+      "order": 10
+    },
+    "anim.renderMode": {
+      "label": "Render mode",
+      "description": "\"premium\" (default): rows cascade in via alpha fade — a geq per faded source. \"light\": the same cascade via free enable-gate pops — no geq, composable, cheap when nested."
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.countUp": {
+      "label": "Count up",
+      "description": "Count the value columns up during the intro."
+    },
+    "anim.easing": {
+      "label": "Easing",
+      "description": "Intro easing curve."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Reveal mode + row-cascade intro.",
+      "order": 13,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the alpine preset by default; set a producer slug + namespace to pull shared design tokens. Explicit color props still win.",
+      "order": 14,
+      "collapsedByDefault": true
+    },
+    "icon": {
+      "label": "Icon",
+      "description": "Named header glyph (shared alpine catalog). A derived HUMAN view of the raw iconPath agent prop: picking a name WRITES the SVG path into iconPath (the stored, code-friendly value); a bespoke agent-written path shows as no selection.",
+      "order": 11
+    },
+    "iconPath": {
+      "label": "Icon path (SVG d)",
+      "description": "Header glyph SVG path d (24×24), drawn as a mask on the icon chip — the raw value behind the friendly `icon` knob.",
+      "order": 15
+    },
+    "columnColors": {
+      "label": "Column colors",
+      "description": "Per-column value color (index-aligned to columns). Portrait layout tints secondary metrics (e.g. additions green / deletions red).",
+      "order": 16
+    },
+    "columnSigns": {
+      "label": "Column signs",
+      "description": "Per-column sign prefix (index-aligned to columns), e.g. + / -. Portrait only.",
+      "order": 17
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only layout contract view: renders the contract wireframe instead of the table — rows GREEN with the measured rule when every row/card is the same size, offenders RED when not. Deterministic default false; production never sets it.",
+      "order": 18,
+      "collapsedByDefault": true
+    }
+  }
+}

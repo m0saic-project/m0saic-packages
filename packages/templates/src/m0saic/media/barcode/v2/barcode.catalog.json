@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/barcode/v2",
+  "label": "Barcode",
+  "description": "Scannable 1D barcode (Code 128, EAN-13, UPC-A). Orange bars on light, dark, or transparent backgrounds, with an optional human-readable caption underneath. Double-click the barcode to change what it encodes.",
+  "tags": ["media", "barcode", "designers", "marketers", "print", "label"],
+  "props": {
+    "text": {
+      "label": "Payload",
+      "description": "What the barcode encodes. Code 128: any printable text. EAN-13: 12 or 13 digits. UPC-A: 11 or 12 digits (the check digit is added when you leave it off).",
+      "order": 1,
+      "primary": true
+    },
+    "format": {
+      "label": "Symbology",
+      "description": "Code 128 for general-purpose text; EAN-13 / UPC-A for retail product codes.",
+      "order": 2
+    },
+    "mode": {
+      "label": "Background",
+      "description": "Light or dark ground behind the bars.",
+      "order": 3
+    },
+    "transparentBackground": {
+      "label": "Transparent background",
+      "description": "Leave the ground transparent (alpha) instead of solid light or dark.",
+      "order": 4
+    },
+    "showHumanReadable": {
+      "label": "Human-readable caption",
+      "description": "Print the encoded digits in a band under the bars. Off = bars only.",
+      "order": 5
+    }
+  }
+}

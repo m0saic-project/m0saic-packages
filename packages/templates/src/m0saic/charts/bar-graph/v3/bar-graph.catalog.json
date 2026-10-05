@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/charts/bar-graph/v3",
+  "label": "Bar Graph",
+  "description": "Canonical bar graph data-viz primitive (tight-rect geometry): vertical/horizontal, labels, presets, intro animation.",
+  "tags": [
+    "data-viz",
+    "bar-graph",
+    "animated",
+    "analysts",
+    "marketers",
+    "report",
+    "charts",
+    "chart"
+  ],
+  "primitive": true,
+  "props": {
+    "values": {
+      "label": "Values",
+      "description": "Numeric data values driving the chart bars.",
+      "order": 1
+    },
+    "labels": {
+      "label": "Category Labels",
+      "description": "Category labels (index-aligned to values).",
+      "order": 2,
+      "primary": true
+    },
+    "domain.minValue": {
+      "label": "Min Value",
+      "description": "Explicit domain minimum. Auto (0 / nice) when unset."
+    },
+    "domain.maxValue": {
+      "label": "Max Value",
+      "description": "Explicit domain maximum. Auto (nice max) when unset.",
+      "placeholder": "data max"
+    },
+    "domain": {
+      "label": "Domain",
+      "description": "Value-axis domain overrides — leave unset to auto-fit to nice round numbers.",
+      "order": 3,
+      "collapsedByDefault": true
+    },
+    "layout.orientation": {
+      "label": "Orientation",
+      "description": "Vertical bars grow up; horizontal bars grow right."
+    },
+    "layout.gap": {
+      "label": "Gap",
+      "description": "Gap between bars as a fraction of bar width (0 = flush, 1 = gap as wide as a bar)."
+    },
+    "layout.padding": {
+      "label": "Padding (px)",
+      "description": "Outer padding in pixels (symmetric)."
+    },
+    "layout.barThickness": {
+      "label": "Bar Thickness (px)",
+      "description": "Optional fixed bar thickness in px. Bars share space evenly when unset.",
+      "placeholder": "auto (from gap)"
+    },
+    "layout.cornerRadius": {
+      "label": "Corner Radius",
+      "description": "Card corner-radius fraction (0..1)."
+    },
+    "layout": {
+      "label": "Layout",
+      "description": "Bar geometry: orientation, spacing, thickness, corner radius.",
+      "order": 4,
+      "collapsedByDefault": true
+    },
+    "appearance.preset": {
+      "label": "Preset",
+      "description": "Built-in color scheme (card / bars / text / grid / axis)."
+    },
+    "appearance.barColor": {
+      "label": "Bar Color",
+      "description": "Bar fill — a single color, or an array of per-bar colors (cycled in bar order)."
+    },
+    "appearance": {
+      "label": "Appearance",
+      "description": "Color scheme (preset) + bar fill color(s).",
+      "order": 5,
+      "collapsedByDefault": true
+    },
+    "grid.show": {
+      "label": "Show",
+      "description": "Draw gridlines."
+    },
+    "grid.count": {
+      "label": "Count",
+      "description": "Number of gridline intervals."
+    },
+    "grid": {
+      "label": "Grid",
+      "description": "Gridlines behind the bars.",
+      "order": 6,
+      "collapsedByDefault": true
+    },
+    "baseline.show": {
+      "label": "Show",
+      "description": "Draw the baseline rule."
+    },
+    "baseline": {
+      "label": "Baseline",
+      "description": "Baseline rule at the bars' anchor edge.",
+      "order": 7,
+      "collapsedByDefault": true
+    },
+    "valueAxis.show": {
+      "label": "Show",
+      "description": "Draw the value-axis rule."
+    },
+    "valueAxis": {
+      "label": "Value Axis",
+      "description": "Value-axis rule at the max-value side.",
+      "order": 8,
+      "collapsedByDefault": true
+    },
+    "valueLabels.show": {
+      "label": "Show",
+      "description": "Print each bar's value."
+    },
+    "valueLabels.format": {
+      "label": "Format",
+      "description": "raw = as-is; percent = share of max; compact = 1.2k."
+    },
+    "valueLabels.decimals": {
+      "label": "Decimals",
+      "description": "Decimal places."
+    },
+    "valueLabels.suffix": {
+      "label": "Suffix",
+      "description": "Appended to each value (e.g. \"%\", \" MB\")."
+    },
+    "valueLabels": {
+      "label": "Value Labels",
+      "description": "Per-bar value labels.",
+      "order": 9,
+      "collapsedByDefault": true
+    },
+    "titles.title": {
+      "label": "Title",
+      "description": "Chart title.",
+      "placeholder": "e.g., Monthly Sales"
+    },
+    "titles.subtitle": {
+      "label": "Subtitle",
+      "description": "Chart subtitle.",
+      "placeholder": "e.g., Q4 2024"
+    },
+    "titles": {
+      "label": "Titles",
+      "description": "Chart title + subtitle.",
+      "order": 10,
+      "collapsedByDefault": true
+    },
+    "anim.renderMode": {
+      "label": "Render Mode",
+      "description": "\"premium\" (default): bars + labels fade in — premium, but the alpha is a per-pixel geq paid on every frame of a nesting parent's whole timeline. \"light\": opaque grow + enable-gated label pop — no geq, composable, cheap when nested."
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce Motion",
+      "description": "Skip motion; render the final static frame."
+    },
+    "anim.intro.durationSec": {
+      "label": "Duration (s)",
+      "description": "Per-bar grow duration."
+    },
+    "anim.intro.delaySec": {
+      "label": "Delay (s)",
+      "description": "Delay before the first bar starts."
+    },
+    "anim.intro.staggerSec": {
+      "label": "Stagger (s)",
+      "description": "Gap between consecutive bars' start times."
+    },
+    "anim.intro.ease": {
+      "label": "Ease",
+      "description": "Grow-in easing curve."
+    },
+    "anim.intro": {
+      "label": "Intro",
+      "description": "Intro grow-in timing.",
+      "collapsedByDefault": true
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Reveal mode + intro animation.",
+      "order": 11,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from when the namespace isn't already on ctx (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant to request (e.g. light | dark | high-contrast for @m0saic/theming/v1; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is already populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the local preset palette by default; set a producer slug + namespace to pull shared design tokens (self-seeds when nothing is upstream). Explicit color props still win.",
+      "order": 12,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only: draw the layout contract (bars equal-thickness, text fits its slot) instead of the chart.",
+      "order": 13
+    }
+  }
+}

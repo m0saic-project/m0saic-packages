@@ -91,8 +91,10 @@ test("readGeneratedWebIds: null when absent, the ids when present", () =>
 test("real tree: the committed snapshot is well-formed, sorted and duplicate-free", () => {
   const shipped = readShippedWebIds(PKG_ROOT);
   assert.ok(shipped, `${SHIPPED_WEB_IDS_FILE} is committed`);
-  assert.equal(shipped.release, "0.2.0");
-  assert.equal(shipped.commit, "d72fdcea");
+  // The snapshot the last release minted (re-minted at the 0.3.1 cut from FREEZE a8a2042d: 116 ids, 0 dropped).
+  assert.equal(shipped.release, "0.3.1");
+  assert.equal(shipped.commit, "a8a2042d");
+  assert.equal(shipped.ids.length, 116);
   assert.ok(shipped.note.length > 0);
   assert.deepEqual(shipped.ids, [...shipped.ids].sort(), "ids are sorted");
   assert.equal(new Set(shipped.ids).size, shipped.ids.length, "no duplicates");

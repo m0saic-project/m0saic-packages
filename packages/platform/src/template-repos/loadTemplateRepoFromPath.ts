@@ -12,6 +12,11 @@ import { asDiagnosticCode, asRepoId, asTemplateId } from "@m0saic/types";
 import { validateTemplateRoles } from "./validateTemplateRoles";
 import { registerHostFirstRepoRoot } from "./hostFirstResolution";
 import { parseTemplateId } from "../templateId/parseTemplateId";
+import {
+  TEMPLATE_CATALOG_FILE,
+  parseTemplateCatalogFile,
+  withTemplateCatalog,
+} from "../templateCatalog/templateCatalog";
 
 // ── Result types ─────────────────────────────────────────────────────
 
@@ -41,6 +46,17 @@ export type LoadedTemplateRepo = {
     entryUrl?: string;
   };
   diagnostics: MosaicDiagnostic[];
+  /**
+   * The repo's catalog (`template-catalog.json` beside `template-manifest.json`,
+   * 0.3.1), when it has one: its entries are already merged into `templates`,
+   * catalog-first (a catalogued template is a copy carrying the entry's label,
+   * tags, deprecation, …).
+   */
+  catalog?: {
+    path: string;
+    applied: string[];
+    unknown: string[];
+  };
 };
 
 export type ResolvedEntry = {
@@ -729,11 +745,48 @@ async function importAndValidate(ctx: {
   // role get validated; mismatch is a warning, never an error).
   diagnostics.push(...validateTemplateRoles(templates));
 
+  // Catalog (0.3.1): what describes a template without changing what it renders
+  // (label, tags, visibility, deprecation, …) lives beside the manifest, never
+  // inside a (frozen) template. Merged here, catalog-first, so every host
+  // registers templates that already carry it. A broken catalog is a warning —
+  // catalog metadata never fails a load.
+  let catalog: LoadedTemplateRepo["catalog"];
+  const catalogPath = path.resolve(ctx.repoRoot, TEMPLATE_CATALOG_FILE);
+  if (fileExists(catalogPath)) {
+    let raw: unknown;
+    try {
+      raw = JSON.parse(fs.readFileSync(catalogPath, "utf-8"));
+    } catch (err: any) {
+      diagnostics.push(
+        diag("TEMPLATE_REPO_CATALOG_INVALID", `Failed to parse ${TEMPLATE_CATALOG_FILE}: ${err.message}`, "warning"),
+      );
+    }
+    if (raw !== undefined) {
+      const parsed = parseTemplateCatalogFile(raw);
+      for (const problem of parsed.problems) {
+        diagnostics.push(diag("TEMPLATE_REPO_CATALOG_INVALID", `${TEMPLATE_CATALOG_FILE}: ${problem}`, "warning"));
+      }
+      const merge = withTemplateCatalog(templates, parsed.file.templates);
+      templates = merge.templates;
+      for (const id of merge.unknown) {
+        diagnostics.push(
+          diag(
+            "TEMPLATE_REPO_CATALOG_UNKNOWN_ID",
+            `${TEMPLATE_CATALOG_FILE} describes "${id}", which repo "${repo.repoId}" does not export`,
+            "warning",
+          ),
+        );
+      }
+      catalog = { path: catalogPath, applied: merge.applied, unknown: merge.unknown };
+    }
+  }
+
   return {
     repo,
     templates,
     manifest,
     resolved: { inputPath, kind, manifestPath, entryPath, entryUrl },
     diagnostics,
+    ...(catalog ? { catalog } : {}),
   };
 }

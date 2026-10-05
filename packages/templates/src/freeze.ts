@@ -86,6 +86,28 @@
  * node at mint (`brand/community-m/v1` registers from `community-m.web.ts`),
  * the pin records `webFile` / `webDefinitionSha256` beside the node values.
  *
+ * ⭐ WHY THE MANIFEST RECORDS A LINE PER FOLDER (0.3.1). Folders ship at
+ * different lines: the 0.3.1 migration's `v2` folders are held to the 0.3.1
+ * conventions while every `v1` beside them shipped at 0.2.0 and can only lag.
+ * One fleet-level `release` cannot say that, so the mint writes `shipped`
+ * (template folder → line), carried forward: an unchanged folder keeps its
+ * line, a new or re-minted one gets the new `release`, and a manifest minted
+ * before the map seeds every hashed folder at its own `release`. The gate
+ * (check-registry) and `m0saic doctor` read the same map.
+ *
+ * ⭐ WHY A TEMPLATE'S DESCRIPTION IS NOT IN ITS FILE (0.3.1). The template
+ * convention since 0.3.1: a template FILE is immutable once shipped; what
+ * describes it without changing what it renders (label, description, tags,
+ * platforms, channels, preview, internal, primitive, deprecated, and each
+ * prop's label / hint / placeholder / order) lives in the template's catalog
+ * SIDECAR — `<name>.catalog.json` beside its code, which the freeze never
+ * hashes (only `.ts` source is frozen) — because it may change: a shipped `vN`
+ * is superseded, re-tagged or hidden there. The registry applies the catalog at
+ * registration while pins hash the template AS ITS FILE DECLARES IT
+ * (`getTemplateAsRegistered`) — a catalog edit never moves a pin. The mint
+ * records which ids are `deprecated`; a shipped deprecation is permanent
+ * (Stage 0d, the hook).
+ *
  * ⭐ WHY THIS FILE HAS NO IMPORTS BEYOND NODE BUILTINS. `@m0saic/templates` is
  * vendored into the published `m0saic` tarball, and `verifyStagedRequires` in
  * scripts/build-publish-artifact.mjs scans every staged file for non-builtin
@@ -156,6 +178,21 @@ export type FreezeManifest = {
   files: Record<string, string>;
   /** template id → registration pin. Absent on manifests minted before 0.2.0's pins. */
   registry?: Record<string, FreezeRegistryPin>;
+  /**
+   * Template folder (`src/m0saic/<pack>/<slug>/vN`, see {@link templateFolderOf})
+   * → the m0saic line it shipped at — plus, for a pinned id registered from
+   * outside every version folder, the folder its id names
+   * ({@link templateFolderOfId}). Absent on manifests minted before 0.3.1:
+   * every hashed folder then shipped at `release`. See {@link mintShippedMap}.
+   */
+  shipped?: Record<string, string>;
+  /**
+   * Ids deprecated at mint — by the catalog or, for templates shipped before
+   * 0.3.1, by their own file. A shipped deprecation is permanent: later
+   * releases may reword or repoint it in the catalog, never drop it. Absent
+   * before 0.3.1.
+   */
+  deprecated?: string[];
 };
 
 export type FreezeReport = {
@@ -725,6 +762,149 @@ export function collectFrozenFiles(packageRoot: string): string[] {
   return [...frozen].sort();
 }
 
+/* ── shipped lines (per folder) ──────────────────────────────────────────── */
+
+/**
+ * The template folder a package-relative source path belongs to: everything up
+ * to and including the first `vN` segment under {@link FROZEN_SRC_ROOT}
+ * (`src/m0saic/social/quote-card/v1/layout.ts` → `src/m0saic/social/quote-card/v1`).
+ * Undefined for paths in no version folder (a pack's `_shared/`, a pack-root
+ * helper) — those carry no line of their own.
+ */
+export function templateFolderOf(relPath: string): string | undefined {
+  const segs = relPath.split(path.sep).join("/").split("/");
+  const root = FROZEN_SRC_ROOT.split("/");
+  if (root.some((s, i) => segs[i] !== s)) return undefined;
+  for (let i = root.length; i < segs.length - 1; i++) {
+    if (segs[i]!.startsWith("_")) return undefined;
+    if (/^v\d+$/.test(segs[i]!)) return segs.slice(0, i + 1).join("/");
+  }
+  return undefined;
+}
+
+/**
+ * The folder a template id names by the house layout (`@m0saic/<pack>/<slug>/vN`
+ * lives in `src/m0saic/<pack>/<slug>/vN` — the doctor's rule). Undefined when
+ * the id does not end in a version segment.
+ */
+export function templateFolderOfId(templateId: string): string | undefined {
+  const segs = templateId.split("/");
+  if (segs.length < 3 || !/^v\d+$/.test(segs[segs.length - 1]!)) return undefined;
+  return `${FROZEN_SRC_ROOT}/${segs.slice(1).join("/")}`;
+}
+
+/**
+ * The `shipped` map for a mint at `release`, carried forward from `previous`:
+ * a folder whose hashed files are all present and unchanged in `previous` keeps
+ * its line (from `previous.shipped`, or `previous.release` when that manifest
+ * predates the map); a new folder, or one whose files moved, ships at
+ * `release`. When the hasher version changed between the two manifests the
+ * hashes cannot be compared, so presence alone carries a folder forward.
+ */
+export function mintShippedMap(
+  files: Readonly<Record<string, string>>,
+  previous: FreezeManifest | null,
+  release: string,
+): Record<string, string> {
+  const byFolder = new Map<string, string[]>();
+  for (const rel of Object.keys(files)) {
+    const folder = templateFolderOf(rel);
+    if (!folder) continue;
+    const list = byFolder.get(folder);
+    if (list) list.push(rel);
+    else byFolder.set(folder, [rel]);
+  }
+  const prevFiles = previous?.files ?? {};
+  const comparable = previous !== null && manifestHashVersion(previous) === FREEZE_HASH_VERSION;
+  const out: Record<string, string> = {};
+  for (const folder of [...byFolder.keys()].sort()) {
+    const rels = byFolder.get(folder)!;
+    const carried = rels.every((r) => prevFiles[r] !== undefined && (!comparable || prevFiles[r] === files[r]));
+    const prevLine = previous
+      ? previous.shipped !== undefined ? previous.shipped[folder] : previous.release
+      : undefined;
+    out[folder] = carried && typeof prevLine === "string" && prevLine ? prevLine : release;
+  }
+  return out;
+}
+
+/**
+ * The line a registered template shipped at: its folder's entry in `shipped`
+ * — the folder its id names, else the folder of its registering file. A
+ * manifest without the map answers `release` for everything (the doctor's rule);
+ * with the map, a template in no mapped folder has not shipped (`null`).
+ */
+export function shippedLineFor(
+  manifest: Pick<FreezeManifest, "release" | "shipped"> | null,
+  templateId: string,
+  registeringFile?: string,
+): string | null {
+  if (!manifest) return null;
+  if (manifest.shipped === undefined) return typeof manifest.release === "string" ? manifest.release : null;
+  for (const folder of [templateFolderOfId(templateId), registeringFile ? templateFolderOf(registeringFile) : undefined]) {
+    if (folder !== undefined && typeof manifest.shipped[folder] === "string") return manifest.shipped[folder]!;
+  }
+  return null;
+}
+
+/** Per-line counts of a `shipped` map (`{ "0.2.0": 96, "0.3.1": 12 }`), for the gate's summary. */
+export function shippedLineCounts(shipped: Readonly<Record<string, string>>): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const line of Object.values(shipped)) out[line] = (out[line] ?? 0) + 1;
+  return out;
+}
+
+/* ── the catalog (Stage 0d) ───────────────────────────────────────────────── */
+
+export type TemplateCatalogReport = { ok: boolean; errors: string[]; warnings: string[] };
+
+/**
+ * Hold the pack's catalog (its `<name>.catalog.json` sidecars, gathered into
+ * `src/template-catalog.json`) to its rules —
+ * check-registry Stage 0d:
+ *
+ * - it parses clean (`problems` from the platform parser are errors — a field
+ *   outside the catalog list, a wrong shape);
+ * - every id it describes is registered, and every deprecation's
+ *   `replacement` too — a replacement that is itself deprecated is a warning;
+ * - a template shipped since 0.3.1 — any id not pinned by the last release —
+ *   declares no catalog field in its file (`catalogSidecar`; the render-time
+ *   audit says the same, this also covers the audit's skipped templates);
+ * - every id the last release shipped as deprecated is still deprecated.
+ */
+export function checkTemplateCatalog(input: {
+  catalog: Readonly<Record<string, { deprecated?: { replacement?: string } }>>;
+  problems: readonly string[];
+  registeredIds: ReadonlySet<string>;
+  /** Resolved (catalog-applied) deprecation state, per registered id. */
+  deprecatedIds: ReadonlySet<string>;
+  /** id → catalog fields its FILE declares (the as-registered view). */
+  declaredInFile: Readonly<Record<string, readonly string[]>>;
+  pinnedIds: ReadonlySet<string>;
+  minted?: readonly string[];
+}): TemplateCatalogReport {
+  const errors: string[] = input.problems.map((p) => `catalog: ${p}`);
+  const warnings: string[] = [];
+  for (const id of Object.keys(input.catalog).sort()) {
+    if (!input.registeredIds.has(id)) errors.push(`${id}: described in the catalog but not registered — drop the entry or fix the id`);
+    const replacement = input.catalog[id]!.deprecated?.replacement;
+    if (replacement !== undefined) {
+      if (!input.registeredIds.has(String(replacement))) errors.push(`${id}: deprecated.replacement ${replacement} is not registered`);
+      else if (input.deprecatedIds.has(String(replacement))) warnings.push(`${id}: deprecated.replacement ${replacement} is itself deprecated — point at the live version`);
+    }
+  }
+  for (const id of Object.keys(input.declaredInFile).sort()) {
+    const fields = input.declaredInFile[id]!;
+    if (fields.length && !input.pinnedIds.has(id)) {
+      errors.push(`${id}: declares ${fields.join(", ")} in its code — since 0.3.1 these live in its catalog sidecar, <name>.catalog.json beside the code (catalogSidecar)`);
+    }
+  }
+  for (const id of [...(input.minted ?? [])].sort()) {
+    if (!input.deprecatedIds.has(id)) errors.push(`${id}: deprecated at the last release — a shipped deprecation is permanent; restore its catalog entry`);
+  }
+  return { ok: errors.length === 0, errors, warnings };
+}
+
 /* ── the gate ────────────────────────────────────────────────────────────── */
 
 export function readFreezeManifest(packageRoot: string): FreezeManifest | null {
@@ -788,12 +968,15 @@ export function mintFreezeManifest(
   packageRoot: string,
   meta: { release: string; tag: string; commit: string; note: string },
   registry?: { live: readonly LiveRegistration[]; webIds?: readonly string[]; webLive?: readonly LiveRegistration[] },
+  carry?: { previous?: FreezeManifest | null; deprecated?: readonly string[] },
 ): FreezeManifest {
   const files: Record<string, string> = {};
   for (const rel of collectFrozenFiles(packageRoot)) {
     files[rel] = hashSource(fs.readFileSync(path.join(packageRoot, rel), "utf8")).hash;
   }
   const manifest: FreezeManifest = { ...meta, hashVersion: FREEZE_HASH_VERSION, files };
+  manifest.shipped = mintShippedMap(files, carry?.previous ?? null, meta.release);
+  if (carry?.deprecated) manifest.deprecated = [...new Set(carry.deprecated)].sort();
   if (registry) {
     const web = new Set(registry.webIds ?? []);
     const webById = new Map((registry.webLive ?? []).map((l) => [l.id, l]));
@@ -819,6 +1002,30 @@ export function mintFreezeManifest(
         `refusing to mint: ${unfrozen.length} registry pin(s) name a file the manifest does not hash — ` +
           unfrozen.map((u) => `${u.id} ← ${u.file}`).join("; ") +
           `. A pin over unhashed code is not a lock; the frozen set is the import closure of every vN/ and _shared/ file, so this means the registering module was not reached from a frozen file (or its provenance is unknown).`,
+      );
+    }
+    // A pinned id registered from OUTSIDE every version folder (a pack's
+    // `internal/` or `utils/` helper registers it) has no folder of its own:
+    // record it under the folder its id names — the doctor's key — carrying the
+    // previous line while its pin is unchanged.
+    const previous = carry?.previous ?? null;
+    for (const id of Object.keys(pins)) {
+      if (shippedLineFor(manifest, id, pins[id]!.file) !== null) continue;
+      const key = templateFolderOfId(id);
+      if (!key) continue;
+      const prevPin = previous?.registry?.[id];
+      const prevLine = previous ? (previous.shipped !== undefined ? previous.shipped[key] : previous.release) : undefined;
+      manifest.shipped![key] =
+        prevPin && prevPin.definitionSha256 === pins[id]!.definitionSha256 && typeof prevLine === "string" && prevLine ? prevLine : meta.release;
+    }
+    manifest.shipped = Object.fromEntries(Object.keys(manifest.shipped!).sort().map((k) => [k, manifest.shipped![k]!]));
+    // Every pinned id must answer a shipped line, or the gate would hold it to
+    // every current rule the moment the next release adds one.
+    const lineless = Object.keys(pins).filter((id) => shippedLineFor(manifest, id, pins[id]!.file) === null);
+    if (lineless.length) {
+      throw new Error(
+        `refusing to mint: ${lineless.length} registry pin(s) sit in no template folder the manifest hashes, so no shipped line can be recorded — ` +
+          lineless.map((id) => `${id} ← ${pins[id]!.file}`).join("; "),
       );
     }
   }

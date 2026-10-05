@@ -36,7 +36,18 @@ describe("business-card back catalog", () => {
     expect(getTemplate(entry.templateId)).toBeDefined();
     expect(templateRegistry.some((r) => r.templateId === entry.templateId)).toBe(true);
     expect(isWebTemplateId(entry.templateId)).toBe(true);
-    const dir = assetDir(entry.templateId);
+    // Preview media follows the LIVE template (2026-09-30): a deprecated
+    // version ships none and never borrows its replacement's, so the browse
+    // preview a card-holder lands on is the one at the end of the entry's
+    // replacement chain (the entry itself while it is live).
+    let liveId = entry.templateId;
+    for (let hops = 0; hops < 8; hops++) {
+      const next = getTemplate(liveId)?.deprecated?.replacement;
+      if (!next || String(next) === liveId) break;
+      liveId = String(next);
+    }
+    expect(getTemplate(liveId)).toBeDefined();
+    const dir = assetDir(liveId);
     // Preview media (assets/templates/) is authored in the monorepo and never
     // ships with the package; a standalone checkout has no previews to check.
     if (fs.existsSync(path.dirname(dir))) {

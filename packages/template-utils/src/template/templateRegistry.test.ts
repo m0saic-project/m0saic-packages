@@ -1,7 +1,10 @@
 import {
+  declareTemplateCatalog,
+  declareTemplateConventions,
   deepFreezeTemplate,
   drainTemplateRegistrationRejections,
   getTemplate,
+  getTemplateAsRegistered,
   getTemplateMeta,
   getTemplateOrigin,
   isReservedTemplateId,
@@ -19,6 +22,8 @@ import type {
   MosaicDocument,
 } from "@m0saic/types";
 import { asTemplateId } from "@m0saic/types";
+import { authoredCatalogFields } from "@m0saic/platform";
+import { defineMosaicTemplate } from "./defineMosaicTemplate";
 import { toM0String } from "@m0saic/dsl-stdlib";
 
 function makeCtx(): MosaicEngineContext & { cache?: any } { return { mode: "render" as const,
@@ -678,5 +683,122 @@ describe("repoRelativeRegistrationPath", () => {
     expect(repoRelativeRegistrationPath("/usr/lib/node_modules/m0saic/vendor/@m0saic/templates/dist/x.js"))
       .toBe("/usr/lib/node_modules/m0saic/vendor/@m0saic/templates/dist/x.js");
     expect(repoRelativeRegistrationPath("/repos/acme/dist/index.js")).toBe("/repos/acme/dist/index.js");
+  });
+});
+
+describe("the repo catalog (template-catalog.json, 0.3.1)", () => {
+  const V1 = "@acme/cards/quote/v1";
+  const V2 = "@acme/cards/quote/v2";
+  const DEP = { reason: "v2 binds every prop", replacement: asTemplateId(V2), since: "2026-09-29" };
+  /** A 0.3.1-style template: nothing descriptive in the file. */
+  const bare = (id: string) => {
+    const t = makeTemplate(id) as unknown as Record<string, unknown>;
+    delete t.label;
+    delete t.description;
+    delete t.tags;
+    return t as unknown as MosaicTemplate<{}>;
+  };
+
+  it("declared first, the catalog applies at registration — before the definition-time conventions judge it", () => {
+    declareTemplateCatalog({ [V2]: { label: "Quote Card", description: "Pull quote.", tags: ["social"] } });
+    // browseSurface would THROW for a first-party template with no label / description / tags.
+    expect(() => registerTemplate(bare(V2))).not.toThrow();
+    const t = getTemplate(V2)!;
+    expect(t.label).toBe("Quote Card");
+    expect(t.tags).toEqual(["social"]);
+  });
+
+  it("the as-registered view is the FILE: catalog fields at the file's own values (what a pin hashes)", () => {
+    declareTemplateCatalog({ [V1]: { tags: ["retagged"], internal: true, deprecated: DEP } });
+    registerTemplate(makeTemplate(V1));
+    const resolved = getTemplate(V1)!;
+    const written = getTemplateAsRegistered(V1)!;
+    expect(resolved.tags).toEqual(["retagged"]);
+    expect(resolved.internal).toBe(true);
+    expect(resolved.deprecated).toEqual(DEP);
+    expect(written.tags).toEqual(["test"]);
+    expect(written.internal).toBeUndefined();
+    expect(written.deprecated).toBeUndefined();
+    expect(written.render).toBe(resolved.render);
+    expect(Object.isFrozen(resolved)).toBe(true);
+    expect(Object.isFrozen(written)).toBe(true);
+  });
+
+  it("without a catalog entry, the as-registered view IS the registered template", () => {
+    registerTemplate(makeTemplate(V1));
+    expect(getTemplateAsRegistered(V1)).toBe(getTemplate(V1));
+  });
+
+  it("declared after registration, the same origin's template is restamped; the file view is kept", async () => {
+    registerTemplate(makeTemplate(V1));
+    const r = declareTemplateCatalog({ [V1]: { deprecated: DEP }, "@acme/none/v1": { tags: ["x"] } });
+    expect(r).toEqual({ declared: [V1, "@acme/none/v1"], restamped: [V1] });
+    expect(getTemplate(V1)!.deprecated).toEqual(DEP);
+    expect(getTemplateAsRegistered(V1)!.deprecated).toBeUndefined();
+    expect((await getTemplate(V1)!.render({}, makeCtx())).kind).toBe("mosaic_document");
+  });
+
+  it("an entry binds to the origin that declared it: an external repo cannot restyle a first-party template", () => {
+    registerTemplate(makeTemplate(V1));
+    withExternalTemplateOrigin("/repos/evil", () => declareTemplateCatalog({ [V1]: { internal: true, deprecated: DEP } }));
+    expect(getTemplate(V1)!.internal).toBeUndefined();
+    expect(getTemplate(V1)!.deprecated).toBeUndefined();
+    // …nor on a later first-party re-registration (a hot reload).
+    withTemplateReloadScope(() => registerTemplate(makeTemplate(V1, "reloaded")));
+    expect(getTemplate(V1)!.internal).toBeUndefined();
+  });
+
+  it("a template its own module DEFINES (a repo's export) takes the declared catalog before the conventions", () => {
+    declareTemplateCatalog({ [V2]: { label: "Quote Card", description: "Pull quote.", tags: ["social"] } });
+    // What a template repo's module does at import: define, then export. No label in code.
+    let defined: MosaicTemplate<{}> | undefined;
+    expect(() => { defined = defineMosaicTemplate(bare(V2)); }).not.toThrow();
+    expect(defined!.label).toBe("Quote Card");
+    // …and it still answers for its FILE (nothing descriptive was written there).
+    expect(authoredCatalogFields(defined!)).toEqual({});
+    registerTemplate(defined!);
+    expect(getTemplate(V2)!.tags).toEqual(["social"]);
+    expect(getTemplateAsRegistered(V2)!.label).toBeUndefined();
+  });
+
+  it("without a declared catalog, a first-party define of an undescribed template still fails browseSurface", () => {
+    expect(() => defineMosaicTemplate(bare("@acme/cards/undescribed/v1"))).toThrow(/browseSurface/);
+  });
+
+  it("a hot reload re-applies the declared catalog to the fresh registration", () => {
+    declareTemplateCatalog({ [V1]: { tags: ["catalogued"] } });
+    registerTemplate(makeTemplate(V1, "first"));
+    withTemplateReloadScope(() => registerTemplate(makeTemplate(V1, "reloaded")));
+    expect(getTemplate(V1)!.label).toBe("reloaded");
+    expect(getTemplate(V1)!.tags).toEqual(["catalogued"]);
+    expect(getTemplateAsRegistered(V1)!.tags).toEqual(["test"]);
+  });
+});
+
+describe("declareTemplateConventions — the repo's conventions target (0.3.1)", () => {
+  const bareT = (id: string) => {
+    const t = makeTemplate(id) as unknown as Record<string, unknown>;
+    delete t.label;
+    delete t.description;
+    delete t.tags;
+    return t as unknown as MosaicTemplate<{}>;
+  };
+
+  it("a rule newer than the declared target is recorded as a warning at definition time, never thrown", () => {
+    declareTemplateConventions("0.1.0"); // older than browseSurface (0.2.0)
+    let t: MosaicTemplate<{}> | undefined;
+    expect(() => { t = defineMosaicTemplate(bareT("@acme/old/target/v1")); }).not.toThrow();
+    expect(t).toBeDefined();
+  });
+
+  it("clearing the target restores every rule", () => {
+    declareTemplateConventions("0.1.0");
+    declareTemplateConventions(undefined);
+    expect(() => defineMosaicTemplate(bareT("@acme/old/strict/v1"))).toThrow(/browseSurface/);
+  });
+
+  it("the target binds to the origin that declared it", () => {
+    withExternalTemplateOrigin("/repos/lenient", () => declareTemplateConventions("0.1.0"));
+    expect(() => defineMosaicTemplate(bareT("@acme/first-party/v1"))).toThrow(/browseSurface/);
   });
 });

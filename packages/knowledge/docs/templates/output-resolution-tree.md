@@ -105,6 +105,14 @@ host canvas clobbering authored size) or **an L1 value lost in the wrapper**
      (the CLI source (not published) `handleTemplateMake`, flipped 2026-09-13 —
      before that the hint would have silenced the knob; Make's
      `outputFormat`-prop sync already behaved this way).
+     **Since 0.3.1 this order lives in ONE place — `resolveTemplateOutputHints`
+     (`@m0saic/template-utils`)** — so every host gets it: static hint < the
+     knob < a `format` the template's own `resolveOutputHints` returns. Before
+     that only the CLI applied it; the desktop render handler read the static
+     hint, and a knob off its default was refused ("Output extension implies
+     container "mp4" but resolved container is "png"" — Trickplay, 2026-10-01).
+     A knob that MOVES the container yields the bare `{ kind, container }` (the
+     static hint's `pixelFormat` described the other container).
   2. `outputHints.format` — the static deliverable. **Every public template
      declares one** (the `outputFormat` convention, record posture — see
      [`philosophy-and-contract.md`](philosophy-and-contract.md) §Output

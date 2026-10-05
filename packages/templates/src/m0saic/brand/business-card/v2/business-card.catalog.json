@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/brand/business-card/v2",
+  "label": "Business Card",
+  "description": "The m0saic business card, print-ready: US 3.5 x 2 in at 300 DPI on MOO's bleed box (1098 x 648 px; Vistaprint / FedEx presets too), the brand field + M lockup and your contact on the front, a live-rendered shipped template with a QR to Mosaic Web on the back. One render, two PNGs (front + back). Every line on the front is editable on the canvas.",
+  "tags": ["brand", "print", "card", "business-card", "still", "qr", "founders", "marketers", "developers"],
+  "props": {
+    "name": {
+      "label": "Name",
+      "description": "Your name — the bold line on the front. Double-click it to add any contact line that is empty.",
+      "placeholder": "none",
+      "order": 1,
+      "primary": true
+    },
+    "role": {
+      "label": "Role",
+      "description": "Role / company line under the name. Empty removes it.",
+      "placeholder": "none",
+      "order": 2
+    },
+    "email": {
+      "label": "Email",
+      "description": "Email address, set in the mono face. Empty removes it.",
+      "placeholder": "none",
+      "order": 3
+    },
+    "site": {
+      "label": "Site",
+      "description": "Website, set in the mono face. Empty removes it.",
+      "placeholder": "none",
+      "order": 4
+    },
+    "handle": {
+      "label": "Handle",
+      "description": "Social handle, printed beside the site. Empty removes it.",
+      "placeholder": "none",
+      "order": 5
+    },
+    "back": {
+      "label": "Back",
+      "description": "Which shipped template the back of the card shows (rendered live, with a QR that opens it on Mosaic Web).",
+      "order": 1,
+      "primary": true
+    },
+    "bleed": {
+      "label": "Bleed",
+      "description": "Printer bleed per side: \"moo\" (MOO — 3.66 x 2.16 in, 1098 x 648 px at 300 DPI, exact), \"none\" (trim only, 3.5 x 2 in), \"sixteenth\" (Vistaprint), \"eighth\" (FedEx Office / Staples).",
+      "order": 1
+    },
+    "dpi": {
+      "label": "DPI",
+      "description": "Print resolution in dots per inch — every dimension scales with it. 300 is press standard.",
+      "order": 2
+    },
+    "fieldOpacity": {
+      "label": "Field opacity",
+      "description": "Tint of the field tiles over the navy. The app uses 0.16; print stock needs more contrast.",
+      "order": 3
+    },
+    "accent": {
+      "label": "Accent",
+      "description": "Accent colour — the M and the wordmark's zero.",
+      "order": 4
+    },
+    "guides": {
+      "label": "Proof guides",
+      "description": "Draw the trim (orange) and safe-area (green) outlines for proofing. Off for the press file.",
+      "order": 5
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only: overlay the layout contract (every mark keeps its aspect, the back's template keeps its own, every glyph stays inside the safe area).",
+      "order": 6
+    }
+  }
+}

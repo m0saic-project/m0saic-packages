@@ -116,7 +116,7 @@ function rejectReason(
     // path + a leaf kind.
     if (b.kind === "rect") return "unsupported-type";
     if (!bindingPath(b).length) return "path-required";
-    if (b.kind !== "string" && b.kind !== "number" && b.kind !== "color" && b.kind !== "media") return "kind-required";
+    if (b.kind !== "string" && b.kind !== "number" && b.kind !== "color" && b.kind !== "choice" && b.kind !== "media") return "kind-required";
   }
   return "unsupported-type";
 }

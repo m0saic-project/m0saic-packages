@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/bar-graph/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same alpine bar chart, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/alpine/bar-graph/v2",
+    "since": "2026-09-30"
+  }
+}

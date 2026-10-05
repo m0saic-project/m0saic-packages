@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/story/narrated-chapters/v1",
+  "deprecated": {
+    "reason": "0.3.1: the cards and captions are the handles for the story's own words and colours",
+    "replacement": "@m0saic/story/narrated-chapters/v2",
+    "since": "2026-09-30"
+  }
+}

@@ -76,7 +76,8 @@ describe("QrStampCustom — metadata", () => {
     expect(QrStampCustom.tags).toContain("qr");
     expect(QrStampCustom.tags).toContain("stamp");
     expect(QrStampCustom.internal).toBeFalsy();
-    expect(QrStampCustom.deprecated).toBeUndefined();
+    // Superseded by v2 (0.3.1) in its own sidecar — still registered, still renders.
+    expect(QrStampCustom.deprecated?.replacement).toBe("@m0saic/media/qr/stamp/v2");
   });
 });
 

@@ -59,6 +59,8 @@ import type {
   MosaicTemplate,
 } from "@m0saic/types";
 import { asTemplateId } from "@m0saic/types";
+import type { MosaicTemplateCatalogEntry } from "@m0saic/types";
+import { splitPropPresentation } from "@m0saic/platform";
 import { placeRects } from "@m0saic/dsl-stdlib";
 import { measureText, resolveFontFile } from "@m0saic/text";
 import { curtainSource, gatedBoxTrackSource, type GatedBox } from "../../anim/tracks";
@@ -672,6 +674,19 @@ export type HelloWorldTemplateOptions = {
    * to fly in), so an image mark always uses the `fade`/rise reveal.
    */
   mark?: HelloWorldMarkImage;
+  /**
+   * The 0.3.1 template convention: a template's code carries no description.
+   * `true` returns a card that declares no `label` / `description` / `tags` /
+   * `version` and whose props schema has no presentation
+   * ({@link HELLO_WORLD_PROPS_SCHEMA_BARE}) — the repo's catalog sidecar
+   * (`hello-world.catalog.json`) supplies them; {@link HELLO_WORLD_CATALOG_ENTRY}
+   * is the canonical copy to start from. `label` / `description` / `tags`
+   * options are ignored in this mode (they belong in the sidecar).
+   *
+   * Default `false`: byte-identical to before — the shipped official and
+   * community cards are frozen on that path.
+   */
+  catalog?: boolean;
 };
 
 /** A repo's own mark image for the card's mark cell. */
@@ -690,6 +705,24 @@ export const HELLO_WORLD_LABEL = "Hello, World";
 export const HELLO_WORLD_DESCRIPTION =
   "The Home screen as a greeting: the brand-pattern field wipes in, a navy card rises, the M assembles from its own rectangles, then the wordmark and your greeting. Zero inputs — the first render on a fresh install.";
 export const HELLO_WORLD_TAGS = ["hello", "brand", "animated", "intro", "card"] as const;
+
+const HELLO_WORLD_PRESENTATION = splitPropPresentation(HELLO_WORLD_PROPS_SCHEMA);
+
+/** {@link HELLO_WORLD_PROPS_SCHEMA} with no presentation — what a catalog-convention card's code carries (0.3.1). */
+export const HELLO_WORLD_PROPS_SCHEMA_BARE = HELLO_WORLD_PRESENTATION.schema as unknown as typeof HELLO_WORLD_PROPS_SCHEMA;
+
+/**
+ * The canonical card's description as a catalog entry — label, description,
+ * tags and each prop's label / hint / placeholder / order. A repo's
+ * `hello-world.catalog.json` starts from this (and edits it freely — it is the
+ * repo's own copy) when it builds its card with `catalog: true`.
+ */
+export const HELLO_WORLD_CATALOG_ENTRY: MosaicTemplateCatalogEntry = {
+  label: HELLO_WORLD_LABEL,
+  description: HELLO_WORLD_DESCRIPTION,
+  tags: [...HELLO_WORLD_TAGS],
+  props: HELLO_WORLD_PRESENTATION.props,
+};
 
 /** The core card's defaults — what `@m0saic/hello-world/v1` ships. */
 export function helloWorldDefaultProps(opts: Pick<HelloWorldTemplateOptions, "subline" | "defaults"> = {}): HelloWorldProps {
@@ -957,6 +990,11 @@ export function defineHelloWorldTemplate(opts: HelloWorldTemplateOptions): Mosai
     return template.render({ ...props, animate: false }, ctx) as Promise<MosaicDocument>;
   },
   };
+  if (opts.catalog) {
+    // The 0.3.1 convention: the card's description lives in the repo's sidecar.
+    const { label: _label, description: _description, tags: _tags, version: _version, ...code } = template;
+    return { ...code, propsSchema: HELLO_WORLD_PROPS_SCHEMA_BARE } as MosaicTemplate<HelloWorldProps>;
+  }
   return template;
 }
 

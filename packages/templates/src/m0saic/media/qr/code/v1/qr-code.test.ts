@@ -18,11 +18,11 @@ const render = async (props: Record<string, unknown>) =>
   (await QrCode.render(props as never, makeCtx())) as MosaicDocument;
 
 describe("QrCode — metadata", () => {
-  it("has the expected id, label, version; not deprecated", () => {
+  it("has the expected id, label, version; superseded by v2 (0.3.1) in its own sidecar", () => {
     expect(QrCode.id).toBe("@m0saic/media/qr/code/v1");
     expect(QrCode.label).toBe("QR Code");
     expect(QrCode.version).toBe(1);
-    expect((QrCode as { deprecated?: unknown }).deprecated).toBeUndefined();
+    expect((QrCode as { deprecated?: { replacement?: string } }).deprecated?.replacement).toBe("@m0saic/media/qr/code/v2");
   });
 
   it("supersedes its surviving ancestors (their deprecated.replacement points here)", () => {

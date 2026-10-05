@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/qr/stamp/v2",
+  "label": "QR Stamp",
+  "description": "Drop a QR onto any image or video. Same engine as the auto post-render watermark, exposed for direct use.",
+  "tags": [
+    "brand",
+    "qr",
+    "stamp",
+    "custom",
+    "marketers",
+    "creators",
+    "animated",
+    "link",
+    "video"
+  ],
+  "props": {
+    "mediaPath": {
+      "label": "Media",
+      "description": "Image or video to brand with a QR stamp."
+    },
+    "text": {
+      "label": "QR payload",
+      "description": "Text encoded into the QR — URL, plain string, or structured payload (default: https://www.m0saic.io).",
+      "placeholder": "https://www.m0saic.io"
+    },
+    "position": {
+      "label": "Corner",
+      "description": "Corner placement for the stamp."
+    },
+    "sizePct": {
+      "label": "Size (%)",
+      "description": "Stamp size as a percent of min(W, H)."
+    },
+    "marginPct": {
+      "label": "Margin (%)",
+      "description": "Margin between stamp and corner edges, % of min(W, H)."
+    },
+    "mode": {
+      "label": "Card mode",
+      "description": "QR card mode. 'auto' uses scene luminance to pick light vs dark."
+    },
+    "luminanceBuckets": {
+      "label": "Luminance override",
+      "description": "Luminance-bucket override for auto mode. Omit to let the template probe the stamp corner itself (real renders only — design previews skip analysis and fall back to the light card)."
+    },
+    "animation": {
+      "label": "Entrance",
+      "description": "Entrance animation for the stamp."
+    },
+    "moduleStyle": {
+      "label": "Module Style",
+      "description": "Module shape: circle dots (the branded default), roundedSquare, or square (the classic matrix look)."
+    },
+    "center": {
+      "label": "Centre",
+      "description": "What the carved centre holds: the m0saic M (the branded default), your own asset (pick it below), or off for a plain code."
+    },
+    "centerAsset": {
+      "label": "Centre asset",
+      "description": "Image or video that fills the centre safe area when Centre is 'asset' — contain-fit, over the card colour."
+    }
+  }
+}

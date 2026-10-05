@@ -34,6 +34,7 @@ export * from "./output";
 export * from "./bridges/protocol";
 // Pure (no node:fs) — safe to re-export here for both CLI and webpack/web.
 export * from "./templateId";
+export * from "./templateCatalog";
 // What an artifact is MADE OF — the CLI and Desktop both render this.
 export * from "./packages/mosaicPackages";
 

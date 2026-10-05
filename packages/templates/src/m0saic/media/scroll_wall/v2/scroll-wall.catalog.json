@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/scroll_wall/v2",
+  "label": "Scroll Wall",
+  "description": "An endless scrolling wall of clips: 1-4 rows of video/image tiles slide sideways forever (optionally alternating direction) and loop seamlessly at whole cycles. Every tile is a real DSL cell at full native resolution; the pan is per-tile overlay motion, not a camera crop. Empty clips render a demo wall of colored tiles.",
+  "tags": [
+    "media",
+    "wall",
+    "scroll",
+    "loop",
+    "montage",
+    "animated",
+    "creators",
+    "marketers",
+    "video"
+  ],
+  "props": {
+    "clips": {
+      "label": "Clips",
+      "description": "Clips for the wall — pick a folder, one or more files, or drag-and-drop (video and image). The wall cycles through the list, so one clip fills every slot; drop a file on the first tile showing a clip to replace it, on any repeat to add another. Every clip gets a slot in every row, so the wall takes up to 24 ÷ rows clips: 12 at the default 2 rows, 6 at 4 rows. Empty renders a demo wall of colored tiles.",
+      "order": 1
+    },
+    "rows": {
+      "label": "Rows",
+      "description": "Number of scrolling rows.",
+      "order": 2
+    },
+    "visibleCount": {
+      "label": "Visible tiles",
+      "description": "How many tiles are visible across the canvas. Reduced automatically (bigger tiles) when the row count would push the wall past its 24-tile budget — 11 tiles fit at 2 rows, 5 at 4.",
+      "order": 3
+    },
+    "direction": {
+      "label": "Direction",
+      "description": "Base travel direction (odd rows flip when alternating).",
+      "order": 4
+    },
+    "motion.alternateRowDirection": {
+      "label": "Alternate rows",
+      "description": "Flip travel direction on odd rows."
+    },
+    "motion.rowOffsetFrac": {
+      "label": "Row offset",
+      "description": "Per-row phase offset as a fraction of the tile pitch."
+    },
+    "motion.speedMode": {
+      "label": "Speed mode",
+      "description": "Cycles per render, or an explicit px/sec speed."
+    },
+    "motion.cycles": {
+      "label": "Cycles",
+      "description": "Strip cycles over the render. Whole numbers loop seamlessly."
+    },
+    "motion.pxPerSec": {
+      "label": "Speed (px/s)",
+      "description": "Explicit scroll speed when Speed mode is \"pxPerSec\"."
+    },
+    "motion.snapVelocityToFrameGrid": {
+      "label": "Snap to frame grid",
+      "description": "Round speed to whole pixels per frame (steadier motion, loop no longer closes exactly)."
+    },
+    "motion": {
+      "label": "Motion",
+      "description": "Scroll speed + per-row phrasing.",
+      "order": 5,
+      "collapsedByDefault": true
+    },
+    "tiles.gapPx": {
+      "label": "Gap (px)",
+      "description": "Gap between tiles (snapped down to the canvas lattice; minimum 1 — the wrap needs off-screen slack; thinned further on a canvas too narrow to hold it)."
+    },
+    "tiles.marginPx": {
+      "label": "Margin (px)",
+      "description": "Vertical-only outer margin (a scrolling layer would bleed past any horizontal margin). Thinned automatically on a canvas too short to hold it and the rows."
+    },
+    "tiles.fit": {
+      "label": "Fit",
+      "description": "cover crops to fill; contain letterboxes the frame."
+    },
+    "tiles.backgroundColor": {
+      "label": "Background",
+      "description": "Canvas color behind the tile gaps."
+    },
+    "tiles.clipWindowMs": {
+      "label": "Clip window (ms)",
+      "description": "How much of each clip loops. 0 = automatic from the RAM budget."
+    },
+    "tiles": {
+      "label": "Tiles",
+      "description": "Tile gap, margins, fill and loop window.",
+      "order": 6,
+      "collapsedByDefault": true
+    },
+    "variation.shuffle": {
+      "label": "Shuffle",
+      "description": "Shuffle the clip order (seeded)."
+    },
+    "variation.staggerRepeats": {
+      "label": "Stagger repeats",
+      "description": "Start repeated clips at a seeded offset so they aren't frame-identical."
+    },
+    "variation.seed": {
+      "label": "Seed",
+      "description": "Seed for shuffle + stagger."
+    },
+    "variation": {
+      "label": "Variation",
+      "description": "Seeded ordering + repeat variation.",
+      "order": 7,
+      "collapsedByDefault": true
+    },
+    "debugGeometry": {
+      "label": "Debug geometry",
+      "description": "Dev-only geometry contract: assert every tile footprint survived to the pixels and stamp the achieved precision floors. Deterministic default false.",
+      "order": 1,
+      "collapsedByDefault": true
+    }
+  }
+}

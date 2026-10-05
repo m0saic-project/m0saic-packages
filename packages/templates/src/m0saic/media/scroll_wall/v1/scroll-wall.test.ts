@@ -60,8 +60,8 @@ describe("ScrollWallV1 metadata + registry linkage", () => {
     expect(ScrollWallV1.outputHints).toEqual({ format: { kind: "video", container: "mp4" }, width: 1920, height: 1080, fps: 30, durationMs: 4000 });
   });
 
-  it("is linked in the curated registry under slug scroll-wall", () => {
-    const entry = templateRegistry.find((e) => e.slug === "scroll-wall");
+  it("is linked in the curated registry (slug scroll-wall-v1 since v2 took scroll-wall)", () => {
+    const entry = templateRegistry.find((e) => e.slug === "scroll-wall-v1");
     expect(entry).toBeDefined();
     expect(entry!.templateId).toBe("@m0saic/media/scroll_wall/v1");
     expect(entry!.exportName).toBe("ScrollWallV1");

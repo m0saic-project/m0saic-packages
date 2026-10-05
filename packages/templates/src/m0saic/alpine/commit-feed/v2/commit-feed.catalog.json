@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/commit-feed/v2",
+  "deprecated": {
+    "reason": "Superseded by v3 — the same alpine commit feed, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/alpine/commit-feed/v3",
+    "since": "2026-09-30"
+  }
+}

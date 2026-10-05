@@ -1,6 +1,7 @@
 export {
   propDefinitionAtPath,
   classifyBindableProp,
+  choiceOptionsOf,
   isRectPickerProp,
   isRectListPickerProp,
   isListPropType,
@@ -9,6 +10,7 @@ export {
   isColorPropDef,
   bindingPath,
   bindingOnClear,
+  defaultOnClear,
   bindingSeedDraft,
   bindingCompanion,
   resolveBindableProp,

@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/qr/code/v2",
+  "label": "QR Code",
+  "description": "Scannable QR from any text (URL, plain string, or structured payload). Defaults to the branded look — circle modules on a light card with the m0saic M carved in the centre; swap the centre asset and URL to make it yours. Square/rounded/circle module styles, light/dark/transparent card, optional spawn animation (Output mp4). The one standalone QR template.",
+  "tags": [
+    "brand",
+    "qr",
+    "marketers",
+    "designers",
+    "link"
+  ],
+  "props": {
+    "text": {
+      "label": "Text",
+      "description": "Text to encode (URL, plain string, or structured payload). Defaults to https://www.m0saic.io.",
+      "placeholder": "https://www.m0saic.io",
+      "order": 1
+    },
+    "outputFormat": {
+      "label": "Output",
+      "description": "Deliverable format. \"png\" renders the static QR image; \"mp4\" renders the spawn animation (modules pixelate in — tune it under Animation).",
+      "order": 2
+    },
+    "mode": {
+      "label": "Mode",
+      "description": "Background mode. transparent = alpha PNG for compositing.",
+      "order": 3
+    },
+    "moduleStyle": {
+      "label": "Module Style",
+      "description": "Module shape: circle dots (the branded default), roundedSquare, or square (the classic matrix look).",
+      "order": 4
+    },
+    "moduleColor": {
+      "label": "Module Color",
+      "description": "Fill colour for data modules and eye dark layers.",
+      "order": 5
+    },
+    "backgroundColor": {
+      "label": "Background",
+      "description": "Override the mode-derived background colour.",
+      "placeholder": "by mode",
+      "order": 6
+    },
+    "style.moduleBorderRadius": {
+      "label": "Module radius",
+      "description": "Override module corner radius (0..1). Default derives from Module Style.",
+      "placeholder": "by module style"
+    },
+    "style.eyeOuterBorderRadius": {
+      "label": "Eye outer radius",
+      "description": "Outer eye corner radius (0..1).",
+      "placeholder": "by module style"
+    },
+    "style.eyeInnerDotBorderRadius": {
+      "label": "Eye dot radius",
+      "description": "Inner eye dot corner radius (0..1). 1.0 = circular dot.",
+      "placeholder": "by module style"
+    },
+    "style": {
+      "label": "Style",
+      "description": "Module/eye corner-radius fine-tuning (styled paths only).",
+      "order": 7,
+      "collapsedByDefault": true
+    },
+    "center.show": {
+      "label": "Show Center",
+      "description": "Carve a centre into the QR. Off = plain QR, no cutout. Default on."
+    },
+    "center.assetPath": {
+      "label": "Asset",
+      "description": "Image or video that fills the centre safe area. Empty = the m0saic M (rendered in-house — no file involved); swap in your own logo path (and update the Text URL)."
+    },
+    "center.width": {
+      "label": "Width (px)",
+      "description": "Safe-area width in canvas pixels."
+    },
+    "center.height": {
+      "label": "Height (px)",
+      "description": "Safe-area height in canvas pixels."
+    },
+    "center.paddingPct": {
+      "label": "Padding (%)",
+      "description": "Padding between modules and the centre frame, % of max dim."
+    },
+    "center": {
+      "label": "Center Asset",
+      "description": "Carved centre asset: your image or video in the middle; modules carve a safe area around it (ECC H + version floor keep it scannable).",
+      "order": 8,
+      "collapsedByDefault": true
+    },
+    "animation.spawnDurMs": {
+      "label": "Spawn (ms)",
+      "description": "Stagger: time from first to last tile starting its fade-in."
+    },
+    "animation.tileFadeMs": {
+      "label": "Fade (ms)",
+      "description": "Per-tile fade-in duration."
+    },
+    "animation.holdDurMs": {
+      "label": "Hold (ms)",
+      "description": "Hold at full alpha before fade-out (used when Fade out > 0)."
+    },
+    "animation.fadeOutDurMs": {
+      "label": "Fade out (ms)",
+      "description": "Global fade-out. 0 = spawn in and hold to the end of the render."
+    },
+    "animation.tileOffsetPx": {
+      "label": "Settle (px)",
+      "description": "Per-tile pixel offset that decays to 0 during fade-in."
+    },
+    "animation.gleam": {
+      "label": "Module Gleam",
+      "description": "Travelling per-cell shine over the data modules during the hold. Cells dip to a high alpha floor, so the code stays scannable. Eyes and the centre are untouched. Requires Output mp4."
+    },
+    "animation": {
+      "label": "Animation",
+      "description": "Spawn-animation envelope (active when Output is \"mp4\"): modules pixelate in with a staggered fade. Size the render duration to at least spawn + fade + hold (+ fade out).",
+      "order": 9,
+      "collapsedByDefault": true
+    },
+    "advanced.svg": {
+      "label": "SVG string",
+      "description": "Caller-supplied SVG string — bypasses QR generation (testing, non-QR vector content, pre-generated QRs). Styling/center are ignored; animation still applies.",
+      "placeholder": "from Text"
+    },
+    "advanced.driftPercent": {
+      "label": "Drift %",
+      "description": "Drift tolerance for SVG grid inference (% of min canvas dim)."
+    },
+    "advanced": {
+      "label": "Advanced",
+      "description": "Escape hatches.",
+      "order": 10,
+      "collapsedByDefault": true
+    },
+    "version": {
+      "label": "QR Version",
+      "description": "Force QR version (1–40). Default auto; a centre cutout forces ≥6. Bump higher if a printed code fails to scan.",
+      "placeholder": "auto (smallest that fits)",
+      "order": 11
+    }
+  }
+}

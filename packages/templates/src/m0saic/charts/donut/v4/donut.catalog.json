@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/charts/donut/v4",
+  "deprecated": {
+    "reason": "Superseded by v5 — the same donut chart, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/charts/donut/v5",
+    "since": "2026-09-30"
+  }
+}

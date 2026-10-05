@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/theming/v2",
+  "label": "Theming — Token Producer",
+  "description": "Design-token producer: publishes one ThemeTokens set (dark | light | high-contrast) onto ctx.upstreamVariables for downstream templates to read. Rendered standalone (preview:true) it draws an aspect-adaptive Theme-Tokens sheet — mosaic-M header, the labelled data palette, and the semantic swatches; as an intermediate pipeline step (preview:false) it emits pure data at zero cost and re-skins a chain by swapping one prop.",
+  "tags": [
+    "utility",
+    "theming",
+    "tokens",
+    "producer",
+    "design-system",
+    "designers",
+    "developers",
+    "palette"
+  ],
+  "props": {
+    "preset": {
+      "label": "Preset",
+      "description": "Design-token preset to publish (dark | light | high-contrast).",
+      "order": 1
+    },
+    "alias": {
+      "label": "Alias",
+      "description": "Upstream alias the token block appears under in ctx.upstreamData. Default \"theme\".",
+      "order": 2
+    },
+    "preview": {
+      "label": "Preview swatches",
+      "description": "Render the swatch preview (true, standalone) vs. emit a data-only token block (false, for an intermediate pipeline step — zero render cost).",
+      "order": 3
+    }
+  }
+}

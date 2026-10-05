@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/watermark/v2",
+  "label": "Watermark",
+  "description": "Stamp your logo or wordmark onto any image or video — 9 positions or an exact m0 rect, ratio-true sizing, opacity control. Point it at a folder for one watermarked output per input. (Free tier adds the m0saic QR at bottom-right — pick a different corner to avoid overlap.)",
+  "tags": [
+    "media",
+    "watermark",
+    "brand",
+    "batch",
+    "creators",
+    "marketers",
+    "animated",
+    "logo",
+    "overlay",
+    "video"
+  ],
+  "props": {
+    "sourceIds": {
+      "label": "Source(s)",
+      "description": "Media to watermark — pick a folder, one or more files, or drag-and-drop. One watermarked output per input.",
+      "order": 1
+    },
+    "mode": {
+      "label": "Mode",
+      "description": "Watermark mode. \"static\" bakes it in; \"adaptive\" and \"page\" land in later phases.",
+      "order": 1
+    },
+    "content": {
+      "label": "Content",
+      "description": "What the watermark shows: your logo image, a text wordmark, or both (\"lockup\", later phase).",
+      "order": 2
+    },
+    "image": {
+      "label": "Logo",
+      "description": "Logo image file — PNG with transparency recommended.",
+      "order": 3,
+      "primary": true
+    },
+    "text": {
+      "label": "Text",
+      "description": "Wordmark text (your brand or URL).",
+      "placeholder": "yourbrand.com",
+      "order": 4
+    },
+    "textColor": {
+      "label": "Text Color",
+      "description": "Wordmark color.",
+      "order": 5
+    },
+    "imageDark": {
+      "label": "Logo (dark)",
+      "description": "Dark-background logo variant, crossfaded in over dark scenes (adaptive mode; later phase).",
+      "order": 1
+    },
+    "textColorOnLight": {
+      "label": "Text Color (on light)",
+      "description": "Wordmark color over bright regions (adaptive mode; later phase).",
+      "order": 2
+    },
+    "variant": {
+      "label": "Variant",
+      "description": "\"auto\" follows scene luminance (bright scenes get the on-light artwork, dark scenes your primary styling); \"single\" always uses the primary artwork. Auto degrades to single when no luma probe is available.",
+      "order": 3
+    },
+    "windowing": {
+      "label": "Windowing",
+      "description": "\"always\" keeps the watermark on (entrance fade); \"windows\" fades it in and out over timed appearances whose count scales with clip duration.",
+      "order": 4
+    },
+    "coverageOverride": {
+      "label": "Coverage",
+      "description": "Windowed mode: fraction of the clip the watermark is on-screen (overrides the duration tier).",
+      "placeholder": "auto",
+      "order": 5
+    },
+    "fadeMs": {
+      "label": "Fade (ms)",
+      "description": "Fade in/out duration at entrance and window boundaries, ms.",
+      "order": 6
+    },
+    "crossfadeMs": {
+      "label": "Crossfade (ms)",
+      "description": "Light↔dark crossfade duration at scene brightness changes (always-on auto), ms.",
+      "order": 7
+    },
+    "lumaThreshold": {
+      "label": "Luma Threshold",
+      "description": "Region luma (0..255) at/above which a scene counts as bright.",
+      "order": 8
+    },
+    "minGapMs": {
+      "label": "Min Gap (ms)",
+      "description": "Minimum gap between windowed appearances, ms.",
+      "order": 9
+    },
+    "lumaByInput": {
+      "label": "Luma By Input",
+      "description": "Override hatch: per-input region-luminance results. Normally the template pulls these itself via ctx.analysis — set this only to bypass the probe (agents, tests)."
+    },
+    "lockupLayout": {
+      "label": "Lockup Layout",
+      "description": "Lockup arrangement: wordmark beside the logo or beneath it.",
+      "order": 7
+    },
+    "angleDeg": {
+      "label": "Angle",
+      "description": "Pattern rotation angle, degrees clockwise (negative = up-slope).",
+      "order": 1
+    },
+    "tileGapRatio": {
+      "label": "Tile Gap",
+      "description": "Gap between pattern instances, fraction of min(width, height).",
+      "order": 2
+    },
+    "stagger": {
+      "label": "Stagger",
+      "description": "Offset alternate pattern rows by half the pitch (brick layout).",
+      "order": 3
+    },
+    "maxTiles": {
+      "label": "Max Tiles",
+      "description": "Hard cap on pattern instances (the gap grows to satisfy it).",
+      "order": 4
+    },
+    "debugLayout": {
+      "label": "Debug Layout",
+      "description": "Dev: verify the watermark's layout contract and render a violation card instead of a broken layout.",
+      "order": 1
+    },
+    "opacity": {
+      "label": "Opacity",
+      "description": "Watermark opacity.",
+      "order": 6
+    },
+    "position": {
+      "label": "Position",
+      "description": "Standard placement on the canvas.",
+      "order": 1
+    },
+    "sizeRatio": {
+      "label": "Size",
+      "description": "Watermark width as a fraction of the size basis — match it to your brand assets.",
+      "order": 2
+    },
+    "sizeBasis": {
+      "label": "Size Basis",
+      "description": "Which canvas dimension the size ratio measures against.",
+      "order": 3
+    },
+    "marginRatio": {
+      "label": "Margin",
+      "description": "Margin from the canvas edges, as a fraction of min(width, height).",
+      "order": 4
+    },
+    "layoutM0": {
+      "label": "Layout (m0)",
+      "description": "Escape hatch: an m0 layout resolving to exactly ONE frame — the watermark is placed in that rect (content keeps its aspect, contain-fit). Overrides Position/Size/Margin.",
+      "placeholder": "e.g. 4(-,-,-,2[-,F])",
+      "order": 1
+    },
+    "imageOutputFormat": {
+      "label": "Image Format",
+      "description": "Image outputs: match each input's container (jpg stays jpeg, else png), or force one.",
+      "order": 1
+    }
+  }
+}

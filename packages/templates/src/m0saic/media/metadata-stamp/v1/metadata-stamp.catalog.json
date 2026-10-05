@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/metadata-stamp/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same metadata stamp, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/media/metadata-stamp/v2",
+    "since": "2026-09-30"
+  }
+}

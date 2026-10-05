@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/highlights/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same highlight clips, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/media/highlights/v2",
+    "since": "2026-09-30"
+  }
+}

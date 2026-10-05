@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/charts/stat-card/v1",
+  "deprecated": {
+    "reason": "Superseded by v2 — the same kpi stat card, with its values editable on the Make canvas.",
+    "replacement": "@m0saic/charts/stat-card/v2",
+    "since": "2026-09-30"
+  }
+}

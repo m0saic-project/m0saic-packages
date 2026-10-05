@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/kpi-card/v3",
+  "label": "Alpine KPI Card",
+  "description": "Alpine KPI / stat card — friendly mobile-marketing card: muted label, count-up value, soft delta pill (arrow + change), sublabel, optional sparkline. Every line is editable on the canvas, and the card composes at any size.",
+  "tags": ["data-viz", "alpine", "kpi", "stat-card", "animated", "analysts", "marketers", "metric", "dashboard"],
+  "primitive": true,
+  "props": {
+    "label": {
+      "label": "Label",
+      "description": "The metric's name, set small above the value (e.g. \"Monthly Revenue\").",
+      "placeholder": "e.g. Monthly Revenue",
+      "order": 1
+    },
+    "value": {
+      "label": "Value",
+      "description": "The headline number, exactly as it should read (e.g. \"$48.2K\", \"86%\"); digits count up on the intro.",
+      "placeholder": "e.g. $48.2K",
+      "order": 2,
+      "primary": true
+    },
+    "delta": {
+      "label": "Delta",
+      "description": "The signed change shown in the pill (e.g. \"+12.5%\"). Empty hides the pill.",
+      "placeholder": "e.g. +12.5%",
+      "order": 3
+    },
+    "sublabel": {
+      "label": "Sublabel",
+      "description": "Muted caption beside the change (e.g. \"vs last month\"). Empty hides it.",
+      "placeholder": "e.g. vs last month",
+      "order": 4
+    },
+    "title": {
+      "label": "Title",
+      "description": "Optional card title above the KPI; setting one adds a header.",
+      "placeholder": "none",
+      "order": 5
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Optional line under the title, in the card header.",
+      "placeholder": "none",
+      "order": 6
+    },
+    "direction": {
+      "label": "Direction",
+      "description": "Which way the change went — the arrow and its colour (green up / red down / muted flat).",
+      "order": 7
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme variant.",
+      "order": 8
+    },
+    "valueColor": {
+      "label": "Value Color",
+      "description": "Colour of the headline number; empty uses the theme's title colour.",
+      "placeholder": "theme title color",
+      "order": 9
+    },
+    "sparkline": {
+      "label": "Sparkline",
+      "description": "Optional trend series drawn as a soft sparkline along the card bottom; leave it unset for a trend that follows the direction.",
+      "order": 10
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Reveal mode + intro (count-up + soft fades).",
+      "order": 11,
+      "collapsedByDefault": true
+    },
+    "anim.renderMode": {
+      "label": "Render mode",
+      "description": "\"premium\" (default): soft alpha fades of the pill / sublabel / sparkline — a per-pixel geq each. \"light\": the same via free enable-gate pops — no geq, composable, cheap when nested."
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.countUp": {
+      "label": "Count up",
+      "description": "Count the value up on intro."
+    },
+    "anim.easing": {
+      "label": "Easing",
+      "description": "Intro easing curve."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the alpine preset by default; set a producer slug + namespace to pull shared design tokens. Explicit color props still win.",
+      "order": 12,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is populated."
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only layout contract view: renders the contract wireframe instead of the card — the delta pill GREEN at its intended aspect, RED when stretched. Deterministic false default; production never sets it.",
+      "order": 12
+    }
+  }
+}

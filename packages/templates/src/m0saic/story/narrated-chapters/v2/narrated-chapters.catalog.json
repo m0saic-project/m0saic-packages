@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/story/narrated-chapters/v2",
+  "label": "Narrated Chapters",
+  "description": "Chaptered, narration-timed story video from a story.json manifest — title/section cards, per-chapter scenes, and one deliverable per aspect (landscape/portrait) from a single invocation. Omit props for the built-in demo story.",
+  "tags": [
+    "media",
+    "story",
+    "chapters",
+    "narrated",
+    "pipeline",
+    "agentic",
+    "animated",
+    "creators",
+    "educators",
+    "social",
+    "voice-over",
+    "explainer"
+  ],
+  "props": {
+    "story": {
+      "label": "Story manifest",
+      "description": "story.json manifest — { title, sections: [{ narrationText, narrationAudio?, images?, overrides? }], defaults?, brand?, outputs? }. Omit for the built-in demo story.",
+      "order": 1
+    },
+    "mediaPaths": {
+      "label": "Media paths",
+      "description": "Machine-generated flat mirror of every asset path in the story (run `story-studio build`); needed so narration durations are probed before render.",
+      "order": 2
+    },
+    "projectDir": {
+      "label": "Project folder",
+      "description": "Story project folder (informational; used to shorten paths in diagnostics).",
+      "placeholder": "none (full paths in diagnostics)",
+      "order": 3
+    }
+  }
+}

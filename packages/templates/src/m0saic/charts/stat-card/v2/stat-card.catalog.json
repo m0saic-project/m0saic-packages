@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/charts/stat-card/v2",
+  "label": "KPI Stat Card",
+  "description": "Canonical KPI stat card: label, dominant value, delta (arrow + signed change), and sublabel. Building block of the repo-tracker hero.",
+  "tags": [
+    "data-viz",
+    "stat-card",
+    "kpi",
+    "animated",
+    "analysts",
+    "marketers",
+    "metric",
+    "charts"
+  ],
+  "primitive": true,
+  "props": {
+    "label": {
+      "label": "Label",
+      "description": "Category label (e.g. \"Total Commits\").",
+      "placeholder": "e.g. Total Commits",
+      "order": 1
+    },
+    "value": {
+      "label": "Value",
+      "description": "The headline KPI value, pre-formatted (e.g. \"246\", \"86%\").",
+      "placeholder": "e.g. 246",
+      "order": 2
+    },
+    "delta": {
+      "label": "Delta",
+      "description": "Change vs the comparison window, pre-formatted (e.g. \"+18 (+7.9%)\"). Omit for no-delta cards.",
+      "placeholder": "e.g. +18 (+7.9%)",
+      "order": 3
+    },
+    "direction": {
+      "label": "Direction",
+      "description": "Delta direction — drives the arrow glyph and color (green up / red down).",
+      "order": 4
+    },
+    "sublabel": {
+      "label": "Sublabel",
+      "description": "Small muted caption under the delta (e.g. \"vs last week\").",
+      "placeholder": "e.g. vs last week",
+      "order": 5
+    },
+    "backgroundColor": {
+      "label": "Card Color",
+      "description": "Card surface color. Pass \"none\" to render transparent when composed under a card-chrome primitive.",
+      "placeholder": "theme surface",
+      "order": 6
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only: draw the layout contract (label / value / delta / sublabel fit their cells) instead of the card.",
+      "order": 9
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from when the namespace isn't already on ctx (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant to request (e.g. light | dark | high-contrast for @m0saic/theming/v1; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is already populated (collision escape hatch)."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Reads the card's own palette by default; set a producer slug + namespace to pull shared design tokens (self-seeds when nothing is upstream).",
+      "order": 7,
+      "collapsedByDefault": true
+    },
+    "anim.countUp": {
+      "label": "Count up",
+      "description": "Count the value up on intro."
+    },
+    "anim.slideIn": {
+      "label": "Slide in",
+      "description": "Cascade-reveal the content in (label → delta → sublabel) with a subtle slide-up."
+    },
+    "anim.introFrac": {
+      "label": "Intro length (× duration)",
+      "description": "Fraction of the output duration the intro fills (the rest holds)."
+    },
+    "anim.introMs": {
+      "label": "Intro (ms, override)",
+      "description": "Absolute intro duration (ms). Overrides Intro length when set.",
+      "placeholder": "from Intro fraction"
+    },
+    "anim.easing": {
+      "label": "Easing",
+      "description": "Count-up easing."
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Disable all motion — render the static final value."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Intro animation: count-up, cascade reveal, easing, duration, reduceMotion.",
+      "order": 8,
+      "collapsedByDefault": true
+    }
+  }
+}

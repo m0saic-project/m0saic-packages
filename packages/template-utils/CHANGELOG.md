@@ -1,5 +1,74 @@
 # Changelog
 
+## 0.3.1 — 2026-10-05
+
+### Registry applies the template catalog; `catalogSidecar` convention (0.3.1)
+
+- `declareTemplateCatalog(entries)`: a repo declares its catalog before its templates register; `registerTemplate`
+  applies the entry catalog-first (fields, and prop presentation written into a copy of `propsSchema`) BEFORE the
+  definition-time conventions run, so `browseSurface` / `propLabels` / `bindingHints` judge the template as hosts
+  see it. An entry binds to the origin that declared it — an external repo can never restyle, hide or deprecate a
+  first-party template. Copies a repo loader already merged are recognised too.
+- `getTemplateAsRegistered(id)`: the template as its CODE declares it (catalog fields and `propsSchema` as written)
+  — what a freeze pin hashes, so catalog edits never move a pin.
+- New convention `catalogSidecar` (since 0.3.1, throw): a template's code declares no catalog field and no prop
+  presentation. Templates shipped before 0.3.1 lag it (reported, never fatal); new work meets it.
+  `auditCatalogSidecar(template)` exported.
+- `browseSurface` also requires a resolved `label`.
+- `defineHelloWorldTemplate({ …, catalog: true })`: the front-door card with no label / description / tags / version
+  and a presentation-free schema (`HELLO_WORLD_PROPS_SCHEMA_BARE`) — the repo's `hello-world.catalog.json` supplies
+  them, starting from `HELLO_WORLD_CATALOG_ENTRY`. Renders the identical card; the default path (the frozen official
+  and community cards) is untouched.
+
+**Compatibility.**
+
+A template that describes itself in code still registers and renders exactly as before; on new work the
+`catalogSidecar` finding is an error, on shipped work it is lag.
+
+### `canvasFill` closes the rounded-card loophole (from 0.3.1); `choice` bindings accepted
+
+A static, opaque, full-canvas colour tile is flagged by `canvasFill` whether or not it is rounded or stroked
+(`effects` no longer takes it out of the rule) — UNLESS it carries a handle (a prop bound to it), or the template
+declares `canvas.baseRect` / defaults `useNestedBackgroundColor`. Overlay, mask and placement still exempt. The
+tightening is held to the line: a repo held to `0.3.0` (its `frozen.manifest.json` release or `repo.conventions`,
+the lower of the two) keeps the rounded-card exemption it shipped under (`CANVAS_FILL_SHAPED_SINCE = "0.3.1"`).
+The finding's detail now offers the second fix: make the rect a handle. The binders (`bindProps`, `bindPropPath`)
+and `resolvePropBindings` accept kind `"choice"`.
+
+**Compatibility.**
+
+- Breaking: no for any repo held to a line (`shippedAt` / `conventionsTarget` ≤ 0.3.0) — the rule it shipped
+  under still applies. A template audited with NO line (new work, a repo that has shipped nothing and declares
+  no target) is held to the tightened rule: a rounded full-canvas card that nothing binds now fails
+  `canvasFill` where it passed with 0.3.0 tooling. The fix is one of: bind the rect (`bindProp(src, "preset")`),
+  `canvas.baseRect = "<why>"`, or `document.backgroundColor` instead of the rect.
+- `m0saic doctor` on the starter and on community repos (all held to 0.3.0) is unchanged.
+
+**Release notes.**
+
+Ships with the 0.3.1 lockstep set (`@m0saic/platform` of the same cut defines the `choice` kind).
+
+### `resolveTemplateOutputHints`: the reserved `outputFormat` knob wins over the static format hint
+
+`resolveTemplateOutputHints(template, props)` now returns the format the PROPS ask for: when the merged props
+carry a reserved `outputFormat` naming a container (`png` / `jpeg` / `jpg` / `webp` → image; `mp4` / `mov` /
+`webm` / `mkv` → video) that differs from the static `outputHints.format`, the result's `format` is
+`{ kind, container }` for that container. Precedence: static hint < the knob < a `format` the template's own
+`resolveOutputHints` returns. At the knob's default the static hint stands whole (its `pixelFormat` and the
+rest). `formatFromOutputFormatKnob` is exported.
+
+**Compatibility.**
+
+- Breaking: no. A template without an `outputFormat` prop, or with the knob at its hint, resolves exactly as
+  before. A host that already let the knob win (the CLI) gets the same answer from the resolver.
+- A template that uses a prop named `outputFormat` for something OTHER than the deliverable's container would
+  see its hint move; none in the official or community packs does (the name is reserved by convention).
+
+**Release notes.**
+
+Mosaic Desktop's render handler (`templates:renderToFile`) reads the resolved hints from this cut on — it read
+the static hint directly before, so it needs the same build.
+
 ## 0.3.0 — 2026-09-29
 
 ### `bindingsDeclared` — the prop-binding roll call (THROW, new templates only)

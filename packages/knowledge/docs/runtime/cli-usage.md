@@ -372,22 +372,41 @@ closure into the published tarball). `initialize` echoes the client's
 `protocolVersion`; a tool that throws returns `isError: true` rather than a
 JSON-RPC error, so the model sees the failure instead of the transport eating it.
 
-The 14 tools (`src/mcp/tools.ts`), in three groups:
+The 21 tools (`src/mcp/tools.ts`; the list is locked in `tools.test.ts`), in four groups:
 
 - **Knowledge** — `knowledge_list`, `knowledge_read`, `knowledge_search`. The
   `@m0saic/knowledge` docs, so an agent reads the handbook instead of guessing.
 - **Local, no app needed** — `list_templates`, `template_props`, `validate_m0`,
   `workspace_scaffold`, `render_still`, `doctor`.
-- **Through the loopback bridge into a running Desktop** — `desktop_status`,
-  `desktop_open_in_make`, `desktop_reload_sources`, `desktop_read_verdict`,
-  `desktop_layout`.
+- **Through the loopback bridge into a running Desktop — the authoring loop** —
+  `desktop_status` (also says which flow you are in: `in-the-room`, a shell
+  Desktop's Agent panel opened, or `ecosystem`), `desktop_open_in_make` (open a
+  template for review — this resets the person's session on it),
+  `desktop_reload_sources`, `desktop_read_verdict` (takes a template id, or the
+  path of a forked `.mosaic`; surfaces `srcMosaic` + `geometryEdits`).
+- **The live canvas (0.3.1)** — see it: `desktop_layout` (the template, every
+  tile's bound prop and shown value, the current bag with `changedKeys`, the
+  modes; `detail`, `tileId`, `prop`), `desktop_snapshot` (a PNG on disk); act
+  through Make's own handlers: `desktop_set_props` (THE way to change a prop —
+  one undoable write, "Agent changed …"), `desktop_select_tile`,
+  `desktop_make_control` (reveal, camera, undo/redo, view, preview mode, canvas,
+  tile card, studio, cover, hover, tile override); branch when the template has
+  no knob: `desktop_fork_to_document` (a plain `.mosaic` + its m0),
+  `desktop_open_file`, `desktop_edit_geometry` (a pending ghost the person
+  applies). Behaviour and etiquette: [`agent-at-the-canvas.md`](agent-at-the-canvas.md);
+  the wire: `docs/compat-bridges.md` (0.3.1 routes).
 
-Two rules the implementation enforces:
+Three rules the implementation enforces:
 
 - **`render_still` pins `M0SAIC_CLI=/usr/bin/false`.** `@m0saic/benchmark/run/v1`
   re-invokes `argv[1]`; without the pin a render from inside the CLI fork-bombs.
 - **Failures return a HINT, never raw stderr** (`findFailureHint`). Engine text is
   moat: the argv and the filtergraph never cross to a model.
+- **The act routes never focus or restore the window**, and every live-canvas verb
+  runs the handler a click would — Desktop's main process sanitises the verb and
+  its args inbound and rebuilds every result from an allow-list outbound
+  (`electron/makeAgent.js`), so nothing an agent polls can carry a plan, an argv
+  or a filtergraph.
 
 `src/mcp/bridgeClient.ts` is the transport for the desktop tools. A 404 means
 `route-missing` — "this Desktop is too old for that route" — not "the app is
@@ -414,12 +433,21 @@ conventions: meets 0.2.0 (shipped at 0.2.0).
   `record` warning is advice, not a failure to meet a line).
 - **`behind`** — the lines it does not meet, with the rules that fail, oldest first.
 - **`shippedAt`** — the repo's own `frozen.manifest.json` `release`.
+- **`target`** — the repo's `repo.conventions` (e.g. `"0.3.1"`, 0.3.1): the line whose rules it has
+  adopted. Each template is held to the LOWER of its shipped line and the target; rules introduced after
+  that are lag ("behind"), never errors. A repo moves its target when its templates have adopted the
+  newer rules — like a crate's edition. Absent: held to every rule this CLI knows. A malformed target is
+  a load warning (`CONVENTIONS_TARGET`); one newer than the CLI knows is a note. The summary line reads
+  `conventions: meets 0.3.0 (targets 0.3.0).` and a lagging template says *"the repo targets 0.3.0:
+  behind on catalogSidecar — not a defect, adopt them, then move repo.conventions."*
 - **`lagOnly`** — true when EVERY failure comes from a line newer than `shippedAt`. The footer then
   says so explicitly: *"Not a defect: these templates met the conventions of their day. Fix at the
   next vN."*
 
 **A template is allowed to lag.** It met the conventions of its day; the rules moved; the fix is its
-next `vN`. What the rules guarantee is that **NEW** templates meet the CURRENT line — which is why the
+next `vN`. **A repo is allowed to target an older line too** (`repo.conventions`): a new m0saic release
+never turns its build red — the freeze protects what shipped, the target protects a repo with no freeze
+(every third-party repo). What the rules guarantee is that **NEW** templates meet the CURRENT line — which is why the
 postures throw (founder: "we need to be greedy about adding conventions because agents, especially
 non-frontier ones, won't"). The exit code is still 1 on any error, because the status is informational
 and the message carries the meaning.

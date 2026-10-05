@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/logo-animate/v2",
+  "label": "Logo Animate",
+  "description": "Drop in an SVG logo — get an animated logo video. The SVG becomes real m0 geometry (one cell per shape, silhouette masks), animated per-tile: assemble-in, seamless loop, progress fill, breathing glow, or shimmer.",
+  "tags": [
+    "media",
+    "logo",
+    "animated",
+    "svg-to-mosaic",
+    "brand",
+    "designers",
+    "marketers",
+    "svg",
+    "intro"
+  ],
+  "props": {
+    "svgPath": {
+      "label": "Logo SVG",
+      "description": "Your logo as an SVG file. Only <path>/<rect> shapes are parsed — flatten with Inkscape's Object to Path first if needed.",
+      "order": 1,
+      "primary": true
+    },
+    "svg": {
+      "label": "SVG string",
+      "description": "Inline SVG content. Bypasses the file picker — useful for CLI/programmatic callers. Leave both empty to see the placeholder mark.",
+      "placeholder": "built-in M",
+      "order": 2
+    },
+    "driftPercent": {
+      "label": "Drift %",
+      "description": "Drift tolerance for grid inference (% of min canvas dim). 0 traces exactly; a logo too fine to fit the canvas snaps to the smallest tolerance that fits."
+    },
+    "packing": {
+      "label": "Packing",
+      "description": "Layer-packing strategy: \"one\" or \"multi\"."
+    },
+    "bitmap": {
+      "label": "Bitmap mode",
+      "description": "Rasterize the SVG to a pixel grid and animate pixel-by-pixel. Opt-in — a high-resolution grid is a heavy render. Use when a logo converts to a single shape and won't otherwise animate.",
+      "order": 3
+    },
+    "bitmapPrecision": {
+      "label": "Bitmap precision",
+      "description": "Bitmap-mode fidelity (raster resolution). Higher = crisper but far more frames / slower renders. ultra (512²) is maximum fidelity — it renders but is too heavy to preview live."
+    },
+    "animation": {
+      "label": "Animation",
+      "description": "assemble: tiles spawn in, hold, fade out · logo_loop: seamless reveal loop · progress_fill: fills like a loading bar · breathing: pulsing glow with a travelling shine · shimmer: travelling highlight band.",
+      "order": 1
+    },
+    "rankSet": {
+      "label": "Order",
+      "description": "Tile ordering: scatter (pixelate-in), diag (corner sweep), cascade, radial (center-out).",
+      "order": 2
+    },
+    "spawnDurMs": {
+      "label": "Spawn (ms)",
+      "description": "Stagger from first to last tile starting its fade-in."
+    },
+    "tileFadeMs": {
+      "label": "Fade (ms)",
+      "description": "Per-tile fade-in duration."
+    },
+    "holdDurMs": {
+      "label": "Hold (ms)",
+      "description": "Hold duration at full alpha before fade-out begins."
+    },
+    "fadeOutDurMs": {
+      "label": "Fade out (ms)",
+      "description": "Global fade-out duration."
+    },
+    "tileOffsetPx": {
+      "label": "Settle (px)",
+      "description": "Pixel offset (down/right) each tile settles from."
+    },
+    "loopSec": {
+      "label": "Loop (s)",
+      "description": "Seamless loop period."
+    },
+    "progress": {
+      "label": "Progress",
+      "description": "Static fill level (0..1). Leave empty to animate the fill.",
+      "placeholder": "auto (animated)"
+    },
+    "progressSec": {
+      "label": "Fill (s)",
+      "description": "Fill ramp duration."
+    },
+    "oneShot": {
+      "label": "One-shot",
+      "description": "Fill once and hold instead of repeating."
+    },
+    "shimmerSec": {
+      "label": "Shimmer (s)",
+      "description": "Band sweep period (shimmer + breathing modes)."
+    },
+    "shimmerWidth": {
+      "label": "Band width",
+      "description": "Band width as a fraction of rank space (shimmer + breathing)."
+    },
+    "feather": {
+      "label": "Feather",
+      "description": "Rank-space tolerance softening mode boundaries."
+    },
+    "fit": {
+      "label": "Fit",
+      "description": "\"contain\" letterboxes the logo at its own aspect; \"fill\" stretches it across the canvas.",
+      "order": 4
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Hand-tuned ink/background duo.",
+      "order": 1
+    },
+    "color": {
+      "label": "Ink",
+      "description": "Ink override — every logo shape fills with this color.",
+      "placeholder": "preset ink",
+      "order": 2
+    },
+    "backgroundColor": {
+      "label": "Background",
+      "description": "Canvas background override.",
+      "placeholder": "preset background",
+      "order": 3
+    }
+  }
+}

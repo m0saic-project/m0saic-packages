@@ -16,6 +16,9 @@ export const TEMPLATE_REPO: MosaicTemplateRepoDescriptor = {
   // The front door — what `m0saic hello-world` renders and the first card a
   // newcomer sees (the hello-world convention, 2026-09-14).
   helloWorld: asTemplateId("@m0saic/hello-world/v1"),
+  // The template-convention line this pack targets (0.3.1): the checks hold its
+  // templates to the rules up to it; newer ones are advice until it moves.
+  conventions: "0.3.1",
 };
 
 /**

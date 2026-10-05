@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/agents/commit-feed/v2",
+  "label": "Agent Commit Feed",
+  "description": "Who wrote this week's commits — a commit feed colour-coded by author (human vs coding agent), with the agent-authored share, a proportion bar and a legend. The alpine commit feed nested under its own card; composes at any canvas.",
+  "tags": [
+    "github",
+    "commits",
+    "agents",
+    "ai",
+    "developers",
+    "devrel",
+    "engineering-leaders",
+    "alpine",
+    "animated"
+  ],
+  "props": {
+    "title": {
+      "label": "Title",
+      "description": "Card title.",
+      "placeholder": "none",
+      "order": 1,
+      "primary": true
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Line under the title — the repo and window.",
+      "placeholder": "none",
+      "order": 2
+    },
+    "commits": {
+      "label": "Commits",
+      "description": "Commits, newest last. `agent` names the coding agent that wrote it (\"Claude Code\", \"Copilot\", \"Cursor\"); leave it empty for a human-authored commit. `author` is the human on the commit. Up to 7 are drawn.",
+      "order": 3,
+      "primary": true
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme: \"light\" (default) or \"dark\".",
+      "order": 4
+    },
+    "agentColor": {
+      "label": "Agent colour",
+      "description": "Colour for agent-authored commits (chip, bar, legend).",
+      "order": 5
+    },
+    "humanColor": {
+      "label": "Human colour",
+      "description": "Colour for human-authored commits (chip, bar, legend).",
+      "order": 6
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.renderMode": {
+      "label": "Render mode",
+      "description": "premium = alpha-fade cascade; light = enable-gate pops (cheaper when nested)."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Reveal: the feed's rows cascade in; the share band fades. reduceMotion renders the final frame.",
+      "order": 7,
+      "collapsedByDefault": true
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt-in producer theme tokens.",
+      "order": 8,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only: overlay the layout contract.",
+      "order": 9
+    }
+  }
+}

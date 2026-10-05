@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/media/logo-animate/v1",
+  "deprecated": {
+    "reason": "0.3.1: every shape of the logo takes the SVG file, the ink and the running animation's knobs",
+    "replacement": "@m0saic/media/logo-animate/v2",
+    "since": "2026-09-30"
+  }
+}

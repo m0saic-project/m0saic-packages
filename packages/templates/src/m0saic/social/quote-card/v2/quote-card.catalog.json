@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/social/quote-card/v2",
+  "label": "Quote Card",
+  "description": "Pull-quote social card — auto-wrapped quote, accent bar, attribution with an optional circular avatar; hand-tuned light/dark presets; lossless PNG still, aspect-safe from square to stories. Every line is editable on the canvas.",
+  "tags": ["social", "quote", "card", "pull-quote", "promo", "creators", "marketers", "testimonial"],
+  "props": {
+    "quote": {
+      "label": "Quote",
+      "description": "The quote body. Wrapped and sized to fit automatically — long quotes shrink, short quotes render large.",
+      "order": 1,
+      "primary": true
+    },
+    "attribution": {
+      "label": "Attribution",
+      "description": "Who said it — set bold under the accent bar. Clear it to leave the quote unattributed.",
+      "order": 2
+    },
+    "role": {
+      "label": "Role / source",
+      "description": "A second line under the name — a title, handle, book or episode. Empty hides the line.",
+      "placeholder": "none",
+      "order": 3
+    },
+    "avatar": {
+      "label": "Avatar",
+      "description": "A photo of who said it, clipped to a circle beside the name. Drop an image on the name to add one.",
+      "order": 4
+    },
+    "align": {
+      "label": "Alignment",
+      "description": "Card composition: \"center\" (classic quote card) or \"left\" (editorial).",
+      "order": 1
+    },
+    "quoteMark": {
+      "label": "Quote mark",
+      "description": "Show the decorative opening-quote glyph above the quote.",
+      "order": 2
+    },
+    "accent": {
+      "label": "Accent",
+      "description": "Colour of the quote mark and the divider bar.",
+      "order": 3
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Light or dark card — one click restyles the background and the ink together.",
+      "order": 4
+    },
+    "background": {
+      "label": "Background",
+      "description": "The card colour. Overrides the preset's background; clear it to follow light / dark again.",
+      "placeholder": "preset background",
+      "order": 5
+    },
+    "ink": {
+      "label": "Ink",
+      "description": "Colour of the quote and the name; the role line keeps the preset's softer ink.",
+      "placeholder": "preset ink",
+      "order": 6
+    },
+    "margin": {
+      "label": "Margin",
+      "description": "Space around the quote, as a share of the card's short edge — more margin leaves the words less room.",
+      "order": 1
+    }
+  }
+}

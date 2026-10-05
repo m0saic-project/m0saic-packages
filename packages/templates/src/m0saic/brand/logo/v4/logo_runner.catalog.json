@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/brand/logo/v4",
+  "label": "M0saic Brand Marks",
+  "description": "Renders any m0saic brand mark — the M (as rects or bitmap), the m0 logotype, or the m0saic pattern — with an animated reveal, each at its official dictionary resolution. Default 'm-33' is the fast rect M; 'composite' (bitmap + rects blend) is the deliberate heavy render. Supersedes the earlier brand-logo templates.",
+  "tags": [
+    "brand",
+    "logo",
+    "marks",
+    "animated",
+    "designers",
+    "marketers",
+    "intro",
+    "sting"
+  ],
+  "props": {
+    "color": {
+      "label": "Color",
+      "placeholder": "#f97316",
+      "description": "Colour of the mark's tiles."
+    },
+    "size": {
+      "label": "Brand entry",
+      "description": "m-33 (default): the fast rect M at its official 544² canvas. composite: m-33_bitmap base + rect M overlaid with an animated blend — the HEAVY render (minutes, not seconds). Also: m0 (logotype, 384×512), m0saic-pattern (4354×2016), m-33_bitmap."
+    },
+    "animation": {
+      "label": "Animation",
+      "description": "How the mark moves: loading_ui_v2 (a soft pulse with a shimmer sweep), logo_loop (reveal in, hold, reveal out), progress_fill (fills 0 → 100%), loading_shimmer (a sweeping band)."
+    },
+    "blendInSec": {
+      "label": "Blend-in (s)",
+      "description": "Composite only: seconds the rect M takes to fade in over the bitmap (and back out)."
+    },
+    "blendDelaySec": {
+      "label": "Blend delay (s)",
+      "description": "Composite only: seconds the rect M waits before each fade."
+    },
+    "blendFeather": {
+      "label": "Blend feather",
+      "description": "Composite only: a small lift on the rect M's fade so it never starts fully clear."
+    },
+    "feather": {
+      "label": "Feather",
+      "description": "Softens the edge of the fill, shimmer or reveal as it crosses a tile (0 = hard edge)."
+    },
+    "shimmerSec": {
+      "label": "Shimmer sweep (s)",
+      "description": "Seconds for one shimmer sweep across the mark."
+    },
+    "shimmerWidth": {
+      "label": "Shimmer width",
+      "description": "Width of the shimmer band, as a fraction of the mark (0–1)."
+    },
+    "progress": {
+      "label": "Progress",
+      "placeholder": "auto (animated)",
+      "description": "Progress fill: how much of the mark is filled (0–1). Clear it to animate the fill instead."
+    },
+    "progressSec": {
+      "label": "Progress duration (s)",
+      "description": "Progress fill: seconds for the animated fill, when Progress is not set."
+    },
+    "oneShot": {
+      "label": "Play once",
+      "description": "Progress fill: play the animated fill once instead of looping."
+    },
+    "rankSet": {
+      "label": "Reveal order",
+      "description": "Reveal order over the mark's tiles: diag (top-left → bottom-right), cascade (row-by-row), radial (center → edges)."
+    },
+    "loopSec": {
+      "label": "Loop length (s)",
+      "description": "Logo loop: seconds for one reveal-in, hold, reveal-out cycle."
+    },
+    "inEnd": {
+      "label": "Reveal-in end",
+      "description": "Logo loop: fraction of the loop where the reveal-in finishes."
+    },
+    "outStart": {
+      "label": "Reveal-out start",
+      "description": "Logo loop: fraction of the loop where the reveal-out begins."
+    },
+    "startDelay": {
+      "label": "Start hold",
+      "description": "Logo loop: fraction of the loop held empty before the reveal starts."
+    },
+    "endDelay": {
+      "label": "End hold",
+      "description": "Logo loop: fraction of the loop held empty after the reveal-out."
+    },
+    "easing": {
+      "label": "Easing",
+      "description": "Logo loop: linear, or smoothstep for a calm ease in and out."
+    }
+  }
+}

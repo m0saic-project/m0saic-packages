@@ -78,6 +78,8 @@ export type TemplateConventionName =
   | "textFits"
   | "costBudget"
   | "latticeSmooth"
+  // the template file vs the repo's catalog (0.3.1) — auditRenderedTemplate
+  | "catalogSidecar"
   // build gate / doctor — layout-fingerprints/*.fingerprint vs the current flattened layout
   | "layoutFingerprint";
 
@@ -119,6 +121,11 @@ export const TEMPLATE_CONVENTION_POSTURE: Readonly<Record<TemplateConventionName
   // Safe at throw because every template that shipped is exempt (`shipped`) and
   // the one legitimate case declares itself (`useNestedBackgroundColor` default-on).
   canvasFill: "throw",
+  // Shipped 2026-09-29 as `throw` (the 0.3.1 template convention). Founder:
+  // template files are immutable once shipped; what describes them without
+  // changing what they render lives in the catalog, "because they may change".
+  // Everything shipped before 0.3.1 LAGS it (never fails); new work meets it.
+  catalogSidecar: "throw",
   svgGlyphCoverage: "throw",
   safeMinimumCanvas: "record",
   canvasEnvelope: "record",
@@ -165,6 +172,7 @@ export const TEMPLATE_CONVENTION_SINCE: Readonly<Record<TemplateConventionName, 
   bindingsDeclared: "0.3.0",
   bindingHints: "0.3.0",
   canvasFill: "0.3.0",
+  catalogSidecar: "0.3.1",
   svgGlyphCoverage: "0.2.0",
   safeMinimumCanvas: "0.2.0",
   canvasEnvelope: "0.2.0",
@@ -186,6 +194,25 @@ export function compareConventionVersions(a: string, b: string): number {
 /** Every line the convention table knows about, oldest first. */
 export function conventionVersions(): string[] {
   return [...new Set(Object.values(TEMPLATE_CONVENTION_SINCE))].sort(compareConventionVersions);
+}
+
+const LINE_RE = /^\d+\.\d+\.\d+$/;
+
+/**
+ * The line a template is held to: the LOWEST of the lines given — the line it
+ * shipped at under a freeze, and its repo's conventions target
+ * (`repo.conventions`). Invalid or absent entries are ignored; undefined when
+ * none is given (held to every rule).
+ */
+export function effectiveConventionLine(...lines: Array<string | null | undefined>): string | undefined {
+  const valid = lines.filter((l): l is string => typeof l === "string" && LINE_RE.test(l.trim())).map((l) => l.trim());
+  if (valid.length === 0) return undefined;
+  return valid.sort(compareConventionVersions)[0];
+}
+
+/** True when `convention` was introduced AFTER `line` — behind, not broken, for a template held to `line`. */
+export function isConventionBeyond(convention: TemplateConventionName, line: string | null | undefined): boolean {
+  return typeof line === "string" && compareConventionVersions(TEMPLATE_CONVENTION_SINCE[convention], line) > 0;
 }
 
 export type ConventionsLevel = {
@@ -257,7 +284,9 @@ export const TEMPLATE_CONVENTION_FIX: Readonly<Record<TemplateConventionName, st
   bindingHints:
     `every bound rect must show one line in context — what changing the value does and what it looks like — because Make puts it under the inline editor, on the tile card and in the handle's tooltip, and a person who double-clicks should not have to open the settings or a manual. It comes from the binding's own hint (bindProp(src, "<key>", i, { hint: "…" }) / withBindingHint(src, "…")) or, for every binding of the prop at once, the prop's description (propsSchema.<key>.description). One plain sentence; never the value itself. A companion leaf (filled only by a media drop) needs none. Templates hashed in frozen.manifest.json are exempt.`,
   canvasFill:
-    `fill the canvas with document.backgroundColor, never a full-canvas colour rect. A base rect is a click target that covers everything — it gets selected in Make any time the pointer is not on a smaller tile — and the document background does the same job with no rect at all. Only a STATIC, fully opaque, unshaped fill counts: a curtain wipe (overlay.enable / window), a scrim (overlay.alpha), a masked shape and a rounded card are all legitimate and never flagged. Two declared exceptions, and they mean different things: canvas.baseRect = "<why>" is the general one (the rect IS the subject — a lesson about full-rect nodes, a tutorial surface), and defaultProps.useNestedBackgroundColor = true is the narrow one (this template is COMPOSED INTO another, whose slot its own backgroundColor cannot fill). An empty baseRect reason is refused.`,
+    `fill the canvas with document.backgroundColor, never a full-canvas colour rect that nothing binds. A base rect is a click target that covers everything — it gets selected in Make any time the pointer is not on a smaller tile — and if no prop is bound to it that click does nothing; the document background does the same job with no rect at all. Only a STATIC, fully opaque fill counts: a curtain wipe (overlay.enable / window), a scrim (overlay.alpha) and a masked shape are legitimate and never flagged — a ROUNDED or stroked card is NOT exempt from 0.3.1 on (its corners do not change what a click on it does — a repo held to 0.3.0 keeps the exemption it shipped under), but a full-canvas rect that CARRIES A HANDLE is (a card bound to the theme preset is where the theme gets changed). Two declared exceptions, and they mean different things: canvas.baseRect = "<why>" is the general one (the rect IS the subject — a lesson about full-rect nodes, a tutorial surface), and defaultProps.useNestedBackgroundColor = true is the narrow one (this template is COMPOSED INTO another, whose slot its own backgroundColor cannot fill). An empty baseRect reason is refused.`,
+  catalogSidecar:
+    `a template's code declares what it IS (id, prop types / constraints / controls, defaults, output, render) — never how it is described. label, description, tags, platforms, channels, preview, internal, primitive, deprecated, and each prop's presentation (label, description — the in-context hint — placeholder, order, primary, collapsedByDefault) live in the template's catalog sidecar: <name>.catalog.json beside the module ({ "schemaVersion": 1, "templateId": "<id>", "label": …, "tags": […], "props": { "<key>": { "label": …, "description": … } } }), because they may change after the template ships and shipped code never changes. The repo's build gathers the sidecars into template-catalog.json beside template-manifest.json. Templates shipped before 0.3.1 keep theirs (they lag this rule; a sidecar overrides them).`,
   svgGlyphCoverage:
     `every character drawn with rasterizer:"svg" must have a glyph in the font it resolves to; missing glyphs render as tofu. Use an ASCII stand-in ("->" for an arrow) or a font that has the character.`,
   safeMinimumCanvas:
@@ -290,6 +319,12 @@ export type TemplateConventionFinding = {
 export type EnforceConventionsOptions = {
   /** `"throw"` (first-party default) or `"record"` (external repos). */
   mode?: "throw" | "record";
+  /**
+   * The repo's conventions target (`repo.conventions`, 0.3.1). A convention
+   * introduced after it is recorded as a WARNING — advice until the repo moves
+   * its target — never thrown. Absent: every rule applies per its posture.
+   */
+  target?: string;
 };
 
 function describe(finding: TemplateConventionFinding): string {
@@ -404,6 +439,7 @@ export function enforceTemplateConventions<P extends MosaicTemplateProps>(
   opts: EnforceConventionsOptions = {},
 ): TemplateConventionFinding[] {
   const mode = opts.mode ?? "throw";
+  const target = effectiveConventionLine(opts.target);
   const templateId = String(template.id);
   const findings: TemplateConventionFinding[] = [];
   const fatal: TemplateConventionFinding[] = [];
@@ -413,7 +449,9 @@ export function enforceTemplateConventions<P extends MosaicTemplateProps>(
       clearTemplateConventionFinding(templateId, audit.convention);
       continue;
     }
-    const finding = makeTemplateConventionFinding(templateId, audit.convention, violations, mode === "record");
+    const made = makeTemplateConventionFinding(templateId, audit.convention, violations, mode === "record");
+    // A rule newer than the repo's target is advice, never a failure (0.3.1).
+    const finding = isConventionBeyond(audit.convention, target) ? { ...made, severity: "warning" as const } : made;
     recordTemplateConventionFinding(finding);
     findings.push(finding);
     if (mode === "throw" && finding.severity === "error") fatal.push(finding);

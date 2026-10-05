@@ -51,9 +51,12 @@
  *    `document.backgroundColor`, NOT by a full-canvas colour rect. A base rect is
  *    a click target over everything — selected in Make any time the pointer is
  *    not on a smaller tile — and the document background does the same with no
- *    rect. Only a STATIC, opaque, unshaped fill counts ({@link isPlainColorFill}):
- *    a curtain wipe, a scrim, a mask and a rounded card each carry a field that
- *    excludes them. Declared exceptions: `canvas.baseRect` (general — "the rect
+ *    rect. Only a STATIC, opaque fill counts ({@link isStaticOpaqueFill}) — rounded
+ *    or not — while a full-canvas rect that CARRIES A HANDLE is left alone (a
+ *    card bound to the theme preset is where the theme gets changed, 2026-10-01).
+ *    A curtain wipe, a scrim and a mask each carry a field that excludes
+ *    them; a rounded card does not (its corners change nothing about the
+ *    click). Declared exceptions: `canvas.baseRect` (general — "the rect
  *    IS the point") and {@link NESTED_BG_PROP} (narrow — "I am composed into
  *    another template"); an empty `baseRect` reason is itself a violation.
  *    Root documents only — a CHILD filling its slot is the
@@ -116,9 +119,10 @@ import { checkLayoutFloors, flattenMosaicDocument, sourceBindings } from "@m0sai
 import { resolveDocFrames, resolvePropBindings } from "../geometry-contract/frameResolution";
 import { latticeViolations } from "../lattice/latticeReport";
 import { walkPropDefinitions } from "./auditSchemaConventions";
-import { deepFreezeTemplate } from "./templateRegistry";
+import { deepFreezeTemplate, getTemplate, getTemplateAsRegistered } from "./templateRegistry";
+import { authoredCatalogFields, authoredPropCopy } from "@m0saic/platform";
 import type { TemplateConventionViolation } from "./auditSchemaConventions";
-import { TEMPLATE_CONVENTION_SINCE, compareConventionVersions, makeTemplateConventionFinding, recordTemplateConventionFinding, clearTemplateConventionFinding } from "./templateConventions";
+import { TEMPLATE_CONVENTION_SINCE, compareConventionVersions, effectiveConventionLine, isConventionBeyond, makeTemplateConventionFinding, recordTemplateConventionFinding, clearTemplateConventionFinding } from "./templateConventions";
 import type { TemplateConventionFinding, TemplateConventionName } from "./templateConventions";
 
 export type AuditRenderedTemplateOptions = {
@@ -146,6 +150,12 @@ export type AuditRenderedTemplateOptions = {
    * has shipped nothing yet).
    */
   shippedAt?: string;
+  /**
+   * The repo's conventions target (`repo.conventions`, 0.3.1). The template is
+   * held to the LOWER of this and `shippedAt`: a convention introduced after
+   * that line is lag ("behind"), never a finding.
+   */
+  conventionsTarget?: string;
   /** Extra canvases to render at for the `canvasEnvelope` rule (the standard
    *  set is {@link STANDARD_SWEEP_CANVASES}); none by default — a build gate
    *  renders once, a sweep is opt-in. */
@@ -640,7 +650,9 @@ export function accountableProps(schema: SchemaMap | undefined): Array<{ key: st
     switch (def.type) {
       case "string":
         // A colour picker is a HANDLE (a swatch on the rect); any other closed
-        // set is a mode, not a value the canvas shows.
+        // set is a mode, not a value the canvas shows. A closed set CAN be
+        // bound since 2026-10-01 (kind "choice" — a card bound to its theme
+        // preset), but it is never DEMANDED: a mode has no rect of its own.
         if (colour) out.push({ key, kind: "color" });
         else if (!CLOSED_OR_PICKED(def)) out.push({ key, kind: "string" });
         return;
@@ -691,8 +703,20 @@ export const NESTED_BG_PROP = "useNestedBackgroundColor";
  * a scrim carries `alpha`, a blend carries `blendMode`); a `mask` makes it a
  * shape; `placement` insets it; `effects` round or stroke it into a card.
  */
-function isPlainColorFill(src: AnyRecord): boolean {
-  if (src.overlay || src.mask || src.placement || src.effects) return false;
+/**
+ * A STATIC, fully opaque fill: a colour tile with no overlay expression (a
+ * curtain, a scrim), no mask (a shape) and no placement (an inset). Effects —
+ * rounding, a stroke, a shadow — do NOT take it out of this class (2026-10-01):
+ * a rounded card that covers the whole canvas is still the click target over
+ * everything that the rule exists for; the corners change nothing about that.
+ * What takes it out is a HANDLE (see the canvasFill rule).
+ */
+/** The line from which a rounded / stroked full-canvas card is held to `canvasFill`
+ *  like any other static fill (a repo held to an older line keeps the exemption). */
+export const CANVAS_FILL_SHAPED_SINCE = "0.3.1";
+
+function isStaticOpaqueFill(src: AnyRecord): boolean {
+  if (src.overlay || src.mask || src.placement) return false;
   // The canonical form: `makeColorTile(color)` → a lavfi source carrying `color`
   // (the union is `{ lavfi } XOR { color }`, so a filter graph is not a fill).
   if (src.type === "lavfi") return typeof src.color === "string";
@@ -849,6 +873,54 @@ function loadFont(path: string): { charToGlyph(ch: string): { index: number } } 
 export async function auditRenderedTemplate<P extends MosaicTemplateProps>(
   template: MosaicTemplate<P>,
   opts: AuditRenderedTemplateOptions = {},
+): Promise<RenderedTemplateAudit> {
+  const audit = await auditRenderedTemplateCore(template, opts);
+  // `catalogSidecar` (0.3.1) reads the template as its FILE declares it — not
+  // the registry's catalog-applied view — and is judged even when the render
+  // audit was skipped (a capability-tier template has a file too).
+  const templateId = String(template.id);
+  const written = getTemplate(templateId) === template ? (getTemplateAsRegistered(templateId) ?? template) : template;
+  const violations = auditCatalogSidecar(written);
+  const shouldRecord = opts.record ?? true;
+  if (violations.length === 0) {
+    if (shouldRecord) clearTemplateConventionFinding(templateId, "catalogSidecar");
+    return audit;
+  }
+  const finding = makeTemplateConventionFinding(templateId, "catalogSidecar", violations, opts.external ?? false);
+  if (isConventionBeyond("catalogSidecar", effectiveConventionLine(opts.shippedAt, opts.conventionsTarget))) {
+    audit.lagging.push(finding);
+    if (shouldRecord) clearTemplateConventionFinding(templateId, "catalogSidecar");
+    return audit;
+  }
+  if (shouldRecord) recordTemplateConventionFinding(finding);
+  audit.findings.push(finding);
+  return audit;
+}
+
+/**
+ * `catalogSidecar`: the template's code declares none of what describes it —
+ * the catalog fields (`MOSAIC_TEMPLATE_CATALOG_FIELDS`: label, description,
+ * tags, platforms, channels, preview, internal, primitive,
+ * deprecated) and no prop presentation (`MOSAIC_TEMPLATE_PROP_CATALOG_FIELDS`:
+ * a prop's label, hint, placeholder, order, primary, collapsedByDefault). Pass
+ * the template as its file declares it (`getTemplateAsRegistered`, or a
+ * loader-merged copy — both answer for the file).
+ */
+export function auditCatalogSidecar(template: object): TemplateConventionViolation[] {
+  const fields = Object.keys(authoredCatalogFields(template)).map((field) => ({
+    key: field,
+    detail: `"${field}" is declared in the template's code — since 0.3.1 it lives in the template's catalog sidecar (<name>.catalog.json beside the module): code is immutable once shipped, its description may change.`,
+  }));
+  const props = authoredPropCopy(template).map((dotted) => ({
+    key: `props.${dotted}`,
+    detail: `prop presentation "${dotted}" is declared in propsSchema — since 0.3.1 it lives in the catalog sidecar under props (what a value IS stays in the schema; how Make presents it does not).`,
+  }));
+  return [...fields, ...props];
+}
+
+async function auditRenderedTemplateCore<P extends MosaicTemplateProps>(
+  template: MosaicTemplate<P>,
+  opts: AuditRenderedTemplateOptions,
 ): Promise<RenderedTemplateAudit> {
   const templateId = String(template.id);
   // The canvas a host would seed at defaults: static hints, with a
@@ -1094,17 +1166,34 @@ export async function auditRenderedTemplate<P extends MosaicTemplateProps>(
     });
   }
   if (!baseRectDeclared && valueAt(defaults, NESTED_BG_PROP) !== true) {
+    // The rule as it SHIPPED at 0.3.0 exempted a rounded / stroked card
+    // (`effects`). 0.3.1 closes that loophole — but a repo held to 0.3.0
+    // (`shippedAt` / `conventionsTarget`) keeps the rule it shipped under:
+    // a tightened predicate is a new demand, and new demands land with the
+    // line that makes them, never retroactively (the same posture as a new
+    // convention moving to `lagging`).
+    const shapedCardExempt = (() => {
+      const line = effectiveConventionLine(opts.shippedAt, opts.conventionsTarget);
+      return typeof line === "string" && compareConventionVersions(line, CANVAS_FILL_SHAPED_SINCE) < 0;
+    })();
     for (const doc of docs) {
       const { framesByLogical } = resolveDocFrames(doc, width, height);
       const sources = (doc.sources ?? []) as unknown as AnyRecord[];
       for (let i = 0; i < framesByLogical.length; i++) {
         const f = framesByLogical[i];
         const src = sources[i];
-        if (!f || !src || !isPlainColorFill(src)) continue;
+        if (!f || !src || !isStaticOpaqueFill(src)) continue;
         if (f.x !== 0 || f.y !== 0 || f.width !== width || f.height !== height) continue;
+        if (src.effects && shapedCardExempt) continue;
+        // A full-canvas rect that CARRIES A HANDLE is not a dead click target:
+        // a card bound to the theme preset is where the theme gets changed
+        // (founder, 2026-10-01 — the alpine cards, the year card). The rect
+        // stays; the click on it means something.
+        if (sourceBindings(src.editor as { binding?: unknown; bindings?: unknown } | undefined).length > 0) continue;
+        const shaped = src.effects ? " (rounded or stroked — its corners do not change what a click on it does)" : "";
         push("canvasFill", {
           key: `source[${i}]`,
-          detail: `source ${i} is a static ${String(src.color ?? (src.visual as AnyRecord | undefined)?.backgroundColor)} fill covering the whole ${width}×${height} canvas — set document.backgroundColor instead and drop the source. A base rect is a click target over everything: in Make it is selected whenever the pointer is not on a smaller tile. (A template whose SUBJECT is that rect declares it: canvas.baseRect = "<why>". A template that must ship it because it is composed INTO another uses defaultProps.${NESTED_BG_PROP} = true instead.)`,
+          detail: `source ${i} is a static ${String(src.color ?? (src.visual as AnyRecord | undefined)?.backgroundColor)} fill covering the whole ${width}×${height} canvas${shaped} and no prop is bound to it — set document.backgroundColor instead and drop the source, or make the rect a handle (bindProp(src, "<the prop it should edit>") — a card bound to the theme preset is where the theme gets changed). A base rect nothing binds is a click target over everything: in Make it is selected whenever the pointer is not on a smaller tile, and the click does nothing. (A template whose SUBJECT is that rect declares it: canvas.baseRect = "<why>". A template that must ship it because it is composed INTO another uses defaultProps.${NESTED_BG_PROP} = true instead.)`,
         });
       }
     }
@@ -1173,6 +1262,8 @@ export async function auditRenderedTemplate<P extends MosaicTemplateProps>(
     if (fontUnavailable) audit.notes.push("svgGlyphCoverage: a font could not be loaded on this host; the rule was not fully checked");
   }
 
+  // Held to the lower of the shipped line and the repo's conventions target.
+  const heldTo = effectiveConventionLine(opts.shippedAt, opts.conventionsTarget);
   for (const convention of RENDER_TIME_CONVENTIONS) {
     const violations = violationsByConvention.get(convention) ?? [];
     if (violations.length === 0) {
@@ -1184,7 +1275,7 @@ export async function auditRenderedTemplate<P extends MosaicTemplateProps>(
     // defect: kept out of `findings` and out of the shared log, but returned so a
     // gate can count it. One at or before that line is a real error — the
     // template shipped non-compliant.
-    if (opts.shippedAt && compareConventionVersions(TEMPLATE_CONVENTION_SINCE[convention], opts.shippedAt) > 0) {
+    if (isConventionBeyond(convention, heldTo)) {
       audit.lagging.push(finding);
       if (shouldRecord) clearTemplateConventionFinding(templateId, convention);
       continue;

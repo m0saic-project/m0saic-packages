@@ -1,0 +1,452 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/charts/line-chart/v2",
+  "label": "Line Chart",
+  "description": "Canonical line-chart data-viz primitive: multi-series, full axis/line/point control, transparent/solid/image backgrounds.",
+  "tags": [
+    "data-viz",
+    "line-chart",
+    "animated",
+    "analysts",
+    "marketers",
+    "trend",
+    "charts"
+  ],
+  "primitive": true,
+  "props": {
+    "values": {
+      "label": "Values",
+      "description": "Numeric data — one series (number[]) or many (number[][]).",
+      "order": 1
+    },
+    "seriesLabels": {
+      "label": "Series Labels",
+      "description": "Legend names (index-aligned to series).",
+      "order": 2,
+      "primary": true
+    },
+    "labels": {
+      "label": "X Labels",
+      "description": "Categorical x tick labels.",
+      "order": 3,
+      "primary": true
+    },
+    "domain.xValues": {
+      "label": "X Values",
+      "description": "Numeric x values (even-spaced in v1)."
+    },
+    "domain.minValue": {
+      "label": "Min Value",
+      "description": "Explicit y-domain minimum.",
+      "placeholder": "data min"
+    },
+    "domain.maxValue": {
+      "label": "Max Value",
+      "description": "Explicit y-domain maximum.",
+      "placeholder": "data max"
+    },
+    "domain.minX": {
+      "label": "Min X",
+      "description": "Explicit x-domain minimum (numeric x).",
+      "placeholder": "first category"
+    },
+    "domain.maxX": {
+      "label": "Max X",
+      "description": "Explicit x-domain maximum (numeric x).",
+      "placeholder": "last category"
+    },
+    "domain": {
+      "label": "Domain",
+      "description": "X/Y axis domain overrides + explicit numeric x values.",
+      "order": 4,
+      "collapsedByDefault": true
+    },
+    "line.lineColor": {
+      "label": "Line Color",
+      "description": "Line color — single or per-series array."
+    },
+    "line.strokeWidth": {
+      "label": "Stroke Width",
+      "description": "Stroke width — single or per-series array."
+    },
+    "line.lineStyle": {
+      "label": "Line Style"
+    },
+    "line.curve": {
+      "label": "Curve"
+    },
+    "line.lineCap": {
+      "label": "Line Cap"
+    },
+    "line.lineJoin": {
+      "label": "Line Join"
+    },
+    "line.area.show": {
+      "label": "Show area"
+    },
+    "line.area.color": {
+      "label": "Color",
+      "placeholder": "series color",
+      "description": "Colour of the shaded area under the line; empty uses the line's own colour."
+    },
+    "line.area.opacity": {
+      "label": "Opacity",
+      "description": "How strong the shaded area under the line is, from invisible (0) to solid (1)."
+    },
+    "line.area": {
+      "label": "Area",
+      "description": "Area fill under the line.",
+      "collapsedByDefault": true
+    },
+    "line": {
+      "label": "Line",
+      "description": "Line stroke (single or per-series) + area fill.",
+      "order": 5,
+      "collapsedByDefault": true
+    },
+    "points.showPoints": {
+      "label": "Show Points",
+      "description": "Draw markers at vertices."
+    },
+    "points.pointRadius": {
+      "label": "Point Radius",
+      "description": "Marker radius (px)."
+    },
+    "points.pointColor": {
+      "label": "Point Color",
+      "description": "Marker color (default = line color).",
+      "placeholder": "series color"
+    },
+    "points.pointShape": {
+      "label": "Point Shape"
+    },
+    "points.pointBorder.color": {
+      "label": "Color",
+      "placeholder": "none",
+      "description": "Colour of the ring drawn around each data point; empty draws no ring."
+    },
+    "points.pointBorder.width": {
+      "label": "Width (px)",
+      "description": "Thickness of the ring around each data point, in pixels; 0 draws none."
+    },
+    "points.pointBorder": {
+      "label": "Point Border",
+      "description": "Marker border.",
+      "collapsedByDefault": true
+    },
+    "points.highlightIndex": {
+      "label": "Highlight Index",
+      "description": "Index to emphasize (larger marker).",
+      "placeholder": "none"
+    },
+    "points.highlightLast": {
+      "label": "Highlight Last",
+      "description": "Emphasize the last point."
+    },
+    "points": {
+      "label": "Points",
+      "description": "Vertex markers + highlight.",
+      "order": 6,
+      "collapsedByDefault": true
+    },
+    "axes.xAxis.show": {
+      "label": "Axis line"
+    },
+    "axes.xAxis.color": {
+      "label": "Axis color",
+      "placeholder": "theme axis",
+      "description": "Colour of the horizontal axis line along the bottom of the plot."
+    },
+    "axes.xAxis.showLabels": {
+      "label": "Show labels"
+    },
+    "axes.xAxis.labelColor": {
+      "label": "Label color",
+      "placeholder": "theme text",
+      "description": "Colour of the category labels under the plot."
+    },
+    "axes.xAxis.fontSize": {
+      "label": "Label size (px)",
+      "description": "Size of the category labels under the plot, in pixels."
+    },
+    "axes.xAxis.showTicks": {
+      "label": "Tick marks"
+    },
+    "axes.xAxis.tickLength": {
+      "label": "Tick length (px)",
+      "description": "Length of the small tick marks on the horizontal axis, in pixels."
+    },
+    "axes.xAxis.tickColor": {
+      "label": "Tick color",
+      "placeholder": "theme axis",
+      "description": "Colour of the tick marks on the horizontal axis."
+    },
+    "axes.xAxis.showGrid": {
+      "label": "Gridlines"
+    },
+    "axes.xAxis.gridColor": {
+      "label": "Grid color",
+      "placeholder": "theme grid",
+      "description": "Colour of the vertical gridlines."
+    },
+    "axes.xAxis.gridOpacity": {
+      "label": "Grid opacity",
+      "description": "How strong the vertical gridlines are, from invisible (0) to solid (1)."
+    },
+    "axes.xAxis": {
+      "label": "X Axis",
+      "description": "X axis (line / labels / grid).",
+      "collapsedByDefault": true
+    },
+    "axes.yAxis.show": {
+      "label": "Axis line"
+    },
+    "axes.yAxis.color": {
+      "label": "Axis color",
+      "placeholder": "theme axis",
+      "description": "Colour of the vertical axis line along the left of the plot."
+    },
+    "axes.yAxis.showLabels": {
+      "label": "Show labels"
+    },
+    "axes.yAxis.labelColor": {
+      "label": "Label color",
+      "placeholder": "theme text",
+      "description": "Colour of the value labels beside the plot."
+    },
+    "axes.yAxis.fontSize": {
+      "label": "Label size (px)",
+      "description": "Size of the value labels beside the plot, in pixels."
+    },
+    "axes.yAxis.format": {
+      "label": "Format"
+    },
+    "axes.yAxis.decimals": {
+      "label": "Decimals",
+      "description": "How many decimal places the value labels show."
+    },
+    "axes.yAxis.prefix": {
+      "label": "Prefix",
+      "placeholder": "none",
+      "description": "Text put before every value label (a currency sign, for one)."
+    },
+    "axes.yAxis.suffix": {
+      "label": "Suffix",
+      "placeholder": "none",
+      "description": "Text put after every value label (a unit or a percent sign)."
+    },
+    "axes.yAxis.tickCount": {
+      "label": "Tick count",
+      "placeholder": "auto",
+      "description": "How many value labels (and gridlines) the axis shows; empty picks a round number."
+    },
+    "axes.yAxis.showTicks": {
+      "label": "Tick marks"
+    },
+    "axes.yAxis.tickLength": {
+      "label": "Tick length (px)",
+      "description": "Length of the small tick marks on the vertical axis, in pixels."
+    },
+    "axes.yAxis.tickColor": {
+      "label": "Tick color",
+      "placeholder": "theme axis",
+      "description": "Colour of the tick marks on the vertical axis."
+    },
+    "axes.yAxis.showGrid": {
+      "label": "Gridlines"
+    },
+    "axes.yAxis.gridColor": {
+      "label": "Grid color",
+      "placeholder": "theme grid",
+      "description": "Colour of the horizontal gridlines."
+    },
+    "axes.yAxis.gridOpacity": {
+      "label": "Grid opacity",
+      "description": "How strong the horizontal gridlines are, from invisible (0) to solid (1)."
+    },
+    "axes.yAxis": {
+      "label": "Y Axis",
+      "description": "Y axis (line / labels / grid / ticks).",
+      "collapsedByDefault": true
+    },
+    "axes": {
+      "label": "Axes",
+      "description": "X + Y axis lines, labels, grid, ticks.",
+      "order": 7,
+      "collapsedByDefault": true
+    },
+    "appearance.preset": {
+      "label": "Preset",
+      "description": "Built-in color scheme (card / line / axes / text)."
+    },
+    "appearance.backgroundColor": {
+      "label": "Background",
+      "description": "Solid background color, or \"none\" for transparent.",
+      "placeholder": "preset background"
+    },
+    "appearance.backgroundImage": {
+      "label": "Background Image",
+      "description": "Background image (asset ref / data-URI).",
+      "placeholder": "none"
+    },
+    "appearance.cornerRadius": {
+      "label": "Corner Radius",
+      "description": "Card corner radius (0..1)."
+    },
+    "appearance.padding": {
+      "label": "Padding (px)",
+      "description": "Plot insets (px) — number or {top,right,bottom,left}."
+    },
+    "appearance.border.color": {
+      "label": "Color",
+      "placeholder": "theme border",
+      "description": "Colour of the hairline border around the card."
+    },
+    "appearance.border.alpha": {
+      "label": "Alpha",
+      "placeholder": "theme border alpha",
+      "description": "How strong the card's border is, from invisible (0) to solid (1)."
+    },
+    "appearance.border": {
+      "label": "Border",
+      "description": "Card inner stroke.",
+      "collapsedByDefault": true
+    },
+    "appearance": {
+      "label": "Appearance",
+      "description": "Color scheme (preset) + card surface.",
+      "order": 8,
+      "collapsedByDefault": true
+    },
+    "titles.title": {
+      "label": "Title",
+      "description": "Chart title.",
+      "placeholder": "e.g., Monthly renders"
+    },
+    "titles.subtitle": {
+      "label": "Subtitle",
+      "description": "Chart subtitle."
+    },
+    "titles.titleColor": {
+      "label": "Title Color",
+      "description": "Title color.",
+      "placeholder": "theme text"
+    },
+    "titles.titleSize": {
+      "label": "Title Size",
+      "description": "Title font size (px)."
+    },
+    "titles.titleAlign": {
+      "label": "Title Align"
+    },
+    "titles": {
+      "label": "Titles",
+      "description": "Chart title + subtitle.",
+      "order": 9,
+      "collapsedByDefault": true
+    },
+    "legend.show": {
+      "label": "Show"
+    },
+    "legend.position": {
+      "label": "Position"
+    },
+    "legend.color": {
+      "label": "Color",
+      "placeholder": "theme text",
+      "description": "Colour of the series names in the legend."
+    },
+    "legend.fontSize": {
+      "label": "Font size (px)",
+      "description": "Size of the series names in the legend, in pixels."
+    },
+    "legend": {
+      "label": "Legend",
+      "description": "Legend.",
+      "order": 10,
+      "collapsedByDefault": true
+    },
+    "valueLabels.show": {
+      "label": "Show"
+    },
+    "valueLabels.format": {
+      "label": "Format"
+    },
+    "valueLabels.decimals": {
+      "label": "Decimals",
+      "description": "How many decimal places the labels above the points show."
+    },
+    "valueLabels.color": {
+      "label": "Color",
+      "placeholder": "theme text",
+      "description": "Colour of the labels above the points; empty uses each line's colour."
+    },
+    "valueLabels.fontSize": {
+      "label": "Font size (px)",
+      "description": "Size of the labels above the points, in pixels."
+    },
+    "valueLabels": {
+      "label": "Value Labels",
+      "description": "Per-point value labels.",
+      "order": 11,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only: draw the layout contract (title / labels / legend fit their cells) instead of the chart.",
+      "order": 14
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; snap to final."
+    },
+    "anim.intro.durationSec": {
+      "label": "Duration (s)"
+    },
+    "anim.intro.delaySec": {
+      "label": "Delay (s)"
+    },
+    "anim.intro.staggerSec": {
+      "label": "Stagger (s)"
+    },
+    "anim.intro.ease": {
+      "label": "Ease"
+    },
+    "anim.intro": {
+      "label": "Intro",
+      "description": "Draw-on timing.",
+      "collapsedByDefault": true
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Intro draw-on animation.",
+      "order": 12,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from when the namespace isn't already on ctx (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant to request (e.g. light | dark | high-contrast for @m0saic/theming/v1; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is already populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Reads the resolved preset's tokens by default; set a producer slug + namespace to pull shared design tokens (self-seeds when nothing is upstream).",
+      "order": 13,
+      "collapsedByDefault": true
+    }
+  }
+}
