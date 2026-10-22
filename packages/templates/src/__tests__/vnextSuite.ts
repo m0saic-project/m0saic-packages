@@ -8,7 +8,9 @@
  *      description, tags and every prop's copy come from the catalog sidecar
  *      (`<name>.catalog.json`), which the registry applies;
  *   2. nothing was lost — every prop `vN` labelled / described still is;
- *   3. `vN` is deprecated in ITS sidecar, pointing here;
+ *   3. `vN` is deprecated in ITS sidecar, pointing here — or at the line's
+ *      head once a later version has superseded this one too (every retired
+ *      version names the live one, so a reader lands there in one hop);
  *   4. the render audit passes as NEW work (no error finding, no lag) — the
  *      one-template form of the build gate;
  *   5. PAINT PARITY — across the cases, the document is `vN`'s once the editor
@@ -139,6 +141,23 @@ function copyOf(schema: unknown, prefix = "", out: Record<string, { label: boole
   return out;
 }
 
+/**
+ * The live version of the line `id` sits on: `id` itself, or — once a later
+ * version superseded it — where its sidecar's `deprecated.replacement` leads,
+ * followed to the end (a sidecar names the head directly, so this is one hop;
+ * the walk only covers a chain that lags).
+ */
+export function lineHeadOf(id: string): string {
+  let head = id;
+  const seen = new Set<string>();
+  for (;;) {
+    const next = getTemplate(head)?.deprecated?.replacement;
+    if (!next || seen.has(head)) return head;
+    seen.add(head);
+    head = String(next);
+  }
+}
+
 export type VNextSuiteOptions = {
   /** The new template (its exported object). */
   next: AnyTemplate;
@@ -200,7 +219,16 @@ export function vnextSuite(o: VNextSuiteOptions): void {
       expect(typeof registered.label === "string" && registered.label.length > 0).toBe(true);
       expect(typeof registered.description === "string" && registered.description.length > 0).toBe(true);
       expect((registered.tags ?? []).length).toBeGreaterThan(0);
-      expect(registered.deprecated).toBeUndefined();
+      // Live — or superseded in turn: then its own sidecar retires it, pointing at the line's head (the same slug, a
+      // later version, itself live).
+      const head = lineHeadOf(id);
+      if (head === id) expect(registered.deprecated).toBeUndefined();
+      else {
+        expect(registered.deprecated).toMatchObject({ replacement: head });
+        expect(head.replace(/\/v\d+$/, "")).toBe(id.replace(/\/v\d+$/, ""));
+        expect(Number(/\/v(\d+)$/.exec(head)?.[1])).toBeGreaterThan(Number(o.next.version));
+        expect(getTemplate(head)?.deprecated).toBeUndefined();
+      }
       for (const [field, value] of Object.entries(o.catalog ?? {})) expect((registered as unknown as Rec)[field]).toEqual(value);
     });
 
@@ -224,8 +252,8 @@ export function vnextSuite(o: VNextSuiteOptions): void {
       for (const key of Object.keys(was)) if (!skip.has(key)) expect([key, norm(is[key])]).toEqual([key, norm(was[key])]);
     });
 
-    it("the old version is deprecated in its own sidecar, pointing here", () => {
-      expect(getTemplate(prevId)!.deprecated).toMatchObject({ replacement: id });
+    it("the old version is deprecated in its own sidecar, pointing here (at the line's head, once this one is superseded too)", () => {
+      expect(getTemplate(prevId)!.deprecated).toMatchObject({ replacement: lineHeadOf(id) });
     });
 
     it("meets every 0.3.1 convention as new work (the build gate's render audit, no lag)", async () => {

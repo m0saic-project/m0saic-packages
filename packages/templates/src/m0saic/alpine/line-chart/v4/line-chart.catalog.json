@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/alpine/line-chart/v4",
+  "label": "Alpine Line Chart",
+  "description": "Alpine line/area chart, a friendly mobile-marketing card: soft area fill, rounded line, point markers, value rail, category labels, left-to-right draw-on. Every gridline, point and tick is a real cell on one exact scale, so the chart's geometry draws the chart.",
+  "tags": [
+    "data-viz",
+    "alpine",
+    "line-chart",
+    "animated",
+    "analysts",
+    "developers",
+    "trend",
+    "dashboard",
+    "chart"
+  ],
+  "primitive": true,
+  "props": {
+    "values": {
+      "label": "Values",
+      "description": "Numeric series driving the line (left→right).",
+      "order": 1
+    },
+    "labels": {
+      "label": "Category Labels",
+      "description": "Category labels (index-aligned to values) along the x-axis.",
+      "order": 2,
+      "primary": true
+    },
+    "title": {
+      "label": "Title",
+      "description": "Card title.",
+      "placeholder": "e.g., LINE CHART",
+      "order": 3
+    },
+    "subtitle": {
+      "label": "Subtitle",
+      "description": "Card subtitle.",
+      "placeholder": "e.g., Monthly Active Users",
+      "order": 4
+    },
+    "curve": {
+      "label": "Curve",
+      "description": "Interpolation between points.",
+      "order": 5
+    },
+    "preset": {
+      "label": "Preset",
+      "description": "Alpine theme variant.",
+      "order": 6
+    },
+    "lineColor": {
+      "label": "Line Color",
+      "description": "Line + marker color. Defaults to the resolved theme primary.",
+      "placeholder": "theme primary",
+      "order": 7
+    },
+    "grid.show": {
+      "label": "Show",
+      "description": "Draw horizontal gridlines + value ticks."
+    },
+    "grid.count": {
+      "label": "Tick count",
+      "description": "Number of horizontal gridlines/ticks."
+    },
+    "grid": {
+      "label": "Grid",
+      "description": "Gridlines + value ticks behind the line.",
+      "order": 8,
+      "collapsedByDefault": true
+    },
+    "area.show": {
+      "label": "Show",
+      "description": "Fill under the line."
+    },
+    "area.opacity": {
+      "label": "Opacity",
+      "description": "Area fill opacity (0..1)."
+    },
+    "area": {
+      "label": "Area",
+      "description": "Soft area fill under the line.",
+      "order": 9,
+      "collapsedByDefault": true
+    },
+    "points.show": {
+      "label": "Show",
+      "description": "Draw a dot at each data vertex."
+    },
+    "points": {
+      "label": "Points",
+      "description": "Point markers at each data vertex.",
+      "order": 10,
+      "collapsedByDefault": true
+    },
+    "showTicks": {
+      "label": "Axis ticks",
+      "description": "Small vertical ticks on the x-axis at each labeled data point (classic chart look). Default true.",
+      "order": 10
+    },
+    "domain.minValue": {
+      "label": "Min Value",
+      "description": "Explicit domain minimum. Auto-derived when unset.",
+      "placeholder": "data min"
+    },
+    "domain.maxValue": {
+      "label": "Max Value",
+      "description": "Explicit domain maximum. Auto-derived when unset.",
+      "placeholder": "data max"
+    },
+    "domain": {
+      "label": "Domain",
+      "description": "Value-axis domain overrides — leave unset to auto-fit to nice round numbers.",
+      "order": 11,
+      "collapsedByDefault": true
+    },
+    "anim.reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Skip motion; render the final static card."
+    },
+    "anim.introFrac": {
+      "label": "Intro length",
+      "description": "Share of the clip the intro fills (the rest holds)."
+    },
+    "anim.ease": {
+      "label": "Easing",
+      "description": "Intro draw-on easing curve."
+    },
+    "anim": {
+      "label": "Animation",
+      "description": "Left→right draw-on intro.",
+      "order": 12,
+      "collapsedByDefault": true
+    },
+    "theme.slug": {
+      "label": "Producer slug",
+      "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+      "placeholder": "preset palette (no producer)"
+    },
+    "theme.preset": {
+      "label": "Preset",
+      "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+      "placeholder": "producer default"
+    },
+    "theme.namespace": {
+      "label": "Namespace",
+      "description": "Upstream alias to read tokens from. Default \"theme\".",
+      "placeholder": "theme"
+    },
+    "theme.forceFetch": {
+      "label": "Force fetch",
+      "description": "Re-seed via the slug even if the namespace is populated."
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Opt into a theme source. Uses the alpine preset by default; set a producer slug + namespace to pull shared design tokens. Explicit color props still win.",
+      "order": 13,
+      "collapsedByDefault": true
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only layout contract view: renders the contract wireframe instead of the chart — x-axis ticks GREEN when each sits on its data point's x, offenders RED. Deterministic false default; production never sets it.",
+      "order": 13
+    }
+  }
+}

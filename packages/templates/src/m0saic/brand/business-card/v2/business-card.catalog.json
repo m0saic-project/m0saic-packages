@@ -1,6 +1,11 @@
 {
   "schemaVersion": 1,
   "templateId": "@m0saic/brand/business-card/v2",
+  "deprecated": {
+    "reason": "Superseded by v3 — the same card with a light theme beside the navy, and a choice of back: the industry solutions QR, the hello-world card, or any shipped template (v2's back).",
+    "replacement": "@m0saic/brand/business-card/v3",
+    "since": "2026-10-18"
+  },
   "label": "Business Card",
   "description": "The m0saic business card, print-ready: US 3.5 x 2 in at 300 DPI on MOO's bleed box (1098 x 648 px; Vistaprint / FedEx presets too), the brand field + M lockup and your contact on the front, a live-rendered shipped template with a QR to Mosaic Web on the back. One render, two PNGs (front + back). Every line on the front is editable on the canvas.",
   "tags": ["brand", "print", "card", "business-card", "still", "qr", "founders", "marketers", "developers"],

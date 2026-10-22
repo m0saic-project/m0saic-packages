@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.4.0 — 2026-10-22
+
+### A cover can be a start page: `binding.value` answers, `editor.start`, own-size covers
+
+- `src/meta/meta.ts`: `editor.binding.value` / `editor.bindings[].value?: string | number | boolean`. A binding
+  with a value makes its rect ONE ANSWER: a click writes the value and no editor opens. A `choice` leaf takes one
+  of its set's values, a `number` leaf a finite number, a basic `boolean` prop `true` / `false` (a boolean binds
+  ONLY as an answer). A rect whose bindings ALL carry a value is an answer tile: one click writes every one (a
+  "3 takes, one big and two small" card sets the count and the layout together).
+- `src/meta/meta.ts`: `editor.start?: boolean`, a `renderCover()` page's Start: a click on the rect closes the
+  cover and opens the template.
+- `src/template/template.ts`: the `renderCover` contract gains the START PAGE: a cover may ask the few things a
+  person decides first; on a cover an answer keeps the cover up and the host re-renders it with the new props
+  (it shows what is picked); a cover that asks closes only on a start rect, its chip's close, Play or MAKE. A
+  cover may return its OWN size (hosts show it at the size it returns), so a portrait template can open on a
+  landscape start page.
+
+**Compatibility.**
+
+Additive (new optional fields; a doc widening). Hosts that do not know them ignore them: the rect stays an
+ordinary binding, and a cover shows as it always has.
+
+**Release notes.**
+
+Ships with the next lockstep set, beside `@m0saic/platform`'s `bindingValue` (its entry of the same date).
+
 ## 0.3.1 — 2026-10-05
 
 ### The template catalog — what describes a template lives beside its code

@@ -1,6 +1,7 @@
 /* Alpine — friendly mobile-marketing data-viz pack (standalone brand flavor). */
 export * from "./bar-graph/v1";
 export * from "./bar-graph/v2";
+export * from "./bar-graph/v3";
 export * from "./donut/v1";
 export * from "./donut/v2";
 export * from "./donut/v3";
@@ -8,6 +9,7 @@ export * from "./donut/v4";
 export * from "./line-chart/v1";
 export * from "./line-chart/v2";
 export * from "./line-chart/v3";
+export * from "./line-chart/v4";
 export * from "./kpi-card/v1";
 export * from "./kpi-card/v2";
 export * from "./kpi-card/v3";

@@ -1,6 +1,11 @@
 {
   "schemaVersion": 1,
   "templateId": "@m0saic/alpine/bar-graph/v2",
+  "deprecated": {
+    "reason": "Superseded by v3: the same alpine bar chart on an exact scale. v2's bars ran short of their own gridlines (the value-label headroom came out of the bar scale only).",
+    "replacement": "@m0saic/alpine/bar-graph/v3",
+    "since": "2026-10-12"
+  },
   "label": "Alpine Bar Chart",
   "description": "Alpine horizontal bar chart — friendly mobile-marketing card: rounded bars, category rail, inline values, value ticks.",
   "tags": [

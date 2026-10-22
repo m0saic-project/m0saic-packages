@@ -203,6 +203,25 @@
     },
     {
       "slug": "business-card",
+      "templateKey": "@m0saic/brand/business-card/v3",
+      "title": "Business Card",
+      "description": "The m0saic business card, print-ready: US 3.5 x 2 in at 300 DPI on MOO's bleed box (1098 x 648 px; Vistaprint / FedEx presets too), light (the solutions look) or dark (the navy card). Front: the brand field, the M lockup and your contact. Back: a big QR to m0saic.io/solutions, the hello-world card, or any shipped template rendered live with a QR that opens it on Mosaic Web. One render, two PNGs (front + back).",
+      "tags": [
+        "brand",
+        "print",
+        "card",
+        "business-card",
+        "still",
+        "qr",
+        "solutions",
+        "founders",
+        "marketers",
+        "developers"
+      ],
+      "pack": "brand"
+    },
+    {
+      "slug": "business-card-v2",
       "templateKey": "@m0saic/brand/business-card/v2",
       "title": "Business Card",
       "description": "The m0saic business card, print-ready: US 3.5 x 2 in at 300 DPI on MOO's bleed box (1098 x 648 px; Vistaprint / FedEx presets too), the brand field + M lockup and your contact on the front, a live-rendered shipped template with a QR to Mosaic Web on the back. One render, two PNGs (front + back). Every line on the front is editable on the canvas.",
@@ -899,6 +918,24 @@
     },
     {
       "slug": "bar-graph",
+      "templateKey": "@m0saic/alpine/bar-graph/v3",
+      "title": "Alpine Bar Chart",
+      "description": "Alpine bar chart, a friendly mobile-marketing card: rounded bars on an exact scale (every bar lands on its value's gridline), category labels, value labels, value ticks centred on their lines.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "bar-graph",
+        "animated",
+        "analysts",
+        "developers",
+        "dashboard",
+        "report",
+        "chart"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "bar-graph-v2",
       "templateKey": "@m0saic/alpine/bar-graph/v2",
       "title": "Alpine Bar Chart",
       "description": "Alpine horizontal bar chart — friendly mobile-marketing card: rounded bars, category rail, inline values, value ticks.",
@@ -995,6 +1032,24 @@
     },
     {
       "slug": "line-chart",
+      "templateKey": "@m0saic/alpine/line-chart/v4",
+      "title": "Alpine Line Chart",
+      "description": "Alpine line/area chart, a friendly mobile-marketing card: soft area fill, rounded line, point markers, value rail, category labels, left-to-right draw-on. Every gridline, point and tick is a real cell on one exact scale, so the chart's geometry draws the chart.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "line-chart",
+        "animated",
+        "analysts",
+        "developers",
+        "trend",
+        "dashboard",
+        "chart"
+      ],
+      "pack": "alpine"
+    },
+    {
+      "slug": "line-chart-v3",
       "templateKey": "@m0saic/alpine/line-chart/v3",
       "title": "Alpine Line Chart",
       "description": "Alpine line/area chart — friendly mobile-marketing card: soft area fill, rounded line, point markers, value rail, left→right draw-on. Standalone Alpine brand flavor. v2 rebuilds the geometry as a ratio layout (plot marks are masks filling a ratio plot cell in plot-local coords) so it composes at any canvas without the absolute-placement precision blowup.",

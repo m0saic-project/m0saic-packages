@@ -36,6 +36,48 @@ not supersede the singular. Pick by cardinality:
 
 ---
 
+## Data files: a `media` prop the template reads
+
+A `media` prop's value is a file path, and the template may read that file itself. That is
+how a template takes data from a file: a CSV, a spreadsheet, line-delimited JSON, a parquet
+or SQLite export.
+
+```ts
+sheet: {
+  type: "media",
+  required: false,
+  meta: { control: { extensions: ["csv", "tsv", "xlsx"] } },
+},
+```
+
+- **The picker.** Every `media` prop gets the OS file picker. `meta.control.extensions`
+  (lowercase, no dot) replaces its default filter, which offers only video, image and audio
+  files, so without it a data file cannot be picked. Make's drop target follows the same
+  list. `picker: "file"` is not needed.
+- **The template parses it.** `render` gets the path, reads the file and parses it. CSV,
+  TSV and JSON lines take a few lines of code; xlsx, parquet or SQLite need a parser library,
+  which is the pack's dependency decision (a community template imports only what
+  `dep-allowlist.json` allows, and `fs` itself needs a per-file exception there).
+- **Declare the read.** `capabilities: { tier: "capability", caps: { fs: { read: true } } }`.
+  A `core`-tier template touches no filesystem.
+- **Never probed.** Before a render the engine probes every existing file path in the props
+  with ffprobe, and a failed probe stops the render. Data and text formats skip the probe:
+  json, jsonc, yml, yaml, xml, csv, tsv, toml; subtitles (srt, vtt, ass, ssa, sub); txt, md,
+  log, html; m0saic's own formats; fonts; spreadsheets (xlsx, xlsm, xlsb, xls, ods,
+  numbers); line-delimited and geo JSON (ndjson, jsonl, geojson, topojson); columnar files
+  (parquet, avro, orc, arrow, feather); embedded databases (sqlite, sqlite3, db, duckdb);
+  statistics files (sav, dta, sas7bdat, xpt, rds, rdata, h5, hdf5). Any other extension
+  reaches ffprobe and fails the render; the list is `NON_MEDIA_EXTENSIONS` in
+  the render engine source (not published).
+- **CLI and Desktop only.** Reading a file needs node's `fs`, which the browser build cannot
+  bundle, so the template is a Desktop-only card on the web.
+- **The file is an input.** The render follows the file's contents, not only its path: the
+  same path over an edited file renders a different video.
+- **Small data needs no file.** A `json`, `number[]` or `string[]` prop holds the rows
+  directly, travels in a share link and works on the web.
+
+---
+
 ## `"time-range"` — the paired-prop picker
 
 Declared on **both** halves of a `<base>StartMs` / `<base>EndMs` numeric pair, with the

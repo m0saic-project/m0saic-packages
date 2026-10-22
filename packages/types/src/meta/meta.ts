@@ -94,6 +94,15 @@ export type MosaicSourceEditorMeta = {
   label?: string;
 
   /**
+   * A `renderCover()` page's START (0.3.x): a click on this rect closes the
+   * cover and opens the template. A cover that asks (it carries answer tiles,
+   * see `binding.value`) closes ONLY on a start rect, its chip's close, Play
+   * or MAKE, so a stray click between choices never loses them; a cover with
+   * no answers still closes on any click. Ignored outside a cover.
+   */
+  start?: boolean;
+
+  /**
    * Optional binding from this slot back to the template prop this rect
    * DISPLAYS — the Make page's double-click → inline-edit target (and the
    * reverse "hover the prop → outline its rects" link).
@@ -152,6 +161,18 @@ export type MosaicSourceEditorMeta = {
    *   blur-commit would write its seed on an unrelated edit) and never earns
    *   a badge. Needs a `seedDraft`; not for `media` / `rect` leaves.
    *
+   * - `value` (0.3.x) makes the rect ONE ANSWER: a click writes the value,
+   *   no editor opens. A `choice` leaf takes one of its set's values, a
+   *   `number` leaf a finite number, a basic `boolean` prop `true` / `false`
+   *   (a boolean binds ONLY as an answer); anything else is dropped. A rect
+   *   whose bindings ALL carry a value is an answer tile, and one click
+   *   writes every one of them (a "3 takes, one big and two small" tile sets
+   *   the count and the layout together). The case it exists for: a
+   *   `renderCover()` start page ("How many takes do you have?") whose tiles
+   *   ARE the choices, so the template's defaults stay its real render. On a
+   *   cover an answer keeps the cover up and redraws it with the new props
+   *   (it shows what is picked); the cover's `editor.start` rect closes it.
+   *
    * Authored via `bindProp()` / `bindPropPath()` in `@m0saic/template-utils`;
    * resolved per render (sources are positional, so no migration on re-keying).
    */
@@ -172,6 +193,9 @@ export type MosaicSourceEditorMeta = {
     /** A seeded leaf ONLY the tile's media drop fills (a slot number) — kept
      *  out of the text form and the badge row. Needs `seedDraft`. */
     companion?: boolean;
+    /** ONE ANSWER: a click on the rect writes this value (a `choice` value,
+     *  a finite number, or a boolean) — no editor opens. See the field doc above. */
+    value?: string | number | boolean;
     /**
      * One human-readable line shown IN CONTEXT when a person edits this rect
      * — under the inline editor, on the tile card, in the handle's tooltip:
@@ -210,6 +234,9 @@ export type MosaicSourceEditorMeta = {
     onClear?: "remove-element" | "unset-leaf";
     seedDraft?: string;
     companion?: boolean;
+    /** ONE ANSWER (see `binding.value`): with a value on EVERY entry, one
+     *  click writes them all. */
+    value?: string | number | boolean;
     /**
      * One human-readable line shown IN CONTEXT when a person edits this rect
      * — under the inline editor, on the tile card, in the handle's tooltip:

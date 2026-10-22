@@ -195,14 +195,199 @@
     },
     "@m0saic/alpine/bar-graph/v1": {
       "deprecated": {
-        "reason": "Superseded by v2 — the same alpine bar chart, with its values editable on the Make canvas.",
-        "replacement": "@m0saic/alpine/bar-graph/v2",
+        "reason": "Superseded by v3: the same alpine bar chart, with its values editable on the Make canvas (v2) and its bars on an exact scale (v3).",
+        "replacement": "@m0saic/alpine/bar-graph/v3",
         "since": "2026-09-30"
       }
     },
     "@m0saic/alpine/bar-graph/v2": {
+      "deprecated": {
+        "reason": "Superseded by v3: the same alpine bar chart on an exact scale. v2's bars ran short of their own gridlines (the value-label headroom came out of the bar scale only).",
+        "replacement": "@m0saic/alpine/bar-graph/v3",
+        "since": "2026-10-12"
+      },
       "label": "Alpine Bar Chart",
       "description": "Alpine horizontal bar chart — friendly mobile-marketing card: rounded bars, category rail, inline values, value ticks.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "bar-graph",
+        "animated",
+        "analysts",
+        "developers",
+        "dashboard",
+        "report",
+        "chart"
+      ],
+      "primitive": true,
+      "props": {
+        "values": {
+          "label": "Values",
+          "description": "Numeric data values driving the bars.",
+          "order": 1
+        },
+        "labels": {
+          "label": "Category Labels",
+          "description": "Category labels (index-aligned to values). Optional — clear for a value-only chart.",
+          "order": 2,
+          "primary": true
+        },
+        "title": {
+          "label": "Title",
+          "description": "Card title.",
+          "placeholder": "e.g., BAR CHART",
+          "order": 3
+        },
+        "subtitle": {
+          "label": "Subtitle",
+          "description": "Card subtitle.",
+          "placeholder": "e.g., Sales by Channel",
+          "order": 4
+        },
+        "orientation": {
+          "label": "Orientation",
+          "description": "Bar orientation: horizontal (bars grow right) or vertical (bars grow up).",
+          "order": 5
+        },
+        "preset": {
+          "label": "Preset",
+          "description": "Alpine theme variant.",
+          "order": 6
+        },
+        "barColor": {
+          "label": "Bar Color",
+          "description": "Bar fill color. Defaults to the resolved theme primary.",
+          "placeholder": "theme primary",
+          "order": 7
+        },
+        "bars.thickness": {
+          "label": "Thickness",
+          "description": "Bar width (vertical) / height (horizontal) as a fraction of its band. 1 = bars touch. Overrides Gap when set.",
+          "placeholder": "derived from Gap"
+        },
+        "bars.gap": {
+          "label": "Gap",
+          "description": "Gap between bars as a fraction of bar thickness (legacy inverse of Thickness — ignored when Thickness is set)."
+        },
+        "bars.cornerRadius": {
+          "label": "Bar rounding",
+          "description": "Bar cap rounding (0..1)."
+        },
+        "bars": {
+          "label": "Bars",
+          "description": "Bar geometry: gap between bars + cap rounding.",
+          "order": 8,
+          "collapsedByDefault": true
+        },
+        "grid.show": {
+          "label": "Show",
+          "description": "Draw gridlines + value ticks."
+        },
+        "grid.count": {
+          "label": "Tick count",
+          "description": "Number of gridline intervals."
+        },
+        "grid": {
+          "label": "Grid",
+          "description": "Gridlines + value ticks behind the bars.",
+          "order": 9,
+          "collapsedByDefault": true
+        },
+        "valueLabels.show": {
+          "label": "Show",
+          "description": "Print each bar's value inline."
+        },
+        "valueLabels.format": {
+          "label": "Format",
+          "description": "compact = 1.2K; raw = as-is; percent = share of max."
+        },
+        "valueLabels.decimals": {
+          "label": "Decimals",
+          "description": "Decimal places."
+        },
+        "valueLabels.suffix": {
+          "label": "Suffix",
+          "description": "Appended to each value (e.g. \"%\", \" MB\")."
+        },
+        "valueLabels": {
+          "label": "Value Labels",
+          "description": "Inline per-bar value labels.",
+          "order": 10,
+          "collapsedByDefault": true
+        },
+        "domain.minValue": {
+          "label": "Min Value",
+          "description": "Explicit domain minimum. Auto (0 / nice) when unset."
+        },
+        "domain.maxValue": {
+          "label": "Max Value",
+          "description": "Explicit domain maximum. Auto (nice max) when unset.",
+          "placeholder": "data max"
+        },
+        "domain": {
+          "label": "Domain",
+          "description": "Value-axis domain overrides — leave unset to auto-fit to nice round numbers.",
+          "order": 11,
+          "collapsedByDefault": true
+        },
+        "anim.renderMode": {
+          "label": "Render mode",
+          "description": "\"premium\" (default): bars fade + grow in — a per-pixel geq per bar/label. \"light\": bars grow opaquely + labels enable-gate pop — no geq, composable, cheap when nested."
+        },
+        "anim.reduceMotion": {
+          "label": "Reduce motion",
+          "description": "Skip motion; render the final static card."
+        },
+        "anim.introFrac": {
+          "label": "Intro length",
+          "description": "Share of the clip the intro fills (the rest holds)."
+        },
+        "anim.ease": {
+          "label": "Easing",
+          "description": "Grow-in easing curve."
+        },
+        "anim": {
+          "label": "Animation",
+          "description": "Reveal mode + grow-in intro.",
+          "order": 12,
+          "collapsedByDefault": true
+        },
+        "theme.slug": {
+          "label": "Producer slug",
+          "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+          "placeholder": "preset palette (no producer)"
+        },
+        "theme.preset": {
+          "label": "Preset",
+          "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+          "placeholder": "producer default"
+        },
+        "theme.namespace": {
+          "label": "Namespace",
+          "description": "Upstream alias to read tokens from. Default \"theme\".",
+          "placeholder": "theme"
+        },
+        "theme.forceFetch": {
+          "label": "Force fetch",
+          "description": "Re-seed via the slug even if the namespace is populated."
+        },
+        "theme": {
+          "label": "Theme",
+          "description": "Opt into a theme source. Uses the alpine preset by default; set a producer slug + namespace to pull shared design tokens. Explicit color props still win.",
+          "order": 13,
+          "collapsedByDefault": true
+        },
+        "debugLayout": {
+          "label": "Debug layout",
+          "description": "Dev-only layout contract view: renders the contract wireframe instead of the chart — bars GREEN with the measured rule when every bar is the same thickness (equal height horizontal / equal width vertical), offenders RED with the violation when not. Deterministic default false; production never sets it.",
+          "order": 14,
+          "collapsedByDefault": true
+        }
+      }
+    },
+    "@m0saic/alpine/bar-graph/v3": {
+      "label": "Alpine Bar Chart",
+      "description": "Alpine bar chart, a friendly mobile-marketing card: rounded bars on an exact scale (every bar lands on its value's gridline), category labels, value labels, value ticks centred on their lines.",
       "tags": [
         "data-viz",
         "alpine",
@@ -1227,14 +1412,183 @@
     },
     "@m0saic/alpine/line-chart/v2": {
       "deprecated": {
-        "reason": "Superseded by v3 — the same alpine line chart, with its values editable on the Make canvas.",
-        "replacement": "@m0saic/alpine/line-chart/v3",
+        "reason": "Superseded by v4: the same alpine line chart, with its values editable on the Make canvas (v3) and every gridline, point and tick a real cell on one exact scale (v4).",
+        "replacement": "@m0saic/alpine/line-chart/v4",
         "since": "2026-09-30"
       }
     },
     "@m0saic/alpine/line-chart/v3": {
+      "deprecated": {
+        "reason": "Superseded by v4: the same alpine line chart with every gridline, point and tick a real cell on one exact scale (v3 drew them as masks over the whole plot).",
+        "replacement": "@m0saic/alpine/line-chart/v4",
+        "since": "2026-10-12"
+      },
       "label": "Alpine Line Chart",
       "description": "Alpine line/area chart — friendly mobile-marketing card: soft area fill, rounded line, point markers, value rail, left→right draw-on. Standalone Alpine brand flavor. v2 rebuilds the geometry as a ratio layout (plot marks are masks filling a ratio plot cell in plot-local coords) so it composes at any canvas without the absolute-placement precision blowup.",
+      "tags": [
+        "data-viz",
+        "alpine",
+        "line-chart",
+        "animated",
+        "analysts",
+        "developers",
+        "trend",
+        "dashboard",
+        "chart"
+      ],
+      "primitive": true,
+      "props": {
+        "values": {
+          "label": "Values",
+          "description": "Numeric series driving the line (left→right).",
+          "order": 1
+        },
+        "labels": {
+          "label": "Category Labels",
+          "description": "Category labels (index-aligned to values) along the x-axis.",
+          "order": 2,
+          "primary": true
+        },
+        "title": {
+          "label": "Title",
+          "description": "Card title.",
+          "placeholder": "e.g., LINE CHART",
+          "order": 3
+        },
+        "subtitle": {
+          "label": "Subtitle",
+          "description": "Card subtitle.",
+          "placeholder": "e.g., Monthly Active Users",
+          "order": 4
+        },
+        "curve": {
+          "label": "Curve",
+          "description": "Interpolation between points.",
+          "order": 5
+        },
+        "preset": {
+          "label": "Preset",
+          "description": "Alpine theme variant.",
+          "order": 6
+        },
+        "lineColor": {
+          "label": "Line Color",
+          "description": "Line + marker color. Defaults to the resolved theme primary.",
+          "placeholder": "theme primary",
+          "order": 7
+        },
+        "grid.show": {
+          "label": "Show",
+          "description": "Draw horizontal gridlines + value ticks."
+        },
+        "grid.count": {
+          "label": "Tick count",
+          "description": "Number of horizontal gridlines/ticks."
+        },
+        "grid": {
+          "label": "Grid",
+          "description": "Gridlines + value ticks behind the line.",
+          "order": 8,
+          "collapsedByDefault": true
+        },
+        "area.show": {
+          "label": "Show",
+          "description": "Fill under the line."
+        },
+        "area.opacity": {
+          "label": "Opacity",
+          "description": "Area fill opacity (0..1)."
+        },
+        "area": {
+          "label": "Area",
+          "description": "Soft area fill under the line.",
+          "order": 9,
+          "collapsedByDefault": true
+        },
+        "points.show": {
+          "label": "Show",
+          "description": "Draw a dot at each data vertex."
+        },
+        "points": {
+          "label": "Points",
+          "description": "Point markers at each data vertex.",
+          "order": 10,
+          "collapsedByDefault": true
+        },
+        "showTicks": {
+          "label": "Axis ticks",
+          "description": "Small vertical ticks on the x-axis at each labeled data point (classic chart look). Default true.",
+          "order": 10
+        },
+        "domain.minValue": {
+          "label": "Min Value",
+          "description": "Explicit domain minimum. Auto-derived when unset.",
+          "placeholder": "data min"
+        },
+        "domain.maxValue": {
+          "label": "Max Value",
+          "description": "Explicit domain maximum. Auto-derived when unset.",
+          "placeholder": "data max"
+        },
+        "domain": {
+          "label": "Domain",
+          "description": "Value-axis domain overrides — leave unset to auto-fit to nice round numbers.",
+          "order": 11,
+          "collapsedByDefault": true
+        },
+        "anim.reduceMotion": {
+          "label": "Reduce motion",
+          "description": "Skip motion; render the final static card."
+        },
+        "anim.introFrac": {
+          "label": "Intro length",
+          "description": "Share of the clip the intro fills (the rest holds)."
+        },
+        "anim.ease": {
+          "label": "Easing",
+          "description": "Intro draw-on easing curve."
+        },
+        "anim": {
+          "label": "Animation",
+          "description": "Left→right draw-on intro.",
+          "order": 12,
+          "collapsedByDefault": true
+        },
+        "theme.slug": {
+          "label": "Producer slug",
+          "description": "Producer template to seed tokens from (e.g. \"@m0saic/theming/v1\").",
+          "placeholder": "preset palette (no producer)"
+        },
+        "theme.preset": {
+          "label": "Preset",
+          "description": "Producer preset/variant (light | dark | high-contrast; producer-defined).",
+          "placeholder": "producer default"
+        },
+        "theme.namespace": {
+          "label": "Namespace",
+          "description": "Upstream alias to read tokens from. Default \"theme\".",
+          "placeholder": "theme"
+        },
+        "theme.forceFetch": {
+          "label": "Force fetch",
+          "description": "Re-seed via the slug even if the namespace is populated."
+        },
+        "theme": {
+          "label": "Theme",
+          "description": "Opt into a theme source. Uses the alpine preset by default; set a producer slug + namespace to pull shared design tokens. Explicit color props still win.",
+          "order": 13,
+          "collapsedByDefault": true
+        },
+        "debugLayout": {
+          "label": "Debug layout",
+          "description": "Dev-only layout contract view: renders the contract wireframe instead of the chart — x-axis ticks GREEN when each sits on its data point's x, offenders RED. Deterministic false default; production never sets it.",
+          "order": 13
+        }
+      }
+    },
+    "@m0saic/alpine/line-chart/v4": {
+      "label": "Alpine Line Chart",
+      "description": "Alpine line/area chart, a friendly mobile-marketing card: soft area fill, rounded line, point markers, value rail, category labels, left-to-right draw-on. Every gridline, point and tick is a real cell on one exact scale, so the chart's geometry draws the chart.",
       "tags": [
         "data-viz",
         "alpine",
@@ -1924,12 +2278,17 @@
     },
     "@m0saic/brand/business-card/v1": {
       "deprecated": {
-        "reason": "Superseded by v2 — the same card, with every empty contact line addable from the name on the Make canvas.",
-        "replacement": "@m0saic/brand/business-card/v2",
+        "reason": "Superseded by v2 — the same card, with every empty contact line addable from the name on the Make canvas — and v2 by v3 (a light theme, and the solutions QR back).",
+        "replacement": "@m0saic/brand/business-card/v3",
         "since": "2026-09-29"
       }
     },
     "@m0saic/brand/business-card/v2": {
+      "deprecated": {
+        "reason": "Superseded by v3 — the same card with a light theme beside the navy, and a choice of back: the industry solutions QR, the hello-world card, or any shipped template (v2's back).",
+        "replacement": "@m0saic/brand/business-card/v3",
+        "since": "2026-10-18"
+      },
       "label": "Business Card",
       "description": "The m0saic business card, print-ready: US 3.5 x 2 in at 300 DPI on MOO's bleed box (1098 x 648 px; Vistaprint / FedEx presets too), the brand field + M lockup and your contact on the front, a live-rendered shipped template with a QR to Mosaic Web on the back. One render, two PNGs (front + back). Every line on the front is editable on the canvas.",
       "tags": [
@@ -2009,6 +2368,127 @@
         "debugLayout": {
           "label": "Debug layout",
           "description": "Dev-only: overlay the layout contract (every mark keeps its aspect, the back's template keeps its own, every glyph stays inside the safe area).",
+          "order": 6
+        }
+      }
+    },
+    "@m0saic/brand/business-card/v3": {
+      "label": "Business Card",
+      "description": "The m0saic business card, print-ready: US 3.5 x 2 in at 300 DPI on MOO's bleed box (1098 x 648 px; Vistaprint / FedEx presets too), light (the solutions look) or dark (the navy card). Front: the brand field, the M lockup and your contact. Back: a big QR to m0saic.io/solutions, the hello-world card, or any shipped template rendered live with a QR that opens it on Mosaic Web. One render, two PNGs (front + back).",
+      "tags": [
+        "brand",
+        "print",
+        "card",
+        "business-card",
+        "still",
+        "qr",
+        "solutions",
+        "founders",
+        "marketers",
+        "developers"
+      ],
+      "props": {
+        "name": {
+          "label": "Name",
+          "description": "Your name — the bold line on the front. Double-click it to add any contact line that is empty.",
+          "placeholder": "none",
+          "order": 1,
+          "primary": true
+        },
+        "role": {
+          "label": "Role",
+          "description": "Role / company line under the name. Empty removes it.",
+          "placeholder": "none",
+          "order": 2
+        },
+        "email": {
+          "label": "Email",
+          "description": "Email address, set in the mono face. Empty removes it.",
+          "placeholder": "none",
+          "order": 3
+        },
+        "site": {
+          "label": "Site",
+          "description": "Website, set in the mono face. Empty removes it.",
+          "placeholder": "none",
+          "order": 4
+        },
+        "handle": {
+          "label": "Handle",
+          "description": "Social handle, printed beside the site. Empty removes it.",
+          "placeholder": "none",
+          "order": 5
+        },
+        "theme": {
+          "label": "Theme",
+          "description": "\"light\" — the m0saic.io solutions look: an ivory page, warm tiles, ink letters; \"dark\" — the navy card, its tiles lifted so the pattern survives print.",
+          "order": 6,
+          "primary": true
+        },
+        "back": {
+          "label": "Back",
+          "description": "What the back shows: \"solutions\" — a big QR to the industry solutions page; \"hello-world\" — the hello-world card with a QR to it on Mosaic Web; \"template\" — any other shipped template, rendered live, with a QR that opens it.",
+          "order": 1,
+          "primary": true
+        },
+        "backTemplate": {
+          "label": "Back template",
+          "description": "Which shipped template the back shows (rendered live, with a QR that opens it on Mosaic Web).",
+          "order": 2
+        },
+        "qrUrl": {
+          "label": "QR link",
+          "description": "What the back's QR opens — the industry solutions page, so one card serves every show. Printed beside it as typed (no https://).",
+          "placeholder": "https://m0saic.io/solutions",
+          "order": 3
+        },
+        "backTitle": {
+          "label": "Back title",
+          "description": "The bold line beside the QR. Double-click it to add a last line.",
+          "placeholder": "See it for your business",
+          "order": 4
+        },
+        "backLine": {
+          "label": "Back line",
+          "description": "A last line under the link, in the mono face — a booth number, say. Empty removes it.",
+          "placeholder": "none",
+          "order": 5
+        },
+        "backImage": {
+          "label": "Back picture",
+          "description": "One picture beside a smaller QR, cropped to 16:9 — a store's ad, say. Empty: the big QR alone.",
+          "placeholder": "the big QR",
+          "order": 6
+        },
+        "bleed": {
+          "label": "Bleed",
+          "description": "Printer bleed per side: \"moo\" (MOO — 3.66 x 2.16 in, 1098 x 648 px at 300 DPI, exact), \"none\" (trim only, 3.5 x 2 in), \"sixteenth\" (Vistaprint), \"eighth\" (FedEx Office / Staples).",
+          "order": 1
+        },
+        "dpi": {
+          "label": "DPI",
+          "description": "Print resolution in dots per inch — every dimension scales with it. 300 is press standard.",
+          "order": 2
+        },
+        "fieldOpacity": {
+          "label": "Field opacity",
+          "description": "Tint of the field tiles over the page (0–1). Empty = the theme's: 0.7 on light (a visible brick, still soft), 0.5 on dark. Paper prints no backlight: on dark, under about 0.4 the brick prints as solid black.",
+          "placeholder": "the theme's",
+          "order": 3
+        },
+        "accent": {
+          "label": "Accent",
+          "description": "Accent colour — the M, the wordmark's zero and the QR.",
+          "order": 4
+        },
+        "guides": {
+          "label": "Proof guides",
+          "description": "Draw the trim (orange) and safe-area (green) outlines for proofing. Off for the press file.",
+          "order": 5
+        },
+        "debugLayout": {
+          "label": "Debug layout",
+          "description": "Dev-only: overlay the layout contract (every mark keeps its aspect, a picture on the back keeps its own, every glyph stays inside the safe area).",
           "order": 6
         }
       }

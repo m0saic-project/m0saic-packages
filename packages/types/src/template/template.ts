@@ -2130,11 +2130,25 @@ export interface MosaicTemplate<
    * - **Opt-in only.** Hosts NEVER synthesize a fallback cover for templates
    *   that don't declare one — absence means "behave exactly as before".
    *
+   * A START PAGE (0.3.x, founder 2026-10-19: "the min info user needs to get
+   * a solid start immediately"). A cover may ASK the few things a person must
+   * decide before anything else (how many takes, which platform): its rects
+   * carry answer bindings (`binding.value`), a click writes the answer
+   * without dismissing the cover, the host re-renders the cover with the new
+   * props (so it shows what is picked), and the cover's `editor.start` rect
+   * opens the template. A cover that asks closes only on a start rect, its
+   * chip's close, Play or MAKE. Never move the questions into
+   * `defaultProps`: the defaults stay the template's real render, and an
+   * agent that supplies props skips the cover (and its questions) entirely.
+   *
    * Constraints: side-effect-free and deterministic (same as `renderLite`).
    * Invoked with `ctx.mode === "design"`. MUST NOT depend on `ctx.media`
    * (hosts pass an empty registry — the cover is self-contained, so no probe
    * runs) nor on node-only APIs when the template ships in a web build.
-   * `ctx.target` carries the editor's canvas dimensions — size to it.
+   * `ctx.target` carries the editor's canvas dimensions; size to it, OR
+   * return a cover of your own size — hosts show a cover at the size it
+   * returns, so a portrait template may open on a landscape start page that
+   * reads at desktop size.
    */
   renderCover?: (
     props: P,

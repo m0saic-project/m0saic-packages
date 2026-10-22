@@ -143,6 +143,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "business-card",
+    templateId: "@m0saic/brand/business-card/v3",
+    exportName: "BusinessCardV3",
+  },
+  {
+    slug: "business-card-v2",
     templateId: "@m0saic/brand/business-card/v2",
     exportName: "BusinessCardV2",
   },
@@ -540,6 +545,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   {
     // slug "bar-graph" coexists with charts/bar-graph — pack-scoped uniqueness.
     slug: "bar-graph",
+    templateId: "@m0saic/alpine/bar-graph/v3",
+    exportName: "AlpineBarGraphV3",
+  },
+  {
+    slug: "bar-graph-v2",
     templateId: "@m0saic/alpine/bar-graph/v2",
     exportName: "AlpineBarGraphV2",
   },
@@ -586,6 +596,11 @@ export const templateRegistry: OfficialTemplateRegistryEntry[] = [
   },
   {
     slug: "line-chart",
+    templateId: "@m0saic/alpine/line-chart/v4",
+    exportName: "AlpineLineChartV4",
+  },
+  {
+    slug: "line-chart-v3",
     templateId: "@m0saic/alpine/line-chart/v3",
     exportName: "AlpineLineChartV3",
   },

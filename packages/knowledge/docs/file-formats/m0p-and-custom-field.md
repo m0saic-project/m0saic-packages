@@ -23,7 +23,7 @@ These features shipped together in April 2026. They are foundational to v2 work 
 | `.m0c` | JSON: DSL + StableKey-keyed labels + derive image + meta | One layout, with labels / overlays / derive thumbnail / `custom.*` |
 | `.m0g` | `.m0c`-shaped JSON with `format: "m0g"` + the `M0cGold` `gold` block | A **m0saic golden** ("mogging") — a tried-and-true, signed-off layout; `#mogging` comment-line convention (`types.ts`) |
 | `.m0p` | JSON: pack of `.m0c`-shaped variants under shared identity | Multiple coordinated variants (cross-canvas, brand pack, content set, themed collection) |
-| `.m0v` | JSON: `outputs` / `assets` / `custom` (`src/m0v/m0vFile.ts`) | **Mosaic Vocabulary** — user-tier shared brand language: output presets, palette, typography, asset paths. CLI `--m0v <path>`; `m0saic open` accepts it |
+| `.m0v` | JSON: `outputs` / `assets` / `brand` / `custom` (`src/m0v/m0vFile.ts`) | **Mosaic Vocabulary** — user-tier shared brand language: output presets, asset paths, and since 2026-10-19 the `brand` slot (the shop's name, logo, accent, site, … as strings — Mosaic Desktop's "Your brand" profile, `~/m0saic/solutions/<id>/brand.m0v`; see `templates/reference/brand-schema.md`). Every slot optional; palette, typography still ride in `custom`. CLI `--m0v <path>` reads `outputs`; `m0saic open` accepts it |
 
 `.m0` and `.m0c` are unchanged by the later formats' arrival — each is purely additive.
 This doc covers `.m0`/`.m0c`/`.m0p` in depth; `.m0g` and `.m0v` have their own type

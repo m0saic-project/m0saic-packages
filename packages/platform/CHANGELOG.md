@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.4.0 — 2026-10-22
+
+### Share links: `&bundle=1`, the sender's "my repo publishes m0saic release bundles"
+
+- `share/shareQuery.ts`: `TemplateShareParams.bundle?: boolean` and the wire param `&bundle=1`, written after
+  `from` and only with it. It is the third-party sender's claim that `from` publishes m0saic release bundles
+  (`bundle.json` + `runtime.tgz` on its GitHub releases), so `m0saic install` can install it; a host may then
+  offer that command, built from `from` alone and attributed to the link's author. The parser keeps it only
+  with a valid `from` and only for the value `1`; anything else is dropped without failing the link, like
+  `note` / `from`.
+
+### Bindings: `bindingValue`, a rect that IS one answer (and the `boolean` answer kind)
+
+- `mosaic/propBindings`: `PropBindingRef.value?: string | number | boolean` and `bindingValue(ref, kind, def)`,
+  the validated ANSWER of a binding: one of a `choice` leaf's set (`choiceOptionsOf`), a finite number on a
+  `number` leaf, or `true` / `false` on a `boolean` prop. Anything else, or a value on another kind, is dropped.
+- `BindableKind` gains `"boolean"`, which exists ONLY as an answer: `classifyBindableProp` classifies a basic
+  `boolean` prop as `"boolean"` when the binding carries a boolean `value`, and as unbindable otherwise (there is
+  still no boolean editor on the canvas). A boolean takes no `seedDraft`.
+- `resolveBindableProp` returns `value` when it survives, beside `seedDraft` / `companion`.
+
+**Compatibility.**
+
+Additive. A binding without `value` resolves exactly as before; a boolean prop without one is still unbindable.
+A consumer that switches exhaustively over `BindableKind` sees one more member.
+
+**Release notes.**
+
+Ships with the next lockstep set.
+
 ## 0.3.1 — 2026-10-05
 
 ### Template catalog: sidecar parser, merge, collector; the loader reads `template-catalog.json`

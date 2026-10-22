@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "templateId": "@m0saic/brand/business-card/v3",
+  "label": "Business Card",
+  "description": "The m0saic business card, print-ready: US 3.5 x 2 in at 300 DPI on MOO's bleed box (1098 x 648 px; Vistaprint / FedEx presets too), light (the solutions look) or dark (the navy card). Front: the brand field, the M lockup and your contact. Back: a big QR to m0saic.io/solutions, the hello-world card, or any shipped template rendered live with a QR that opens it on Mosaic Web. One render, two PNGs (front + back).",
+  "tags": ["brand", "print", "card", "business-card", "still", "qr", "solutions", "founders", "marketers", "developers"],
+  "props": {
+    "name": {
+      "label": "Name",
+      "description": "Your name — the bold line on the front. Double-click it to add any contact line that is empty.",
+      "placeholder": "none",
+      "order": 1,
+      "primary": true
+    },
+    "role": {
+      "label": "Role",
+      "description": "Role / company line under the name. Empty removes it.",
+      "placeholder": "none",
+      "order": 2
+    },
+    "email": {
+      "label": "Email",
+      "description": "Email address, set in the mono face. Empty removes it.",
+      "placeholder": "none",
+      "order": 3
+    },
+    "site": {
+      "label": "Site",
+      "description": "Website, set in the mono face. Empty removes it.",
+      "placeholder": "none",
+      "order": 4
+    },
+    "handle": {
+      "label": "Handle",
+      "description": "Social handle, printed beside the site. Empty removes it.",
+      "placeholder": "none",
+      "order": 5
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "\"light\" — the m0saic.io solutions look: an ivory page, warm tiles, ink letters; \"dark\" — the navy card, its tiles lifted so the pattern survives print.",
+      "order": 6,
+      "primary": true
+    },
+    "back": {
+      "label": "Back",
+      "description": "What the back shows: \"solutions\" — a big QR to the industry solutions page; \"hello-world\" — the hello-world card with a QR to it on Mosaic Web; \"template\" — any other shipped template, rendered live, with a QR that opens it.",
+      "order": 1,
+      "primary": true
+    },
+    "backTemplate": {
+      "label": "Back template",
+      "description": "Which shipped template the back shows (rendered live, with a QR that opens it on Mosaic Web).",
+      "order": 2
+    },
+    "qrUrl": {
+      "label": "QR link",
+      "description": "What the back's QR opens — the industry solutions page, so one card serves every show. Printed beside it as typed (no https://).",
+      "placeholder": "https://m0saic.io/solutions",
+      "order": 3
+    },
+    "backTitle": {
+      "label": "Back title",
+      "description": "The bold line beside the QR. Double-click it to add a last line.",
+      "placeholder": "See it for your business",
+      "order": 4
+    },
+    "backLine": {
+      "label": "Back line",
+      "description": "A last line under the link, in the mono face — a booth number, say. Empty removes it.",
+      "placeholder": "none",
+      "order": 5
+    },
+    "backImage": {
+      "label": "Back picture",
+      "description": "One picture beside a smaller QR, cropped to 16:9 — a store's ad, say. Empty: the big QR alone.",
+      "placeholder": "the big QR",
+      "order": 6
+    },
+    "bleed": {
+      "label": "Bleed",
+      "description": "Printer bleed per side: \"moo\" (MOO — 3.66 x 2.16 in, 1098 x 648 px at 300 DPI, exact), \"none\" (trim only, 3.5 x 2 in), \"sixteenth\" (Vistaprint), \"eighth\" (FedEx Office / Staples).",
+      "order": 1
+    },
+    "dpi": {
+      "label": "DPI",
+      "description": "Print resolution in dots per inch — every dimension scales with it. 300 is press standard.",
+      "order": 2
+    },
+    "fieldOpacity": {
+      "label": "Field opacity",
+      "description": "Tint of the field tiles over the page (0–1). Empty = the theme's: 0.7 on light (a visible brick, still soft), 0.5 on dark. Paper prints no backlight: on dark, under about 0.4 the brick prints as solid black.",
+      "placeholder": "the theme's",
+      "order": 3
+    },
+    "accent": {
+      "label": "Accent",
+      "description": "Accent colour — the M, the wordmark's zero and the QR.",
+      "order": 4
+    },
+    "guides": {
+      "label": "Proof guides",
+      "description": "Draw the trim (orange) and safe-area (green) outlines for proofing. Off for the press file.",
+      "order": 5
+    },
+    "debugLayout": {
+      "label": "Debug layout",
+      "description": "Dev-only: overlay the layout contract (every mark keeps its aspect, a picture on the back keeps its own, every glyph stays inside the safe area).",
+      "order": 6
+    }
+  }
+}

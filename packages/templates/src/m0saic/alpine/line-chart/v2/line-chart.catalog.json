@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "templateId": "@m0saic/alpine/line-chart/v2",
   "deprecated": {
-    "reason": "Superseded by v3 — the same alpine line chart, with its values editable on the Make canvas.",
-    "replacement": "@m0saic/alpine/line-chart/v3",
+    "reason": "Superseded by v4: the same alpine line chart, with its values editable on the Make canvas (v3) and every gridline, point and tick a real cell on one exact scale (v4).",
+    "replacement": "@m0saic/alpine/line-chart/v4",
     "since": "2026-09-30"
   }
 }

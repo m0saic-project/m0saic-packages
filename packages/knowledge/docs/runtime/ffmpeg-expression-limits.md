@@ -115,3 +115,10 @@ at t=0 or grind at ~1 fps. That one is neither parse depth nor `geq` eval cost �
 that wall is engine-internal: `.ai/moat/runtime/macos-swscale-thread-cap.md`
 (absent in the shipped copy; symptom summary: dense still-image canvases freeze
 at t=0 / grind ~1 fps on macOS — the engine's threadGuard mitigates it).
+Since 0.4.0 the same guard also caps every video decoder in a dense command:
+past six threaded video inputs each `-i` takes `-threads K` (K = 32 / inputs,
+between 1 and 4), because each mp4 decoder otherwise keeps a frame-thread pool of
+one thread per core plus that many frames in flight — 22 inputs on an 8 GB machine
+swapped until the kernel panicked. Stills, lavfi graphs and the engine's own qtrle
+intermediates are not counted. Measured on the panic case (16 videos, 5 s at
+1080p, 8 GB): 29 s, 1.3 GB peak, no swap.

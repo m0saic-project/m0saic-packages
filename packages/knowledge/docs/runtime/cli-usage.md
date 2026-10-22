@@ -44,7 +44,11 @@ m0saic layout.m0           # .m0 / .m0c paths also accepted (index.ts:~7184-7270
 ## Command table
 
 18 `.command(` registrations in `index.ts` + `telemetry` registered by
-`registerTelemetryCommand(program)` (index.ts:~7138 → `utils/telemetry.ts:~372`).
+`registerTelemetryCommand(program)` (index.ts:~7138 → `utils/telemetry.ts:~372`) +
+`community` (`fetch`), `install`, `uninstall` registered by
+`registerTemplateInstallCommands(program, …)` (`utils/templateInstall.ts`, since
+0.4.0; also listed in `inlineDsl.ts` `KNOWN_SUBCOMMANDS` so they are never read as
+an inline m0 string).
 Two of the 18 sit inside `if (DEV_MODE) { … }` and are absent from the public
 help — see the DEV-GATED rows below.
 
@@ -58,12 +62,15 @@ help — see the DEV-GATED rows below.
 | Command (index.ts line) | What it does |
 |---|---|
 | `make <input>` (~5095) | Primary render: template id / `.mosaic` / `.mosaicx` → video or image. Full flag surface below. |
-| `hello-world` | The first render — a thin alias for `make @m0saic/hello-world/v1` (the brand card; output defaults to `hello-world.mp4`). With `--template-repo <path...>` / `--community-repo <path>` it renders the loaded repo's **front door** instead: the first repo (load order) whose `repo.helloWorld` names a template that registered, announced as `Front door: <id> — <repo>'s hello-world`; no repos, or none that name one → the core card with a one-line why. Takes `-o -w -h --fps --durationMs --props --quiet --verbose` (no engine surface). Picker: the CLI source (not published). |
+| `hello-world` | The first render — a thin alias for `make @m0saic/hello-world/v1` (the brand card; output defaults to `hello-world.mp4`). With `--template-repo <path...>` it renders the loaded folder's **front door** instead: the first flagged repo (load order) whose `repo.helloWorld` names a template that registered (installed repos never are the front door; the community one is `m0saic make @m0saic-community/hello-world/v1` after `m0saic community fetch`), announced as `Front door: <id> — <repo>'s hello-world`; no repos, or none that name one → the core card with a one-line why. Takes `-o -w -h --fps --durationMs --props --quiet --verbose` (no engine surface). Picker: the CLI source (not published). |
 | `make-wireframe` (~5462) | Static wireframe PNG from `--m0 <string>` or `--mfile <path>`. |
 | `make-wireframe-animated` (~5568) | Animated wireframe MP4 from `--m0`/`--mfile`; extra `--disable-ui`. |
 | `flatten <input>` (~5680) | Inline all `type:mosaic` children of a `.mosaic`/template into one flat JSON doc — no render. |
 | `resolve <input>` (~5800) | `.mosaicx` recipe → resolved `.mosaic` provenance doc, no ffmpeg; `--flatten` also inlines children. |
-| `list-templates` (~5946) | Print registered template ids (`--json`); annotates primitive/internal/deprecated. |
+| `list-templates` (~6103) | Print registered template ids, grouped by source (since 0.4.0): `Built-in: N templates`, then `Installed <repo id> (<name>): <tag>, signed|unsigned, N templates` (community first), then `Folder <path>, <repo id> (<name>): N templates` for `--template-repo`. A heading is one line that never starts with `@`; ids stay one per line, flush left. `--source <name>` lists one group: `builtin`, `community`, or a repo id with or without `@` (any case); an unknown name exits 1 and lists the sources. `--json` = a flat sorted id array, filtered by `--source`. Annotates primitive/internal/deprecated. Grouping: the CLI source (not published). |
+| `community fetch` | **Since 0.4.0.** Install or update the official community templates from their latest signed GitHub release bundle, or report them current (`--force` reinstalls, `--quiet`). A valid signature is required. See "Installed template repos" below. Impl: the CLI source (not published). |
+| `install [source]` | **Since 0.4.0.** Install a template repo from its release bundle: `owner/repo[@tag]`, a GitHub repo or release page, a `bundle.json` / `.tgz` URL, or a bundle on disk. No source: list what is installed (`--json`). A third-party repo: once `bundle.json` is read, the third-party code notice, then a question (repo, tag, templates, size; default No) before the runtime downloads; `--yes` skips it and is required with no terminal (CI, pipes: exit 1, nothing installed). A repo signed by m0saic (second-party) gets one line instead, no question. Given the official community repo in any GitHub form, it runs `community fetch` instead. A private repo needs its access key: `--key-env <name>`, then `M0SAIC_REPO_KEY`, then the key saved for it; in a terminal it asks once and saves it. `--force`, `--quiet`. |
+| `uninstall <repoId>` | **Since 0.4.0.** Remove an installed template repo (files + entry) and its saved access key, if any; exit 1 with the installed ids when it is not installed. |
 | `doctor <repoDir>` | **Public since 0.2.0** (dev-gated at 0.1.0; founder ruling 2026-09-16, BURN-DOWN D5 → publish). Run the template conventions over a template repo folder — the same checks its build gate (`tools/check-registry.mjs`) runs, from outside (agents, reviewers, forks, CI on a fork): definition-time + render-time conventions (the 13 throw-posture ones incl. `latticeSmooth`) and, when the repo commits `layout-fingerprints/` or `.layout.m0` sidecars, the fingerprint diff. `--json` (one object: `ok, repo, mode, loadDiagnostics, rendered, skipped, errors, warnings, notes, fingerprints, conventions`), `--sweep` (also render on the standard 1080p canvases → `canvasEnvelope`), `--entry <path>`, `--src <dir>`. Loads through `loadTemplateRepoFromPath` under the external origin scope, so conventions RECORD rather than throw and one bad template never hides the rest. **Runs the repo's template module bodies in-process** — prints a trust warning to stderr (not under `--json`). Exit 1 on any error-severity finding or a fatal load diagnostic. It is the pack-publishing contract for community/starter authors ("the publish requirement for packs"). Impl: the CLI source (not published); locked public by `__tests__/cli.surface.test.js`. |
 | `browse-templates` (~6033) | **DEV-GATED** (whole command inside `if (DEV_MODE)`, 4792): interactive TTY picker (template → variant → confirm → delegates to `make`). It drives the E2E variant matrix and writes to `test-output/` — a development harness, not a user surface. |
 | `momo <message…>` (~6282) | **DEV-GATED** (whole command inside `if (DEV_MODE)`, 5040): relay English geometry instruction to Momo in a running Mosaic Desktop over the loopback bridge; exit 0 applied / 2 not-applied / 1 couldn't-run. |
@@ -177,8 +184,9 @@ mosaic; prints `Validation DEGRADED`), `--report` (`.output.json` /
 `--keep-temp`, `--quiet`, `--verbose`, `--prefer-pretty-m0` /
 `--prefer-canonical-m0` (printed-m0 form only; note: NOT `--prefer-*-m0saic`),
 `--background-color <color>`, `--template-repo <path...>` +
-`--template-repo-entry <file>` (external template repos), `--community-repo <path>`
-(ONE checkout of the official community repo — see the community gate below).
+`--template-repo-entry <file>` (a template repo folder for one run). Installed
+repos load with no flag; `--community-repo` was removed in 0.4.0 — see
+"Installed template repos" and the community gate below.
 
 **Encode surface** (index.ts:~4231-4338, mirrors the Make page's Advanced panel;
 precedence: flags > `.m0v` preset > doc-on-disk > engine default):
@@ -235,34 +243,140 @@ and neither is `doctor` (public since 0.2.0).
 > `momo` / `browse-templates` finds hits; that is the router table, not the
 > gated implementation.
 
-## External template repos and the community gate (2026-09-16)
+## External template repos and the community gate (2026-09-16; installs 2026-10-13)
 
-**Three reserved identities, exact-match, nothing else is checked:** template
-namespaces `@m0saic/` and `@m0saic-dev/`, repo id `@m0saic-community`
-(`index.ts:~907-909`; registry compare is case-insensitive, `templateRegistry.ts:~112`).
-Every other namespace / repo id is open. `--template-repo` never grants anything.
+**Three reserved namespaces and one reserved repo id, exact-match, nothing else
+is checked:** template namespaces `@m0saic/`, `@m0saic-dev/`, `@m0saic-community/`
+and repo id `@m0saic-community` (`RESERVED_TEMPLATE_NAMESPACES` /
+`RESERVED_COMMUNITY_REPO_ID` in `index.ts`; registry compare is case-insensitive,
+`templateRegistry.ts`). Every other namespace / repo id is open. A `--template-repo`
+folder never gets a grant in a shipped build.
 
-**The grant.** `--community-repo <path>` says "this IS the official repo"; the
-`@m0saic-dev/` grant comes only from `verifyCommunityRelease()` (`@m0saic/product`
-`communityRelease.ts`) passing on the checkout's `release.json` against
-`LICENSE_PUBLIC_KEYS` (`publicKeys.ts` — the licence k1 family; rotation = append
-`k2`, ship, sign with `M0SAIC_SIGNING_KID=k2`; older CLIs report `unknown-kid`).
-The gate runs BEFORE the entry module is imported. All gate/notice lines go to
-stderr (survive `--quiet`, keep `--json` stdout clean):
+**Installed template repos (CLI 0.4.0).** `m0saic community fetch` and
+`m0saic install <source>` put release bundles (`bundle.json` + `runtime.tgz`,
+written by https://github.com/m0saic-project/m0saic-community-templates/blob/main/tools/pack-bundle.mjs — the starter's
+`npm run bundle` — and attached to a GitHub release; previews and samples are
+never downloaded) into `~/m0saic/template-repos/` (`M0SAIC_ROOT` moves it):
+`installed.json` + one unpacked runtime per repo at `<slug>/<tag or sha-…>/`.
+The store, download and checks are `@m0saic/product` `templateBundle.ts` (index
+parse, source resolution, download with a 30 s idle timeout + HTTP Range resume +
+size/sha256 checks, an extractor that writes only regular files and folders —
+links, devices, `..`, absolute paths, backslashes, `node_modules`,
+Windows-illegal names and duplicates are refused) and `installedTemplateRepos.ts`
+(lock, staging + swap, the signature and reserved-namespace checks). `community
+fetch` reads `github.com/m0saic-project/m0saic-community-templates/releases/latest/
+download/bundle.json` (`M0SAIC_COMMUNITY_GITHUB_REPO` overrides; the bundle must
+still verify) and installs, updates, or reports current; a signed install that no
+longer verifies is reinstalled. Install refusals: `not-signed` (any
+`@m0saic-community` bundle that does not verify — dev builds also take an
+unsigned one), `reserved-namespace` (manifest ids in a reserved namespace,
+unless the verified community repo), `check-failed` (the CLI loads the staged
+copy once, `checkStagedTemplateRepo`, before it replaces anything),
+`wrong-repo`, size / hash / tree mismatches, `busy` (another install holds
+`.lock`), `declined` (the question below answered no, cancelled, or no terminal
+and no `--yes`).
 
-- ok → `✓ community repo verified: <tag> (signed, <kid>)`
-- else → `⚠  <path> is not a verified release of the official community repo
-  (<reason>). Loaded as an ordinary template repo — its @m0saic-dev/ ids are
-  refused. Get the official checkout: the link on m0saic.io/community` → the
-  reserved ids are refused in ONE collapsed line, `⚠  [template-repo]
-  TEMPLATE_ID_RESERVED_NAMESPACE: refused <N> ids in reserved namespace
-  (@m0saic-dev/…): <id1>, <id2>, <id3>, …` (other rejection codes stay one line
-  each) → the existing `❌ Refusing to use template repo` block → **exit 1**.
+**Asking first (2026-10-13).** `install` reads `bundle.json`, then decides
+(product `installTemplateBundle({ confirm })`: the hook runs after the index and
+the "current" check, before the runtime download, and the store lock is taken
+after it, so an open question never holds `.lock`; false throws `declined`). A
+copy that is already current is reported with no question. A third-party repo
+(a bare `.tgz` too) gets the notice, then `Install @acme (Acme Templates)
+v2026.10.1 (12 templates, 640 KB)?` (`Update @acme v2026.10.0 → v2026.10.1
+(…)?`, `Reinstall …?` for `--force` over the same tag, `Install the template
+repo at <source>?` with no `bundle.json`), default No: no prints `Nothing
+installed.`, exit 1. With no terminal (stdin or stdout not a TTY, or `CI` set)
+and no `--yes`: `✗ Not installed: m0saic asks before it installs a template
+repo, and there is no terminal to ask on.` + `Approve it explicitly: m0saic
+install <source> --yes`, exit 1, the runtime never downloaded (the `setup`
+rule). `--yes` never asks. The notice prints once per install, never at load.
+
+**One way in for the community templates.** `community fetch` never asks.
+`install` given the community repo's GitHub releases in any form
+(`owner/repo[@tag]`, the repo or a release page, a release file's URL; product
+`isCommunityBundleSource`) prints `The community templates install with m0saic
+community fetch; running that.` and runs it: the same pins (signed only, repo id
+`@m0saic-community` only), recorded as `community`, a tag kept
+(`fetchCommunityTemplates({ source })`). A `@m0saic-community` bundle from
+anywhere else (one packed on disk, tested before it is published) installs
+through `install` with no notice and no question, printing
+`@m0saic-community is m0saic's official community repo: it installs only if
+m0saic's signature verifies.`: safe on an unverified claim, since a bundle naming
+that repo id installs only if it verifies and an index that disagrees with the
+manifest inside is refused. A community not-found says `No community templates
+release there.` (a third-party one points at m0saic.io/developers/bundles).
+
+**Three tiers (2026-10-13).** First-party: the built-in templates and the community
+repo (signed; the only holder of the reserved namespaces). Second-party: a repo
+signed by m0saic in its own namespace (one m0saic built for a customer, signed with
+`scripts/sign-template-repo.mjs` like the starters; the starters land here too).
+Third-party: unsigned. `install` acts on `bundle.json`'s `signed` before the
+download: a second-party bundle prints `<repo id> (<name>) is signed by m0saic: it
+installs only if that signature verifies.`, with no third-party notice, no question
+and no `--yes` needed. The product refuses any bundle whose `bundle.json` says signed
+and whose signature does not verify (`not-signed`: `bundle.json says it is signed by
+m0saic, but the signature does not verify (<reason>)`), before the CLI's load check
+runs any code; it is never installed unsigned. A signature is not a namespace grant:
+a signed repo other than the community repo using reserved ids is still
+`reserved-namespace`.
+
+**Private repos (an access key, 2026-10-13).** A private GitHub repo that publishes
+bundles installs like any other, plus an access key: today a fine-grained GitHub
+token its owner hands out (that repo, Contents read-only). The key comes from
+`--key-env <NAME>` (the variable must be set; a source that is not a GitHub release
+exits 1), then `M0SAIC_REPO_KEY`, then the key saved for that owner/repo in
+`~/m0saic/template-repo-keys.json` (mode 0600, by lowercase owner/repo). There is no
+`--key <value>` flag (shell history, process lists). In a terminal, a GitHub source
+that answers not-found with no key, or refuses the key (`auth-failed`, `no-access`),
+prints why and asks `Access key for owner/repo (Enter to stop)` (masked), retries,
+and saves a key that worked (`Saved the access key for owner/repo (<file>); updates
+use it.`); keys from the environment are never saved. With no terminal, a GitHub
+not-found adds `A private repo needs its access key: run this in a terminal to enter
+it, or set M0SAIC_REPO_KEY.` Transport: `GET api.github.com/repos/<o>/<r>/releases/
+latest` (or `/tags/<tag>`) lists the assets, `bundle.json` is the index, and each
+file is `GET …/releases/assets/<id>` with `Accept: application/octet-stream` and
+`redirect: manual`; GitHub's redirect is followed without the key, which is only ever
+sent to `https://api.github.com` (`downloadToFile` refuses any other host). Every
+GitHub release form carries `githubRelease` (owner/repo[@tag], the repo and release
+pages, release file URLs; product `resolveKeyedGitHubSource`). Errors: `auth-failed`
+(401), `no-access` (404/403 with a key; a used-up rate limit is `http-error`).
+Records gain `github` ("owner/repo", lowercase, on any GitHub install) and
+`access: "key"`, never the key; `m0saic install` lists keyed repos `private`;
+`uninstall` deletes the saved key (`✓ removed … and its saved access key`). Access
+ending changes nothing installed (it keeps working offline); updates stop.
+
+**Loading.** `make`, `hello-world`, `list-templates` and `mcp` load the installed
+repos with no flag, once per process (the MCP server sees a new install after a
+restart), after any `--template-repo` folders — a folder with the same repo id
+wins (the developer's clone over its installed release) — and quietly (no notice,
+no "Loaded" line). An installed repo that fails to load is skipped with one
+warning instead of stopping the command. Installed repos never become
+`hello-world`'s front door. A not-registered `@m0saic-dev/…` /
+`@m0saic-community/…` id adds the hint `m0saic community fetch` when the
+community templates are not installed.
+
+**The grant.** The reserved namespaces go only to the installed
+`@m0saic-community` whose `release.json` passes `verifyCommunityRelease()`
+(`@m0saic/product` `communityRelease.ts`) against `LICENSE_PUBLIC_KEYS`
+(`publicKeys.ts` — the licence k1 family; rotation = append `k2`, ship, sign with
+`M0SAIC_SIGNING_KID=k2`; older CLIs report `unknown-kid`). It is checked at install
+and again on EVERY load (`gateCommunityRepo`, before the entry module is
+imported): pass → silent; fail → the copy is skipped, never imported (not even as
+an ordinary repo), with one stderr line: `⚠  [template-repo] the installed
+community templates (<tag>) no longer verify (<why>); skipped. Reinstall: m0saic
+community fetch --force`. A `--template-repo` folder whose repo id is
+`@m0saic-community` loads under ordinary rules in a shipped build: its reserved
+ids are refused in ONE collapsed line, `⚠  [template-repo]
+TEMPLATE_ID_RESERVED_NAMESPACE: refused <N> ids in reserved namespaces
+(@m0saic-community/…, @m0saic-dev/…): <id1>, <id2>, <id3>, …` (other rejection
+codes stay one line each) → `❌ Refusing to use template repo` with the hint
+`install its signed release instead: m0saic community fetch` → **exit 1**.
 
 **`release.json` v1:** `{ schemaVersion: 1, tag, publishedAt, treeSha256,
 signature: { kid, alg: "ed25519", sig: <base64url> } }` (`--unsigned` omits
 `signature`; the legacy `{ tag, publishedAt }` reads as `missing-signature`).
-Tree = every file under `dist/**` + `template-manifest.json` + `package.json`,
+Tree = every file under `dist/**` + `template-manifest.json` + `package.json` +
+`template-catalog.json` (each root file only when present),
 sorted POSIX paths, one `"<path>\0<sha256>\n"` line each; `*.json` hashed on
 `JSON.stringify(JSON.parse(text))` (BOM stripped; CRLF / re-indent survive, a
 key reorder does not), other files raw bytes; no symlink is ever followed.
@@ -287,7 +401,8 @@ repo root from the HOST's own `node_modules` walk — the CLI's vendored copies,
 the desktop's bundle, the workspace under dev — never from the checkout. So a
 clone with nothing installed loads anywhere (0.2.0 is the first CLI that
 can), and a `node_modules/@m0saic/template-utils` planted beside a tree is
-never evaluated, via `--community-repo` or `--template-repo` alike. Every
+never evaluated through a `--template-repo` folder (an installed copy with a
+`node_modules` beside its tree is refused by the gate before any import). Every
 other specifier (`sharp`, `@twemoji/svg`, relative paths) resolves as before,
 from the checkout. CommonJS only — an `.mjs` entry's static `import`s use the
 ESM resolver, which has no hook.
@@ -297,12 +412,33 @@ with `M0SAIC_SIGNING_KEY_FILE` (REQUIRED — no default path; production laptop
 only) under `M0SAIC_SIGNING_KID` (default `k1`), self-verifies against the
 embedded keys, writes `.gitattributes` (`* -text`). Unset or missing key =
 refused, never a silent unsigned release; `--unsigned` = loud banner, a snapshot
-no shipped CLI trusts.
+no shipped CLI trusts. After the tag: `node tools/pack-bundle.mjs --tag <tag>` in
+the snapshot, then `gh release create <tag> -R m0saic-project/m0saic-community-templates
+bundle/bundle.json bundle/runtime.tgz bundle/previews.tgz` — what `community fetch`
+installs (the mint's next steps print both lines).
+
+**Samples (2026-10-20).** A pack may ship sample pictures and clips for people
+with no assets yet: `template-manifest.json` names the folder in
+`repo.assets.samplesDir` (say `"samples"`), and `pack-bundle.mjs` packs every
+file under it as a third archive, `samples.tgz` (`bundle.json.samples {file,
+sha256, size, files, unpackedSize, dir} | null`; `--no-samples` skips it; the
+folder must sit inside the repo, hold no links, and stay under 128 MB unpacked —
+`samples-outside-repo`, `samples-missing`, `samples-too-large`). A manifest that
+names no folder ships none. Mosaic Desktop installs it beside the previews (best
+effort, `installed.json.samples = installed | none | failed`) and shows the
+folder as the Files dock's first place, "Samples" (a plain `samples/` folder in
+a clone or the dev stand-in counts too); the CLI never fetches it. Add
+`bundle/samples.tgz` to the `gh release create` line when the packer prints it.
 
 **DEV seam (workspace builds only, inside `if (DEV_MODE)`):** reasons
-`missing-release` / `missing-signature` are still granted — `✓ community repo:
-<path> (dev build: unsigned community checkout trusted)` (the in-repo
-https://github.com/m0saic-project/m0saic-community-templates/blob/main has no `release.json`) — and
+`missing-release` / `missing-signature` are still granted — for an installed copy
+(and `m0saic install` takes an unsigned community bundle), and for a
+`--template-repo` folder whose repo id is `@m0saic-community`: `✓ community
+templates from <path> (dev build: --template-repo trusted when it verifies or is
+unsigned)` (the in-repo https://github.com/m0saic-project/m0saic-community-templates/blob/main has no `release.json`;
+`scripts/bake-front-door-preview.mjs` and the community render e2e load it this
+way, against the real `~/m0saic` toolchain and license; a FIFO/socket/device tree
+is refused there) — and
 `M0SAIC_COMMUNITY_TRUST_KEY_PEM` (+ `M0SAIC_COMMUNITY_TRUST_KEY_KID`, default `k1`)
 adds a public key for tests. Tampered tree, forged release or unknown kid are
 refused even in dev. The tarball folds `process.env.M0SAIC_DEV` to `"0"` and the
@@ -310,14 +446,15 @@ audit bans the token, so none of this ships.
 
 **Lookalikes are a display concern** — one stderr line for UNSIGNED repos, never a
 refusal: `⚠  [template-repo] <subject> is not an official m0saic namespace — only
-@m0saic/ and @m0saic-dev/ are, and they are signed.` Subject: loaded publisher
-namespaces starting with `@m0saic` that are not exactly the two reserved ones →
+@m0saic/, @m0saic-dev/, @m0saic-community/ are, and they are signed.` Printed for a
+`--template-repo` folder on every load, for an installed repo once (at install).
+Subject: loaded publisher namespaces starting with `@m0saic` that are not exactly
+the reserved ones →
 else a repoId matching `/m0saic|mosaic/i` → else `"<displayName>" (<repoId>)`.
 Never for repoId exactly `@m0saic-community`: via `--template-repo` that gets
 `⚠  [template-repo] repo id "@m0saic-community" is reserved for the official
-community repo and this checkout is unverified — loading it under ordinary
-rules.` A `--community-repo` checkout that fails the gate gets ONLY the
-not-verified notice.
+community repo; this folder loads under ordinary rules (the signed release
+installs with: m0saic community fetch).`
 
 **Desktop:** `installVersion()` runs `validateCommunityTree` → `verifyCommunityTree`
 (inline-requires `@m0saic/product`) → refuses `tag-mismatch`; failure =
@@ -327,20 +464,23 @@ not-verified notice.
 seed/installed load path (`loadCommunityRepo`) does not re-verify; consent gate
 unchanged.
 
-Help wording for `make` / `hello-world` / `list-templates` is ONE string,
-test-locked (`__tests__/cli.flags.test.js`): "…Grants the @m0saic-dev/ namespace
-when its release signature verifies (unsigned or modified checkouts load as
-ordinary repos); the community checkout loads only this way".
+Help (test-locked, `__tests__/cli.surface.test.js`): the root epilog lists
+`m0saic community fetch`, `m0saic install <source>` and `--template-repo`;
+`make` / `hello-world` / `list-templates` carry `--template-repo` and point at
+`m0saic community fetch`; `--community-repo` is an unknown option
+(`cli.flags.test.js`). The gate and every on-disk tampering case are locked by
+`__tests__/community-install.signing.e2e.test.js`, the install flow by
+`__tests__/template-install.e2e.test.js`.
 
 ### Hardening (rounds 2 + 3, 2026-09-16)
 
-**Host-first `@m0saic/*` resolution.** https://github.com/m0saic-project/m0saic-packages/blob/main/packages/platform/src/template-repos/hostFirstResolution.ts (wired in `loadTemplateRepoFromPath.ts` via `registerHostFirstRepoRoot(repoRoot)` before the native `import(file://…)` of the entry): ONE wrapper around Node's real `Module._resolveFilename` (found by walking the prototype chain — under Jest `node:module` exports a subclass copy), installed once per process, persistent so render-time lazy requires are covered. A request matching `/^@m0saic\/[^/\\]+(?:\/.*)?$/` whose requesting module lies under a registered root (realpath'd) is resolved from the HOST's own `node_modules` walk — never the checkout's. Everything else (relative paths, non-`@m0saic` deps, host code) is untouched. CJS only. Consequences: a community clone loads from ANY directory with no `node_modules` (before this, `--community-repo` only worked inside the monorepo); a planted `node_modules/@m0saic/*` beside a verified tree is never evaluated, via either flag; a starter's `file:` link to `@m0saic/template-utils` resolves to the same physical package — no drift.
+**Host-first `@m0saic/*` resolution.** https://github.com/m0saic-project/m0saic-packages/blob/main/packages/platform/src/template-repos/hostFirstResolution.ts (wired in `loadTemplateRepoFromPath.ts` via `registerHostFirstRepoRoot(repoRoot)` before the native `import(file://…)` of the entry): ONE wrapper around Node's real `Module._resolveFilename` (found by walking the prototype chain — under Jest `node:module` exports a subclass copy), installed once per process, persistent so render-time lazy requires are covered. A request matching `/^@m0saic\/[^/\\]+(?:\/.*)?$/` whose requesting module lies under a registered root (realpath'd) is resolved from the HOST's own `node_modules` walk — never the checkout's. Everything else (relative paths, non-`@m0saic` deps, host code) is untouched. CJS only. Consequences: a template repo loads from ANY directory with no `node_modules` (an installed bundle never has one); a planted `node_modules/@m0saic/*` beside a tree is never evaluated through a `--template-repo` folder (and an installed copy carrying one is refused by the gate before import); a starter's `file:` link to `@m0saic/template-utils` resolves to the same physical package — no drift.
 
-**Fail-closed tree verification** (`inspectReleaseTree` in `communityRelease.ts`; desktop mirror `inspectCommunityTree` in the Mosaic Desktop / Web app source (not published), run by `installVersion`). A release tree is plain files and directories, nothing else. Refused, in this order after the signature check and before the hash compare: `symlink-in-tree` (ANY symlink — file or dir — under `dist/**`, `dist` itself, a signed root file, or ANY entry at the checkout root); `special-file-in-tree` (FIFO / socket / device anywhere in the same places — a FIFO named `dist/publishers.js` shadows the signed `dist/publishers/` dir and blocks or executes whoever opens it); `foreign-modules` (a `node_modules` dir at the root or under `dist/`, matched case-insensitively). `verifyCommunityRelease` lstats `release.json` before opening it (a FIFO planted there used to hang the verifier). The hasher THROWS `ReleaseTreeError` on a special entry rather than skipping it; `signCommunityRelease` refuses to sign such a tree. The signed payload is `"m0saic-community-release/v1\n<tag>\n<publishedAt>\n<treeSha256>\n"`. The CLI notice carries the detail for these reasons — `(foreign-modules: node_modules)`; for `special-file-in-tree` the CLI does NOT load the folder at all (an ordinary load provably hangs): notice + `❌ Refusing to use template repo` + exit 1.
+**Fail-closed tree verification** (`inspectReleaseTree` in `communityRelease.ts`; desktop mirror `inspectCommunityTree` in the Mosaic Desktop / Web app source (not published), run by `installVersion`). A release tree is plain files and directories, nothing else. Refused, in this order after the signature check and before the hash compare: `symlink-in-tree` (ANY symlink — file or dir — under `dist/**`, `dist` itself, a signed root file, or ANY entry at the checkout root); `special-file-in-tree` (FIFO / socket / device anywhere in the same places — a FIFO named `dist/publishers.js` shadows the signed `dist/publishers/` dir and blocks or executes whoever opens it); `foreign-modules` (a `node_modules` dir at the root or under `dist/`, matched case-insensitively). `verifyCommunityRelease` lstats `release.json` before opening it (a FIFO planted there used to hang the verifier). The hasher THROWS `ReleaseTreeError` on a special entry rather than skipping it; `signCommunityRelease` refuses to sign such a tree. The signed payload is `"m0saic-community-release/v1\n<tag>\n<publishedAt>\n<treeSha256>\n"`. The CLI's skip line carries the detail for these reasons — `(foreign-modules: node_modules)`; an installed copy that fails is never imported, so a `special-file-in-tree` (an ordinary load provably hangs) cannot block the process; a dev `--template-repo` community folder with one is refused (`❌ Refusing to use template repo` + exit 1).
 
 **Community deps.** The `@m0saic-dev/community-m` pack (the only `sharp` / `@twemoji/svg` user) was deleted as defunct on 2026-09-16; both left the community `package.json` and BOTH allowlists (`dep-allowlist.json` ↔ `TEMPLATE_REPO_DEP_ALLOWLIST`, lockstep-tested). Community templates may import only what the hosts ship: `@m0saic/{types,template-utils,dsl-stdlib,platform,dsl}` + `node:path`. A native or third-party runtime dep is a founder decision. `sharp` survives only as a root devDependency for core/templates tests.
 
-**Accepted residual.** A third-party `--template-repo` checkout with its own `node_modules` runs its own copies of non-`@m0saic` deps — third-party code, with the notice printed; it cannot obtain a reserved identity that way (adversary-verified). DEV builds (`M0SAIC_DEV=1`, compile-stripped from the tarball) still trust an unsigned checkout for `missing-release` / `missing-signature` only; a tampered or forged tree is refused even in dev.
+**Accepted residual.** A third-party `--template-repo` checkout with its own `node_modules` runs its own copies of non-`@m0saic` deps — third-party code, with the notice printed; it cannot obtain a reserved identity that way (adversary-verified). DEV builds (`M0SAIC_DEV=1`, compile-stripped from the tarball) still trust an unsigned community copy (installed, or a `--template-repo` folder) for `missing-release` / `missing-signature` only; a tampered or forged tree is refused even in dev.
 
 ## Wireframe commands
 

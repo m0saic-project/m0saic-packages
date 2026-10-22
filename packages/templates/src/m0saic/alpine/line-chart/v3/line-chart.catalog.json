@@ -1,6 +1,11 @@
 {
   "schemaVersion": 1,
   "templateId": "@m0saic/alpine/line-chart/v3",
+  "deprecated": {
+    "reason": "Superseded by v4: the same alpine line chart with every gridline, point and tick a real cell on one exact scale (v3 drew them as masks over the whole plot).",
+    "replacement": "@m0saic/alpine/line-chart/v4",
+    "since": "2026-10-12"
+  },
   "label": "Alpine Line Chart",
   "description": "Alpine line/area chart — friendly mobile-marketing card: soft area fill, rounded line, point markers, value rail, left→right draw-on. Standalone Alpine brand flavor. v2 rebuilds the geometry as a ratio layout (plot marks are masks filling a ratio plot cell in plot-local coords) so it composes at any canvas without the absolute-placement precision blowup.",
   "tags": [

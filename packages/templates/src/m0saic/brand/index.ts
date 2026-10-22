@@ -7,3 +7,4 @@ export { QrStampStill } from "./qr-stamp/still/v1";
 export { CommunityMV1 } from "./community-m/v1";
 export { BusinessCard } from "./business-card/v1";
 export { BusinessCardV2 } from "./business-card/v2";
+export { BusinessCardV3 } from "./business-card/v3";

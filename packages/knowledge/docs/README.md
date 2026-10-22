@@ -45,6 +45,7 @@ disposes).
 | Overlays, passthroughs, identity | `skills/overlay-semantics.md`, `skills/passthrough-semantics.md`, `skills/identity.md` |
 | Build a template | `templates/philosophy-and-contract.md` → `templates/construction-strategy.md` → `templates/geometry-recipes.md` |
 | Template perf | `templates/patterns/perf-authoring-rules.md` |
+| A template that goes to paper (cards, banners, posters) | `templates/patterns/print-authoring.md` |
 | Data-driven templates | `templates/data-pipeline.md` |
 | Read/write `.m0` / `.m0c` / `.m0p` / `.m0v` | `file-formats/m0p-and-custom-field.md` |
 | Render via the CLI | `runtime/cli-usage.md` |

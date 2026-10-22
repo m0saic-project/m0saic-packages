@@ -1,6 +1,6 @@
 {
   "name": "@m0saic/template-utils",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -13,6 +13,9 @@
     "url": "https://github.com/m0saic-project/m0saic-packages/issues"
   },
   "main": "dist/index.js",
+  "browser": {
+    "./dist/media/defaultMedia.js": "./dist/media/defaultMedia.browser.js"
+  },
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "files": [
@@ -31,8 +34,8 @@
     "@m0saic/dsl-file-formats": "^2.0.0",
     "@m0saic/dsl-stdlib": "^3.0.0",
     "@m0saic/momo-types": "^1.0.0",
-    "@m0saic/platform": "^0.3.1",
-    "@m0saic/text": "^0.3.1",
-    "@m0saic/types": "^0.3.1"
+    "@m0saic/platform": "^0.4.0",
+    "@m0saic/text": "^0.4.0",
+    "@m0saic/types": "^0.4.0"
   }
 }

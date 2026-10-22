@@ -71,6 +71,7 @@ import "./m0saic/brand/logo/v3";
 import "./m0saic/brand/logo/v4";
 import "./m0saic/brand/business-card/v1";
 import "./m0saic/brand/business-card/v2";
+import "./m0saic/brand/business-card/v3";
 
 // ── media/qr — clean slugs (family barrel is tainted by stamp-video) ─────
 import "./m0saic/media/barcode/v1";

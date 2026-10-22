@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.4.0 — 2026-10-22
+
+### Starter media: a browser twin of `dist/media/defaultMedia` (inline SVG data-URIs), swapped in by `package.json` `browser`
+
+`src/media/defaultMedia.browser.ts` is the browser twin of the node-only starter-media helper: the same
+exports (`STARTER_MEDIA_ROLES`, `starterMedia`, `starterMediaFrom`, `starterMediaPath`, the dir helpers,
+`CORE_MEDIA`) returning the six included stand-ins as `{ kind: "data-uri", uri: "data:image/svg+xml,…" }`
+assets instead of `{ kind: "file" }` paths. The SVG text is inlined by `tools/inline-starter-svg.mjs` into
+`src/media/starterSvgInline.ts` (generated from `assets/starter/*.svg`; `defaultMedia.browser.test.ts` fails
+on drift). `package.json` gains `"browser": { "./dist/media/defaultMedia.js": "./dist/media/defaultMedia.browser.js" }`,
+so a browser bundle (webpack honours the field; Node and jest ignore it) that resolves the node helper gets
+the twin. Neither module joins the barrel: the node one stays deep-import-only as before, and the twin is
+reached only through the swap.
+
+**Compatibility.**
+
+Additive. Node callers of `dist/media/defaultMedia` see no change. A bundler that does not read the
+`browser` field resolves the node module exactly as today. The data-URI form is URL-encoded with no `;utf8`
+parameter — what the engine's plain-SVG parser accepts — and uses no `Buffer`.
+
 ## 0.3.1 — 2026-10-05
 
 ### Registry applies the template catalog; `catalogSidecar` convention (0.3.1)

@@ -2,7 +2,7 @@
 //
 //   t=<templateId>[&p=z<payload>][&w=<int>&h=<int>]
 //   [&fps=<int>][&d=<durationMs>][&f=video|image][&a=0|1]
-//   [&note=<≤200>][&from=<http(s) url ≤500>]
+//   [&note=<≤200>][&from=<http(s) url ≤500>][&bundle=1]
 //
 //   t    template id (`@publisher/pack/slug/vN`), exact registry key. The
 //        id IS the version: a template is immutable under its id, and a
@@ -22,6 +22,10 @@
 //   note from   the "where to get this template" handshake for third-party
 //        templates. UNTRUSTED: a host renders the note as plain text and the
 //        link by hostname, and only when it classifies the id as third-party.
+//   bundle  (2026-10-13) the sender says `from` publishes m0saic release
+//        bundles, so `m0saic install` can install it: a host may then offer
+//        that command, built from `from` alone. Only with `from`; only "1".
+//        UNTRUSTED like `from` — a claim, attributed to the link's author.
 //
 // Param ORDER is fixed: a re-share of a received link must be byte-identical.
 // Hosts add their own origin and route in front (the web app:
@@ -60,6 +64,8 @@ export type TemplateShareParams = {
   asks?: TemplateShareAsks;
   note?: string;
   from?: string;
+  /** The sender says `from` publishes m0saic release bundles (`&bundle=1`; only with `from`). */
+  bundle?: boolean;
 };
 
 export type TemplateShareParseResult =
@@ -219,6 +225,7 @@ export async function parseTemplateShareQuery(
 
   const note = sanitizeShareNote(search.get("note"));
   const from = sanitizeShareFrom(search.get("from"));
+  const bundle = from !== undefined && search.get("bundle") === "1";
 
   return {
     ok: true,
@@ -229,6 +236,7 @@ export async function parseTemplateShareQuery(
       ...(Object.keys(asks).length > 0 ? { asks } : {}),
       ...(note !== undefined ? { note } : {}),
       ...(from !== undefined ? { from } : {}),
+      ...(bundle ? { bundle: true } : {}),
     },
   };
 }
@@ -259,5 +267,6 @@ export async function buildTemplateShareQuery(
   if (note) qs.set("note", note);
   const from = sanitizeShareFrom(params.from);
   if (from) qs.set("from", from);
+  if (from && params.bundle === true) qs.set("bundle", "1");
   return qs;
 }

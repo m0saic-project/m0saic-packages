@@ -53,7 +53,8 @@ duplicated here.
 [`prop type: json`](reference/json-prop-type.md) ·
 [`template flags`](reference/template-flags.md) ·
 [`grid builder`](reference/grid.md) · [`MosaicColor`](reference/mosaic-color.md) ·
-[`prop bindings`](reference/prop-bindings.md)
+[`prop bindings`](reference/prop-bindings.md) ·
+[`brand schema`](reference/brand-schema.md)
 
 ## patterns/ — distilled experience
 
@@ -63,3 +64,6 @@ duplicated here.
   early template generation.
 - [`primitive-extraction-pattern.md`](patterns/primitive-extraction-pattern.md)
   — when/how to extract primitives (incl. Rule 7: verify NESTED).
+- [`print-authoring.md`](patterns/print-authoring.md) — P1–P6 for a deliverable
+  that goes to paper: paper's black floor, the gap a pattern needs, recheck the
+  small inks, lock it in a test, proof on the stock.

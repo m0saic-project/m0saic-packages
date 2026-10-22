@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "templateId": "@m0saic/brand/business-card/v1",
   "deprecated": {
-    "reason": "Superseded by v2 — the same card, with every empty contact line addable from the name on the Make canvas.",
-    "replacement": "@m0saic/brand/business-card/v2",
+    "reason": "Superseded by v2 — the same card, with every empty contact line addable from the name on the Make canvas — and v2 by v3 (a light theme, and the solutions QR back).",
+    "replacement": "@m0saic/brand/business-card/v3",
     "since": "2026-09-29"
   }
 }

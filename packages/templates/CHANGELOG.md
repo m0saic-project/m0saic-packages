@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.4.0 — 2026-10-22
+
+### Alpine bar graph v3 and line chart v4: every mark a real cell on one exact scale
+
+`@m0saic/alpine/bar-graph/v3` takes over the `alpine/bar-graph` slug and `@m0saic/alpine/line-chart/v4` the
+`alpine/line-chart` slug. Same props, same handles, same chrome; the construction changed: every bar, gridline,
+point and tick is a real cell on one pixel scale, so the chart's geometry draws the chart. v2's bars ran short of
+their own gridlines (the value-label headroom came out of the bar scale only); v3's bars end on their value's line.
+The line chart's v3 drew its gridlines, points and ticks as masks over the whole plot; v4 places each as a cell
+centred on its value's row, inside a plot child that stays 5-smooth on every canvas. bar-graph v2 and line-chart v3
+are deprecated in their sidecars; v1 and v2 point at the new heads.
+
+**Compatibility.**
+
+- Breaking: no. Every earlier version stays registered and renders as before. The new versions keep their
+  predecessors' props schema (types, constraints, controls, defaults) and handles; the look moved by design
+  (`parity: false` in their vnext suites; the "one scale" suites say how).
+
+**Release notes.**
+
+Alpine bar graph v3 and line chart v4: bars end on their gridlines; gridlines, points and ticks are real cells on
+one exact scale.
+
+### Business card v3: a light theme, and a choice of back (the solutions QR, hello-world, a template)
+
+`@m0saic/brand/business-card/v3` takes over the `business-card` slug. It is v2's card with two enums. `theme`
+is `light` (the m0saic.io solutions look: ivory page, warm tiles, ink letters) or `dark` (v2's navy, with tiles
+lifted so the pattern survives print). `back`
+is `solutions` (a big QR to `m0saic.io/solutions`, a title, the link as typed, an optional line, or a picture
+beside a smaller code), `hello-world` (v2's default back) or `template` (v2's back for any other shipped template,
+picked with `backTemplate`). Defaults are light + solutions. v2 is deprecated in its catalog sidecar; v1's
+sidecar now points at v3.
+
+**Compatibility.**
+
+- Breaking: no. v1 and v2 stay registered and render exactly as before. `{ theme: "dark", back: "hello-world" }`
+  and `{ theme: "dark", back: "template", backTemplate: <key> }` on v3 paint v2's card for the same props, with
+  only the field tile and the secondary grey changed (a parity test swaps those two inks back and compares).
+  `fieldOpacity` on dark now mixes toward #8187D4 (the navy's hue), not navy-soft.
+- A v2 `back: "<key>"` maps to v3 `back: "template", backTemplate: "<key>"` (`back: "hello-world"` stays as is).
+
+**Release notes.**
+
+Light or dark business card, with the industry solutions QR on the back by default. The dark card's pattern now
+shows on paper.
+
 ## 0.3.1 — 2026-10-05
 
 ### The pack's catalog sidecars + per-folder shipped lines in the freeze

@@ -67,6 +67,13 @@
  *     seeded sibling, and a companion is kept out of the text form (a
  *     blur-commit there would write its seed on an unrelated edit) and the
  *     badge row. Validated by `bindingCompanion`: needs a kept `seedDraft`.
+ *   - `value` makes the rect ONE ANSWER: a click writes it, no editor opens
+ *     (a cover's "3 takes" tile). Validated by `bindingValue`: one of a
+ *     `choice` leaf's set, a finite number on a `number` leaf, or `true` /
+ *     `false` on a `boolean` prop; any other value, or a value on another
+ *     kind, is dropped. A `boolean` prop is bindable ONLY as an answer (kind
+ *     `"boolean"`, a basic prop, with a boolean `value`) — there is no
+ *     boolean editor on the canvas.
  */
 
 import type { MosaicTemplatePropDefinition } from "@m0saic/types";
@@ -83,8 +90,10 @@ import type { MosaicTemplatePropDefinition } from "@m0saic/types";
  *  back as `{ canvas, regions: [rect] }`. `media` is a leaf holding a file
  *  PATH (a `media` prop, one `media[]` element, or a structured leaf) —
  *  Make makes the cell a drop target and a picker handle; the value written
- *  is the dropped / picked path. */
-export type BindableKind = "string" | "number" | "color" | "choice" | "rect" | "media";
+ *  is the dropped / picked path. `boolean` exists ONLY as an answer (a
+ *  binding with a boolean `value` on a basic boolean prop): a click writes
+ *  it, nothing edits it. */
+export type BindableKind = "string" | "number" | "color" | "choice" | "rect" | "media" | "boolean";
 
 function isKind(k: unknown): k is BindableKind {
   return k === "string" || k === "number" || k === "color" || k === "choice" || k === "rect" || k === "media";
@@ -155,6 +164,10 @@ export type PropBindingRef = {
   /** A seeded leaf ONLY the tile's media drop fills — never in the text
    *  form, never a badge. Needs `seedDraft`. */
   companion?: boolean;
+  /** ONE ANSWER: a click on the rect writes this value (no editor). A
+   *  `choice` value from the set, a finite number, or a boolean on a
+   *  boolean prop. */
+  value?: string | number | boolean;
   /** Character span of the STRING leaf this rect edits (one line of a
    *  multi-line prop). The editor shows / writes only this slice. */
   range?: TextSpan;
@@ -242,7 +255,7 @@ export function bindingSeedDraft(
   ref: { seedDraft?: unknown },
   kind: BindableKind | null,
 ): string | undefined {
-  if (kind === null || kind === "rect" || kind === "media" || kind === "choice") return undefined;
+  if (kind === null || kind === "rect" || kind === "media" || kind === "choice" || kind === "boolean") return undefined;
   const s = ref.seedDraft;
   if (typeof s !== "string" || s.trim() === "") return undefined;
   if (kind === "number" && !Number.isFinite(Number(s.trim()))) return undefined;
@@ -256,6 +269,29 @@ export function bindingSeedDraft(
  */
 export function bindingCompanion(ref: { companion?: unknown }, seedDraft: string | undefined): boolean {
   return ref.companion === true && seedDraft !== undefined;
+}
+
+/**
+ * The validated ANSWER of a binding — the value a click writes — or
+ * `undefined` when it has none (or one its leaf can't take): a `choice` leaf
+ * takes one of its set's values (a typo would write a value the template
+ * rejects), a `number` leaf a finite number (never a numeric string), a
+ * `boolean` prop `true` / `false`. Every other kind is edited, never
+ * answered.
+ */
+export function bindingValue(
+  ref: { value?: unknown },
+  kind: BindableKind | null,
+  def: MosaicTemplatePropDefinition | undefined,
+): string | number | boolean | undefined {
+  const v = ref.value;
+  if (v === undefined) return undefined;
+  if (kind === "choice") {
+    return typeof v === "string" && (choiceOptionsOf(def) ?? []).some((o) => o.value === v) ? v : undefined;
+  }
+  if (kind === "number") return typeof v === "number" && Number.isFinite(v) ? v : undefined;
+  if (kind === "boolean") return typeof v === "boolean" ? v : undefined;
+  return undefined;
 }
 
 /** The binding entries a source carries: `bindings` (multi-layer) wins over
@@ -378,15 +414,19 @@ function stringKind(def: MosaicTemplatePropDefinition): BindableKind | null {
  */
 export function classifyBindableProp(
   def: MosaicTemplatePropDefinition | undefined,
-  ref?: number | { index?: number; path?: ReadonlyArray<PropPathSegment>; kind?: BindableKind },
+  ref?: number | { index?: number; path?: ReadonlyArray<PropPathSegment>; kind?: BindableKind; value?: unknown },
 ): BindableKind | null {
   if (!def) return null;
   if (def.meta?.ui?.hidden) return null;
-  const r = typeof ref === "number" ? { index: ref } : ref ?? {};
+  const r: { index?: number; path?: ReadonlyArray<PropPathSegment>; kind?: BindableKind; value?: unknown } =
+    typeof ref === "number" ? { index: ref } : ref ?? {};
   const full = bindingPath(r);
   switch (def.type) {
     case "string":
       return stringKind(def);
+    case "boolean":
+      // Only as an answer: a click writes true / false; nothing edits a boolean on the canvas.
+      return typeof r.value === "boolean" ? "boolean" : null;
     case "number":
       return "number";
     case "media":
@@ -425,7 +465,7 @@ export function isListPropType(def: MosaicTemplatePropDefinition | undefined): b
  * unsupported type, list without index, hidden, closed picker). `onClear`
  * is the binding's validated clear action (against the EFFECTIVE leaf — a
  * basic scalar's stray index counts for nothing), absent when it has none;
- * `seedDraft` likewise (validated against the kind).
+ * `seedDraft` and `value` likewise (validated against the kind).
  */
 export function resolveBindableProp(
   schema: PropSchemaMap | undefined,
@@ -437,6 +477,7 @@ export function resolveBindableProp(
   onClear?: BindingClearAction;
   seedDraft?: string;
   companion?: true;
+  value?: string | number | boolean;
   range?: TextSpan;
   focus?: TextSpan;
 } {
@@ -448,6 +489,7 @@ export function resolveBindableProp(
   const onClear = bindingOnClear(binding, kind, leafPath) ?? defaultOnClear(def, kind, leafPath);
   const seedDraft = bindingSeedDraft(binding, kind);
   const companion = bindingCompanion(binding, seedDraft);
+  const value = bindingValue(binding, kind, def);
   return {
     def,
     kind,
@@ -455,6 +497,7 @@ export function resolveBindableProp(
     ...(onClear ? { onClear } : {}),
     ...(seedDraft !== undefined ? { seedDraft } : {}),
     ...(companion ? { companion: true as const } : {}),
+    ...(value !== undefined ? { value } : {}),
     ...(span ?? {}),
   };
 }

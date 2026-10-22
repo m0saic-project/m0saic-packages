@@ -161,6 +161,27 @@ describe("parseTemplateShareQuery", () => {
     }
   });
 
+  it("bundle=1 rides only with from: written by the builder, read back by the parser, dropped otherwise", async () => {
+    const base = { templateId: "@acme/promo/sale-card/v1", props: {} };
+    const withFrom = await buildTemplateShareQuery({ ...base, from: "https://github.com/acme/acme-templates", bundle: true });
+    expect(withFrom.get("bundle")).toBe("1");
+    expect([...withFrom.keys()].slice(-2)).toEqual(["from", "bundle"]);
+    const parsed = await parseTemplateShareQuery(withFrom);
+    expect(parsed.ok && parsed.params.bundle).toBe(true);
+
+    expect((await buildTemplateShareQuery({ ...base, bundle: true })).has("bundle")).toBe(false);
+    expect((await buildTemplateShareQuery({ ...base, from: "https://github.com/acme/acme-templates" })).has("bundle")).toBe(false);
+
+    for (const [from, flag] of [[null, "1"], ["https://github.com/acme/acme-templates", "yes"], ["javascript:alert(1)", "1"]] as const) {
+      const sp = await validSearch();
+      if (from) sp.set("from", from);
+      sp.set("bundle", flag);
+      const r = await parseTemplateShareQuery(sp);
+      expect(r.ok).toBe(true);
+      if (r.ok) expect("bundle" in r.params).toBe(false);
+    }
+  });
+
   it.each(["javascript:alert(1)", "ftp://x.y/z", "/relative", "github.com/x", "https://" + "a".repeat(600)])(
     "drops an unsafe or oversize from=%j without failing the link",
     async (bad) => {

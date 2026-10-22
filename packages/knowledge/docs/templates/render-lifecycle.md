@@ -60,7 +60,9 @@ than throwing.
   node-only imports.
 - **Never read `ctx.media`.** Both hosts pass `{}` (no ffprobe pass), so these
   surfaces are self-contained by contract.
-- **Size to `ctx.target`.** It carries the editor's canvas dimensions.
+- **Size to `ctx.target`**, which carries the editor's canvas dimensions — or, for a cover, return
+  your own size. Make shows a cover at the size it returns, so a portrait template may open on a
+  landscape start page that reads at desktop size (the Device fields stay the template's).
 - **Real geometry.** A cover page's bands and a tutorial's diagram are known
   rects — carve m0 cells, don't float drawtext over a full-canvas source. The
   Rect Thesis does not get a pass for onboarding content (see
@@ -92,6 +94,7 @@ than throwing.
   caller-supplied props" (so `m0saic open --props` skips the cover), and is
   flipped permanently by the first user prop edit. Deliberately **not** derived
   from `props === defaults` — edit-then-undo must not resurrect it.
+  The one exception is an ANSWER on a cover (below): it writes without dismissing.
 - A cover is a **stand-in**, like a `renderLite` card: it must stay out of the
   render-progress hero filmstrip. Note a template can have a cover *without* a
   `renderLite`, so a hero guard written against `hasRenderLite` alone misses it.
@@ -99,6 +102,28 @@ than throwing.
   `tutorial:<id>` doc key). The real document keeps feeding save, geometry-edit,
   doc-stats, and `renderRequest`, so view-only holds by construction rather than
   by discipline — the Make button always renders the real template.
+
+## The start page (2026-10-19)
+
+A cover may ASK the few things a person decides before anything else — the minimum for a solid
+start (founder: "this can become direction of renderCover"). Lyric Stack's asks how many takes and
+which layout, and which app or all three, then Start.
+
+- Its rects are **answer tiles** (`binding.value`, see
+  [`reference/prop-bindings.md`](reference/prop-bindings.md)). On a cover, an answer writes its
+  props WITHOUT dismissing the cover (`handlePropEdit(u, { keepCover: true })`); Make re-renders the
+  cover with the new props, so it shows what is picked. Read the working props (merged with your
+  defaults) to draw the picks: at first open they ARE the defaults, so Start at once is a solid start.
+- **`editor.start: true`** on a source makes it the cover's Start: a click closes the cover and opens
+  the template. Put it on every piece of the button.
+- A cover that asks (answers or a Start on it) closes ONLY on its Start, the cover chip's close, Play
+  or MAKE: a stray click between cards does nothing, so the picks are never lost. A cover with no
+  answers still closes on any click, as covers always have.
+- Make: the Mosaic Desktop / Web app source (not published) (`partitionAnswerTiles`, `stageClickAction`,
+  `startTileIds`). Answers resolve on a cover (ordinary bindings do not).
+- Agents skip the page by supplying props (a cover never shows on such an open), so a start page is
+  never in an agent's way. Exemplar: Rainier `@rainier/reels/lyric-stack/v2`
+  (`src/reels/lyric-stack/v2/cover.ts`).
 
 ## Meta flags
 

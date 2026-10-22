@@ -16,7 +16,7 @@ import os from "node:os";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { execFileSync } from "node:child_process";
-import { BUILD_HINT, PACKAGE_PREFIX, SNAPSHOT_PATH, WEB_ENTRY_PATH, checkStagedFreeze, droppedDeprecated, isCatalogSidecarPath, loadFreeze, main, movedPins, movedShipped, sidecarDroppedDeprecation, webEntryImports } from "./freeze-precommit.mjs";
+import { BUILD_HINT, PACKAGE_PREFIX, SNAPSHOT_PATH, WEB_ENTRY_PATH, checkStagedFreeze, droppedDeprecated, fingerprintOfPinnedId, isCatalogSidecarPath, loadFreeze, main, movedPins, movedShipped, sidecarDroppedDeprecation, webEntryImports } from "./freeze-precommit.mjs";
 
 const freeze = createRequire(import.meta.url)("../dist/freeze.js");
 const PKG_ROOT_FOR_DIST = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
@@ -278,6 +278,24 @@ test("layout fingerprint sidecars: HEAD is law - modify or delete fails, a new s
   assert.equal(r([M(PACKAGE_PREFIX + "src/m0saic/alpine/v2/theming.layout.m0")]).ok, true, "HEAD lacks it: free");
   assert.equal(r([M(notOne)]).ok, true, "a .m0 that is not a sidecar is not held");
   assert.equal(checkStagedFreeze({ staged: [M(sidecar)], manifest, read: () => "x", freeze, head: {} }).ok, true, "no head.has → nothing held (older caller)");
+});
+
+test("layout fingerprint sidecars: only a pinned (shipped) template's are held; an in-flight one moves freely", () => {
+  const shipped = PACKAGE_PREFIX + "src/m0saic/alpine/v1/theming.layout.m0";
+  const inFlight = PACKAGE_PREFIX + "src/m0saic/marketing/launch-compiled/v1/launch-compiled.layout.m0";
+  const fallback = PACKAGE_PREFIX + "layout-fingerprints/some-id.m0";
+  const head = { snapshot: HEAD_SNAPSHOT, webEntry: HEAD_WEB, has: () => true };
+  const r = (staged, m = manifest) => checkStagedFreeze({ staged, manifest: m, read: () => "3(1,1,1)", freeze, head });
+  assert.equal(r([M(shipped)]).ok, false, "PIN_A's folder: shipped, held");
+  assert.equal(r([M(inFlight)]).ok, true, "no pin in its folder: in flight, free");
+  assert.equal(r([{ status: "D", path: inFlight }]).ok, true);
+  assert.equal(r([M(fallback)]).ok, false, "the fallback folder cannot be matched: held");
+  assert.equal(r([M(inFlight)], { ...manifest, registry: undefined }).ok, false, "a manifest without pins holds every sidecar HEAD has");
+  // A pin in a sub-folder does not claim its parent's sidecar.
+  const nested = { ...manifest, registry: { "@m0saic/x/v1": { ...PIN_A, file: "src/m0saic/marketing/launch-compiled/v1/parts/x.ts" } } };
+  assert.equal(r([M(inFlight)], nested).ok, true);
+  assert.equal(fingerprintOfPinnedId(shipped, manifest), true);
+  assert.equal(fingerprintOfPinnedId(inFlight, manifest), false);
 });
 
 test("staged web.ts: a block-commented or template-literal-wrapped import does not count as present; two imports on one line are both seen", () => {

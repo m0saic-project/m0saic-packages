@@ -54,8 +54,9 @@ describe(`${ID} — template shell`, () => {
     expect(registered.propsSchema?.name?.meta?.ui).toMatchObject({ label: "Name", primary: true });
   });
 
-  it("supersedes v1: the v1 sidecar deprecates it in favour of v2", () => {
-    expect(getTemplate(String(BusinessCard.id))!.deprecated).toMatchObject({ replacement: ID });
+  it("supersedes v1, and v3 supersedes both: each sidecar points at the live version", () => {
+    expect(getTemplate(String(BusinessCard.id))!.deprecated).toMatchObject({ replacement: "@m0saic/brand/business-card/v3" });
+    expect(getTemplate(ID)!.deprecated).toMatchObject({ replacement: "@m0saic/brand/business-card/v3" });
   });
 
   it("meets every 0.3.1 convention as new work", async () => {

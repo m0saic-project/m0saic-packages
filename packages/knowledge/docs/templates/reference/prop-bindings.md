@@ -21,11 +21,12 @@ binding: {
   propKey: string;                 // dotted path as propsSchema nests it: "label", "titles.title"
   index?: number;                  // ONE element of string[] / number[] / media[]
   path?: Array<string | number>;   // route into a json / list / array value: [2, "title"]
-  kind?: "string" | "number" | "color" | "rect" | "media";  // required on structured leaves
+  kind?: "string" | "number" | "color" | "choice" | "rect" | "media";  // required on structured leaves
   layer?: number;                  // which text layer shows the leaf (multi-layer text)
   onClear?: "remove-element" | "unset-leaf";
   seedDraft?: string;
   companion?: boolean;
+  value?: string | number | boolean;        // ONE ANSWER: a click writes it, no editor opens
   range?: { start: number; end: number };   // one line of a multi-line string leaf
   focus?: { start: number; end: number };   // the token the rect shows, inside range
 }
@@ -66,6 +67,14 @@ Rules:
 
 Order the entries the way a double-click should read them: `fields[0]` is the
 primary action (a plain double-click); the badge row offers every kind.
+
+**Grips (2026-10-19).** Several tiles may bind one rect leaf. The FIRST (walk order) PAINTS it:
+every session on the leaf, opened from any of them (double-click, the move badge, the tile card's
+Adjust on canvas, the panel's Draw on preview), seeds from that tile (Make `paintedRectTileFor`).
+Later tiles are grips. Use one when other bound content covers the box: in Make a later tile wins
+the pointer, so a box its own words fill is unreachable. Bind the box itself (under the content: it
+paints the rect and seeds the session) AND a small grip on top, beside the box, bound to the same
+leaf. Exemplar: Rainier `@rainier/reels/lyric-stack/v2` "Move lyrics" (`area-handle.ts`).
 
 ## The roll call — `bindingsDeclared` (THROW, 2026-09-25)
 
@@ -246,6 +255,27 @@ panel stays the primary place rows are deleted — canvas clear is an accelerato
   leaf, throws at author time; `rect` and `media` leaves take no seed.
 - Focus lands on the FIRST field: order a seeded field first when the seed is
   the whole suggestion.
+
+## `value` — a rect that IS one answer (2026-10-19)
+
+```ts
+editor: { bindings: [{ propKey: "takeCount", value: "3" }, { propKey: "layout3", value: "feature" }] }
+```
+
+- A click on the rect writes the value(s). Nothing opens: no inline editor, no tile card, no badge.
+- Validated by `@m0saic/platform` `bindingValue`: a `choice` leaf takes one of its set's values, a
+  `number` leaf a finite number (never a numeric string), a basic `boolean` prop `true` / `false`.
+  Anything else is dropped, and the rect stays an ordinary binding. A typo in an answer never writes a
+  value the template would reject.
+- A rect whose bindings ALL carry a value is an **answer tile**: one click writes every one (the count
+  and the layout together). A rect with a value on only some entries is an ordinary editor tile.
+- A **boolean** prop binds ONLY as an answer (`value: true`). There is still no boolean editor on the
+  canvas, so a boolean without a value, or on a tile that is not an answer, is never bindable.
+- Draw an option in pieces (its card, its panes, its label) and give EVERY piece the same bindings: a
+  click anywhere on it answers, and Make lights the pieces as one on hover.
+- The case it exists for: a `renderCover()` START PAGE, where the template asks its first questions
+  (see [`../render-lifecycle.md`](../render-lifecycle.md), "The start page"). Never move those questions
+  into `defaultProps`: the defaults stay the template's real render.
 
 ## `kind: "media"` — a rect that takes a dropped file
 

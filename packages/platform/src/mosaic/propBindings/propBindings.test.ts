@@ -3,6 +3,7 @@ import {
   choiceOptionsOf,
   bindingCompanion,
   bindingOnClear,
+  bindingValue,
   defaultOnClear,
   bindingSeedDraft,
   bindingRange,
@@ -413,5 +414,44 @@ describe("companion — a seeded leaf only the media drop fills", () => {
     expect(resolveBindableProp({ days }, { propKey: "days", path: [6, "teaser"], kind: "number", companion: true }).companion).toBeUndefined();
     // a media leaf never keeps a seed, so never a companion
     expect(resolveBindableProp({ t: def("media[]") }, { propKey: "t", index: 0, seedDraft: "x", companion: true }).companion).toBeUndefined();
+  });
+});
+
+// 2026-10-19: a cover's first step ("How many takes do you have?") is a page of
+// answer tiles — one click writes the value, no editor opens.
+describe("bindingValue — a rect that is ONE ANSWER", () => {
+  const takes = def("string", { control: { options: [{ value: "1", label: "1 take" }, { value: "3", label: "3 takes" }] } as any });
+  it("a choice leaf keeps a value from its set and drops any other", () => {
+    expect(bindingValue({ value: "3" }, "choice", takes)).toBe("3");
+    expect(bindingValue({ value: "5" }, "choice", takes)).toBeUndefined();
+    expect(bindingValue({ value: 3 }, "choice", takes)).toBeUndefined();
+    expect(bindingValue({ value: "dark" }, "choice", SCHEMA.preset)).toBe("dark");
+  });
+  it("a number leaf keeps a finite number, never a numeric string", () => {
+    expect(bindingValue({ value: 2.5 }, "number", SCHEMA.count)).toBe(2.5);
+    expect(bindingValue({ value: "2" }, "number", SCHEMA.count)).toBeUndefined();
+    expect(bindingValue({ value: Number.NaN }, "number", SCHEMA.count)).toBeUndefined();
+  });
+  it("every other kind is edited, never answered", () => {
+    expect(bindingValue({ value: "hi" }, "string", SCHEMA.title)).toBeUndefined();
+    expect(bindingValue({ value: "#fff" }, "color", SCHEMA.accent)).toBeUndefined();
+    expect(bindingValue({ value: "x" }, null, undefined)).toBeUndefined();
+    expect(bindingValue({}, "choice", takes)).toBeUndefined();
+  });
+  it("a boolean prop binds ONLY as an answer: true / false, never an editor", () => {
+    expect(classifyBindableProp(SCHEMA.on, { value: true })).toBe("boolean");
+    expect(classifyBindableProp(SCHEMA.on, { value: "yes" })).toBeNull();
+    expect(classifyBindableProp(SCHEMA.on)).toBeNull();
+    expect(bindingValue({ value: false }, "boolean", SCHEMA.on)).toBe(false);
+    expect(bindingValue({ value: 1 }, "boolean", SCHEMA.on)).toBeUndefined();
+    expect(resolveBindableProp({ on: SCHEMA.on }, { propKey: "on", value: true })).toMatchObject({ kind: "boolean", value: true });
+    expect(resolveBindableProp({ on: SCHEMA.on }, { propKey: "on" }).kind).toBeNull();
+    // never seeded
+    expect(resolveBindableProp({ on: SCHEMA.on }, { propKey: "on", value: true, seedDraft: "x" }).seedDraft).toBeUndefined();
+  });
+  it("resolveBindableProp carries a kept value and drops a bad one", () => {
+    expect(resolveBindableProp({ takes }, { propKey: "takes", value: "3" })).toMatchObject({ kind: "choice", value: "3" });
+    expect(resolveBindableProp({ takes }, { propKey: "takes", value: "9" }).value).toBeUndefined();
+    expect(resolveBindableProp({ count: SCHEMA.count }, { propKey: "count", value: 4 })).toMatchObject({ kind: "number", value: 4 });
   });
 });

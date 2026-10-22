@@ -133,6 +133,21 @@ export function isFingerprintPath(p) {
 /** `registry` pins of a manifest, or {} for one minted before pins. */
 const pinsOf = (manifest) => (manifest && manifest.registry && typeof manifest.registry === "object" ? manifest.registry : {});
 
+/**
+ * True when a fingerprint sidecar records a SHIPPED template: it sits in the folder of a file the manifest pins
+ * (`registry[id].file`). Only those are held. A template no release has pinned is in flight: its fingerprint is
+ * re-minted as the work moves, and the release that pins it freezes it from then on. A manifest minted before pins,
+ * or a sidecar in the `layout-fingerprints/` fallback (no folder to match), is held as before.
+ */
+export function fingerprintOfPinnedId(p, manifest) {
+  const pins = Object.values(pinsOf(manifest));
+  if (pins.length === 0) return true;
+  const rel = p.slice(PACKAGE_PREFIX.length);
+  if (!rel.startsWith("src/")) return true;
+  const dir = rel.slice(0, rel.lastIndexOf("/") + 1);
+  return pins.some((pin) => pin && typeof pin.file === "string" && pin.file.startsWith(dir) && !pin.file.slice(dir.length).includes("/"));
+}
+
 /** Pins in `head` that `next` lost, moved (file / definition) or un-webbed. */
 export function movedPins(head, next) {
   const moved = [];
@@ -193,9 +208,11 @@ const listSome = (xs) => `${xs.slice(0, 3).join(", ")}${xs.length > 3 ? ", ..." 
  *     catalog is for);
  *   - the shipped web-id snapshot: ids are additive-only;
  *   - src/web.ts: side-effect imports are additive-only;
- *   - layout-fingerprint sidecars HEAD already has: never modified or deleted
- *     (a NEW sidecar for a new template is free) — the commit-time twin of
- *     Stage 3, which `--update-fingerprints` would otherwise re-mint silently.
+ *   - layout-fingerprint sidecars HEAD already has, of a template the manifest
+ *     pins (shipped): never modified or deleted (a NEW sidecar for a new
+ *     template is free, and so is an in-flight one no release has pinned yet,
+ *     `fingerprintOfPinnedId`) — the commit-time twin of Stage 3, which
+ *     `--update-fingerprints` would otherwise re-mint silently.
  */
 export function checkStagedFreeze({ staged, manifest, read, freeze, head = {} }) {
   const failures = [];
@@ -203,7 +220,7 @@ export function checkStagedFreeze({ staged, manifest, read, freeze, head = {} })
   let checked = 0;
   const rel = (p) => p.slice(PACKAGE_PREFIX.length);
   const frozenFile = (p) => manifest.files[rel(p)] !== undefined;
-  const held = (p) => p === manifestPath || p === SNAPSHOT_PATH || p === WEB_ENTRY_PATH || isCatalogSidecarPath(p) || frozenFile(p) || (isFingerprintPath(p) && head.has?.(p) === true);
+  const held = (p) => p === manifestPath || p === SNAPSHOT_PATH || p === WEB_ENTRY_PATH || isCatalogSidecarPath(p) || frozenFile(p) || (isFingerprintPath(p) && head.has?.(p) === true && fingerprintOfPinnedId(p, manifest));
   for (const { status, path: p } of staged) {
     if (!p.startsWith(PACKAGE_PREFIX)) continue;
     if (status === "T") {
@@ -262,8 +279,9 @@ export function checkStagedFreeze({ staged, manifest, read, freeze, head = {} })
     if (isFingerprintPath(p)) {
       // HEAD is law for sidecars too: a fingerprint HEAD carries is the layout a
       // shipped id had; re-minting it is what a Tier-2 drift or a helper edit
-      // would need to hide behind. A new sidecar (new template) is free.
-      if (head.has?.(p) !== true) continue;
+      // would need to hide behind. A new sidecar (new template) is free, and so
+      // is an in-flight template's (no release has pinned it yet).
+      if (head.has?.(p) !== true || !fingerprintOfPinnedId(p, manifest)) continue;
       if (status === "D") failures.push({ path: p, reason: "layout fingerprint deleted - a shipped id's layout record; deprecate the template, never drop its fingerprint" });
       else failures.push({ path: p, reason: "layout fingerprint re-minted - a shipped id's layout moved (--update-fingerprints is for NEW versions only; a changed sidecar for a shipped id is a release act, --no-verify)" });
       continue;

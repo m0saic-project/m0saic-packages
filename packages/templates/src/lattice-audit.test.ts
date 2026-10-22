@@ -96,10 +96,10 @@ describe(`latticeSmooth — every split count > ${LATTICE_SMALL_BASIS} in every 
   });
 
   it("almost every template is clean on its sidecar alone (the rest re-render below)", () => {
-    // Today: the business card, both versions (its QR child is bitmap per
-    // document; v2 is v1's geometry). A growing list here means flattened
-    // layouts are going rough — look.
-    expect(suspects.map((s) => s.id).sort()).toEqual(["@m0saic/brand/business-card/v1", "@m0saic/brand/business-card/v2"]);
+    // Today: the business card, every version (its QR child is bitmap per
+    // document; v2 and v3 are v1's geometry). A growing list here means
+    // flattened layouts are going rough — look.
+    expect(suspects.map((s) => s.id).sort()).toEqual(["@m0saic/brand/business-card/v1", "@m0saic/brand/business-card/v2", "@m0saic/brand/business-card/v3"]);
   });
 
   it("no template — deprecated ones included — carries a rough split count above the small basis", async () => {

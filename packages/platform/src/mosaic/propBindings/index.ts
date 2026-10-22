@@ -13,6 +13,7 @@ export {
   defaultOnClear,
   bindingSeedDraft,
   bindingCompanion,
+  bindingValue,
   resolveBindableProp,
   sourceBindings,
 } from "./propBindings";
